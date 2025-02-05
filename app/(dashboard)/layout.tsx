@@ -60,14 +60,14 @@ const data = {
       icon: ChevronsLeftRightEllipsis,
     },
     {
-      name: "Settings",
-      url: "#",
-      icon: Settings2,
-    },
-    {
       name: "Analytics",
       url: "#",
       icon: ChartBar,
+    },
+    {
+      name: "Settings",
+      url: "#",
+      icon: Settings2,
     },
   ],
   token: [
