@@ -7,7 +7,7 @@ const SidebarLogo = () => {
   const isCollapsed = state === "collapsed";
 
   return (
-    <SidebarMenuItem className="py-4">
+    <SidebarMenuItem className="">
       <div className="flex flex-row items-center">
         <div className="flex">
           {isCollapsed ?
@@ -16,12 +16,13 @@ const SidebarLogo = () => {
             height={35} 
             src="/img/ethy-icon.png"
             alt="Logo" 
+            className="mt-2"
           /> :
           <Image 
-            width={170} 
+            width={125} 
             height={100} 
-            className={`transition-opacity duration-300 opacity-100`}
-            src="/img/ethy-logo-trans.png" 
+            className={`transition-opacity duration-300 opacity-100 mt-1`}
+            src="/img/ethy-logo-white.png" 
             alt="Logo" 
           />}
         </div>

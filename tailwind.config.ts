@@ -10,6 +10,10 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+      fontFamily: {
+        "funnel": "var(--font-funnel)",
+        "hansengrotesk": "var(--font-hansengrotesk)",
+      },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -41,6 +45,10 @@ const config: Config = {
   				DEFAULT: 'hsl(var(--destructive))',
   				foreground: 'hsl(var(--destructive-foreground))'
   			},
+        violeta: {
+          DEFAULT: 'hsl(var(--violeta))',
+          foreground: 'hsl(var(--violeta-foreground))'
+        },
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
@@ -53,11 +61,11 @@ const config: Config = {
   			},
   			sidebar: {
   				DEFAULT: 'hsl(var(--sidebar-background))',
-  				foreground: 'hsl(var(--sidebar-foreground))',
-  				primary: 'hsl(var(--sidebar-primary))',
-  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-  				accent: 'hsl(var(--sidebar-accent))',
-  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+  				foreground: 'hsl(var(--foreground))',
+  				primary: 'hsl(var(--primary))',
+  				'primary-foreground': 'hsl(var(--primary-foreground))',
+  				accent: 'hsl(var(--accent))',
+  				'accent-foreground': 'hsl(var(--accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
   			}
@@ -67,6 +75,9 @@ const config: Config = {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
+      backgroundSize: {
+        '300%': '300%',
+      },
   		keyframes: {
   			'accordion-down': {
   				from: {
@@ -83,11 +94,34 @@ const config: Config = {
   				to: {
   					height: '0'
   				}
-  			}
+  			},
+        'connected': {
+          '75%, 100%': {
+              transform: 'scale(2)',
+              opacity: '0'
+            }
+          },
+          'border-spin': {
+            '100%': {
+              transform: 'rotate(-360deg)',
+            },
+          },
+          'border': {
+            to: { '--border-angle': '360deg' },
+          },
+          'animatedgradient': {
+            '0%': { backgroundPosition: '0% 50%' },
+            '50%': { backgroundPosition: '100% 50%' },
+            '100%': { backgroundPosition: '0% 50%' },
+          },
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+        'connected': 'connected 2s cubic-bezier(0, 0, 0.4, 1) infinite',
+        'border-spin': 'border-spin 7s linear infinite',
+        'border': 'border 4s linear infinite',
+        'gradient': 'animatedgradient 5s ease infinite alternate',
   		}
   	}
   },

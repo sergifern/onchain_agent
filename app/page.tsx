@@ -19,12 +19,12 @@ export default function Home() {
         {authenticated ? (
           <span>Welcome, {user?.email || user?.wallet?.address}</span>
         ) : (
-          <Button disabled={disableLogin} onClick={login}>Connect Wallet</Button>
+          <Button disabled={disableLogin} onClick={login}>Connect</Button>
         )}
       </div>
       <Button onClick={logout} variant="destructive">
         Logout
-        </Button>
+      </Button>
     </div>
   );
 }

@@ -3,24 +3,60 @@
 import { usePrivy } from "@privy-io/react-auth"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { useAccount } from "wagmi";
+import LinkedAccounts from "@/components/linked-accounts";
+import PageContainer from "@/components/page-container";
+import { Info } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function Settings() {
-  const { logout } = usePrivy()
+  const { logout, user, ready, authenticated } = usePrivy()
+  const {address} = useAccount();
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Settings</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>Account Settings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Button onClick={logout} variant="destructive">
-            Logout
-          </Button>
+    <PageContainer title="Settings" description="Manage your account settings">
+      <h2 className="text-xl mb-6 text-secondary flex items-center gap-2">
+        Connected Accounts
+        <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Info className="w-4 h-4" />
+          </TooltipTrigger>
+          <TooltipContent className="border-none">
+            <p>All your accounts and wallets linked to your profile</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>  
+      </h2>
+      <Card className="card-outline">
+        <CardContent className="pt-6">
+          {ready && authenticated && user && (
+            <LinkedAccounts accounts={user.linkedAccounts} />
+          )}
         </CardContent>
       </Card>
-    </div>
+
+      <h2 className="text-xl mb-6 text-secondary flex items-center gap-2 mt-10">
+        Agent Wallets
+        <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Info className="w-4 h-4" />
+          </TooltipTrigger>
+          <TooltipContent className="border-none">
+            <p>All your accounts and wallets linked to your profile</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>  
+      </h2>
+      <Card className="card-outline">
+        <CardContent className="pt-6">
+          {ready && authenticated && user && (
+            <LinkedAccounts accounts={user.linkedAccounts} wallets={true} />
+          )}
+        </CardContent>
+      </Card>
+    </PageContainer>
   )
 }
 

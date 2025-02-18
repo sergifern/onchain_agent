@@ -32,7 +32,7 @@ export function usePrivyLogin() {
       });
 
       // route to /home
-      router.push("/home");
+      //router.push("/home");
     },
     onError: (error) => {
       console.error("Error en el login:", error);

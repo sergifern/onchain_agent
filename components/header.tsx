@@ -3,32 +3,56 @@
 import { usePrivy } from "@privy-io/react-auth"
 import { Button } from "@/components/ui/button"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuGroup } from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ChevronsUpDown, BadgeCheck, CreditCard, Settings2, LogOut  } from "lucide-react"
-
-const data = {
-  user: {
-    name: "Nikk.base.eth",
-    email: "nikk",
-    avatar: "/avatars/shadcn.jpg",
-  },
-}
+import { Settings, SquarePlus } from "lucide-react"
+import { useAccount, useBalance } from "wagmi";
+import { truncateAddress, formatEthyAmount } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { Separator } from "@/components/ui/separator";
+import { WalletSheet } from "@/components/wallet-sheet";
+import { ProfileDropdown } from "@/components/profile-dropdown";
 
 export function Header() {
   const { login, authenticated, user } = usePrivy()
+  const router = useRouter();
+  const { address } = useAccount();
 
+  const EthyBalance = useBalance({
+    address: address,
+    token: process.env.NEXT_PUBLIC_ETHY_TOKEN_ADDRESS as `0x${string}`, 
+  })  
+  
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between border-b px-4">
-      <div className="flex items-center gap-4">
-        <SidebarTrigger />
+    <header className="flex h-16 shrink-0 items-center justify-between md:px-4 px-2">
+      <div className="flex items-center gap-3">
+        <div className="flex items-center">
+          <SidebarTrigger className="text-white border-[1px] border-secondary p-4" />
+        </div>
+        <div className="flex items-center">
+          <Button variant="ghost" className="text-white/60 border-[1px] border-secondary p-4 h-7 w-7" size="icon" onClick={() => {
+            router.push("/terminal")
+          }}>
+            <SquarePlus className=" text-white " />
+          </Button>
+        </div>
       </div>
 
-      <div>
+      <div className="flex items-center md:gap-6 gap-4">
+        <div className="flex items-centertext-secondary text-sm ">
+          {formatEthyAmount(Number(EthyBalance.data?.formatted ?? 0))} ETHY
+        </div>
+        <Separator orientation="vertical" className="h-4 bg-white/20" />
+
         {authenticated ? (
-          <span>Welcome, {`${user?.email}` || user?.wallet?.address}</span>
+          <div className="flex items-center gap-2">
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex h-full w-full animate-connected rounded-full bg-emerald-600 opacity-75"></span>
+              <span className="relative inline-flex size-2 rounded-full bg-emerald-600"></span>
+            </span>
+            <span className="text-secondary text-sm">{truncateAddress(address)}</span>
+            <ProfileDropdown />
+          </div>
         ) : (
-          <Button onClick={login}>Connect Wallet</Button>
+          <Button onClick={login}>Connect</Button>
         )}
       </div>
 

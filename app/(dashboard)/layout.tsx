@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { MoveUpRight, ChevronsLeftRightEllipsis, FolderOpen, Bot, ChevronRight, Coins, HandCoins, Command, ChartBar, CreditCard, Folder, Landmark, User2Icon, LifeBuoy, LogOut, Map, MoreHorizontal, PieChart, Search, Send, Settings2, Share, Sparkles, SquareTerminal, Loader, Book2, Users } from 'lucide-react'
+import { MoveUpRight, ChevronsLeftRightEllipsis, FolderOpen, Bot, ChevronRight, Coins, HandCoins, Command, ChartBar, CreditCard, Folder, Landmark, User2Icon, LifeBuoy, LogOut, Map, MoreHorizontal, PieChart, Search, Send, Settings2, Share, Sparkles, SquareTerminal, Users, Repeat, ArrowUpRight, Info } from 'lucide-react'
 
 import Image
  from "next/image"
@@ -16,6 +16,7 @@ import {
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -33,30 +34,42 @@ import {
 import { Header } from "@/components/header"
 import { usePrivy } from "@privy-io/react-auth"
 import SidebarLogo from "@/components/sidebar-logo"
+import { useState } from "react"
+import router from "next/router"
+import { ComingSoonModal } from "@/components/coming-modal"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { usePathname } from "next/navigation"
+import { Separator } from "@/components/ui/separator"
+import { cn } from "@/lib/utils"
 
 const data = {
   navMain: [
     {
       title: "Terminal",
-      url: "#",
+      url: "/terminal",
       icon: SquareTerminal,
-      isActive: true,
     },
     {
       title: "Namespace",
-      url: "#",
+      url: "/namespace",
       icon: FolderOpen,
     },
     {
-      title: "Your Agent",
-      url: "#",
+      title: "My Agent",
+      url: "/agents",
       icon: Bot,
     },
   ],
   management: [
     {
+      name: "Settings",
+      url: "/settings",
+      icon: Settings2,
+    },
+    {
       name: "API Keys",
-      url: "#",
+      url: "/api-keys",
       icon: ChevronsLeftRightEllipsis,
     },
     {
@@ -64,28 +77,35 @@ const data = {
       url: "#",
       icon: ChartBar,
     },
-    {
-      name: "Settings",
-      url: "#",
-      icon: Settings2,
-    },
   ],
   token: [
     {
+      name: "Burn & Supply",
+      url: "/metrics",
+      icon: Info,
+    },
+    {
+      name: "Swap",
+      url: "/swap",
+      icon: Repeat,
+    },
+    {
       name: "Staking",
       url: "#",
-      icon: HandCoins,
+      icon: Coins,
+      comingSoon: true
     },
     {
       name: "Governance",
       url: "#",
       icon: Landmark,
+      comingSoon: true
     },
   ],
   navSecondary: [
     {
       title: "Documentation",
-      url: "#",
+      url: "https://docs.ethyai.xyz",
       icon: LifeBuoy,
     },
     {
@@ -97,32 +117,46 @@ const data = {
 }
 
 export default function Layout({ children }: Readonly<{ children: React.ReactNode; }>) {
+  const pathname = usePathname();
   const { ready } = usePrivy();
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const isTerminalPage = pathname.startsWith("/terminal")
 
+  const handleNavigation = (url: string) => {
+    if (url === "#" || !url) {
+      //console.log("Coming soon")
+      setIsModalOpen(true)
+    } else {
+      router.push(url)
+    }
+  }
+  
   return (
     <SidebarProvider>
-      <Sidebar variant="inset" collapsible="icon">
+      <Sidebar collapsible="icon" className="border-none">
         <SidebarHeader>
           <SidebarMenu>
             <SidebarLogo />
           </SidebarMenu>
         </SidebarHeader>
-        <SidebarContent>
+        <SidebarContent className="mt-8">
           <SidebarGroup>
-            <SidebarGroupLabel>Ethy Agent</SidebarGroupLabel>
             <SidebarMenu>
-              {data.navMain.map((item) => (
+              {data.navMain.map((item) => {
+                const isActive = pathname === item.url;
+                
+                return (
                 <Collapsible
                   key={item.title}
                   asChild
-                  defaultOpen={item.isActive}
+                  defaultOpen={isActive}
                 >
                   <SidebarMenuItem>
-                    <SidebarMenuButton asChild tooltip={item.title}>
-                      <a href={item.url}>
+                    <SidebarMenuButton asChild tooltip={item.title} isActive={isActive}>
+                      <Link href={item.url}>
                         <item.icon />
                         <span>{item.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                     {item.items?.length ? (
                       <>
@@ -137,9 +171,11 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
                             {item.items?.map((subItem) => (
                               <SidebarMenuSubItem key={subItem.title}>
                                 <SidebarMenuSubButton asChild>
-                                  <a href={subItem.url}>
+                                  <Link 
+                                    href={subItem.url}
+                                  >
                                     <span>{subItem.title}</span>
-                                  </a>
+                                  </Link>
                                 </SidebarMenuSubButton>
                               </SidebarMenuSubItem>
                             ))}
@@ -149,42 +185,59 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
                     ) : null}
                   </SidebarMenuItem>
                 </Collapsible>
-              ))}
+              )
+            })}
             </SidebarMenu>
           </SidebarGroup>
+          <Separator className="my-2 border-border w-5/6 mx-auto" />
           <SidebarGroup className="">
             <SidebarGroupLabel>$ETHY token</SidebarGroupLabel>
             <SidebarMenu>
-              {data.token.map((item) => (
+              {data.token.map((item) => {
+                const isActive = pathname === item.url;
+                return (
                 <Collapsible
                   key={item.name}
                   asChild
+                  defaultOpen={isActive}
                   >
-                  <SidebarMenuItem key={item.name}>
-                    <SidebarMenuButton asChild tooltip={item.name}>
-                      <a href={item.url}>
-                        <item.icon />
+                  <SidebarMenuItem key={item.name} className="flex items-center justify-between">
+                    <SidebarMenuButton asChild tooltip={item.name} isActive={isActive}>
+                      <Link
+                        href={item.url}
+                      >
                         <span>{item.name}</span>
-                      </a>
+                      {item.comingSoon && (
+                        <Badge className="ml-auto text-xs bg-transparent border-primary/60 text-primary/60 hover:bg-primary/10">
+                          Soon
+                        </Badge>
+                      )}
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 </Collapsible>
-              ))}
+              )
+              })}
             </SidebarMenu>
           </SidebarGroup>
           <SidebarGroup className="">
-            <SidebarGroupLabel>Management</SidebarGroupLabel>
+            <SidebarGroupLabel>Developers and Tools</SidebarGroupLabel>
             <SidebarMenu>
-              {data.management.map((item) => (
+              {data.management.map((item) => {
+                const isActive = pathname === item.url;
+                return (
                 <SidebarMenuItem key={item.name}>
-                  <SidebarMenuButton asChild tooltip={item.name}>
-                    <a href={item.url}>
-                      <item.icon />
+                  <SidebarMenuButton asChild tooltip={item.name} isActive={isActive}>
+                    <Link
+                      href={item.url}
+                      onClick={() => item.url === "#" ? handleNavigation(item.url) : null }
+                    >
                       <span>{item.name}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              ))}
+                )
+              })}
             </SidebarMenu>
           </SidebarGroup>
           <SidebarGroup className="mt-auto border-t border-border">
@@ -193,31 +246,44 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
                 {data.navSecondary.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild size="sm">
-                      <Link href={item.url}>
-                        <item.icon />
+                      <Link href={item.url} className="group/item">
                         <span>{item.title}</span>
-                        <MoveUpRight />
-                      </Link>
+                        <ArrowUpRight className="transition-transform duration-200 group-hover/item:translate-x-1" />
+                        </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
+              <SidebarFooter>
+                <p className="text-xs text-muted-foreground pt-4">2025 @ Ethy AI, v2.1.0+1c7fd</p>
+              </SidebarFooter>
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
-      <SidebarInset>
-        <Header />
-        <div className="flex flex-col gap-4 p-4">
-          {!ready ?
-          <div className="mx-auto mt-32">
-            <div className="loader"></div>
-          </div>
-          :
-          children
+      <SidebarInset 
+        className={cn(
+          isTerminalPage && "h-screen flex flex-col overflow-hidden"
+        )}
+      >
+      <Header />
+        <div 
+          className={cn(
+            "flex flex-col p-0 md:p-4 flex-1",
+            isTerminalPage && "overflow-hidden"
+          )}
+        >
+            {!ready ?
+            <div className="mx-auto mt-32">
+              <div className="loader2"></div>
+            </div>
+            :
+            children
           }
         </div>
       </SidebarInset>
+      <ComingSoonModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
     </SidebarProvider>
   )
 }

@@ -28,26 +28,52 @@
   --chart-3: 197 37% 24%;
   --chart-4: 43 74% 66%;
   --chart-5: 27 87% 67%;
+  --sidebar-background: 220 40% 94%; /* Azul muy claro */
+  --sidebar-foreground: 220 20% 20%; /* Azul grisáceo */
+  --sidebar-primary: 220 60% 35%; /* Azul oscuro */
+  --sidebar-primary-foreground: 220 90% 98%;
+  --sidebar-accent: 220 50% 80%; /* Azul vibrante */
+  --sidebar-accent-foreground: 220 20% 20%;
+  --sidebar-border: 220 30% 85%;
+  --sidebar-ring: 220 70% 50%;
 }
 .dark {
-  --background: 227, 60%, 17% ;
-  --foreground: 210 40% 98%;
-  --card: 228, 67%, 13%;
+  --background: 214, 20%, 16% ;
+  /* mes grisos amor 231,15,18 o #202730 (neynar) - fons website framer: 258, 38%, 5%  - mes claret: 243,19,13  - Last version grisosa pero no agrada amor 231,27,12  - #0b0d15 */
+  --foreground: 0 0% 100%;
+
+
+  --sidebar-background: 258, 100%, 2%; /* 228, 87%, 9% alternativa mes fosca #030b2b o tipu 020613 mes fosc encara */
+  --sidebar-border: 220 30% 25%;
+  --sidebar-ring: 220 70% 50%;
+
+  --card: 229, 40%, 14%;
   --card-foreground: 210 40% 98%;
-  --popover: 227, 60%, 17%;
-  --popover-foreground: 210 40% 98%;
+  --card-border: 229, 40%, 14%;
+
   --primary: 210 40% 98%;
   --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 217.2 32.6% 17.5%;
+
+  --secondary: 229 20% 44%;
   --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
+
+  --popover: 227, 60%, 17%;
+  --popover-foreground: 210 40% 98%;
+
+  --accent: 217 24% 20%; /* 217.2 32.6% 17.5%; */
   --accent-foreground: 210 40% 98%;
+
+  --violeta: 261 100% 65%;
+  --violeta-foreground: 210 40% 98%;
+
+  --border: 231 15% 17%;
+  --input: 229 20% 44%;
+
+
+  --muted: 258 100% 2%;
+  --muted-foreground: 215 20.2% 65.1%;
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
   --ring: 212.7 26.8% 83.9%;
   --chart-1: 220 70% 50%;
   --chart-2: 160 60% 45%;
@@ -56,48 +82,69 @@
   --chart-5: 340 75% 55%;
 }
 
+
+/* Before update
+  --background: 230, 45%, 10% ; #0b0d15 
+  --foreground: 0 0% 100%;
+
+
+  --sidebar-background: 227, 82%, 2%; 228, 87%, 9% alternativa mes fosca #030b2b o tipu 020613 mes fosc encara
+  --sidebar-border: 220 30% 25%;
+  --sidebar-ring: 220 70% 50%;
+
+  --card: 229, 40%, 14%;
+  --card-foreground: 210 40% 98%;
+  --card-border: 229, 40%, 14%;
+
+  --secondary: 229 20% 44%;
+  --secondary-foreground: 210 40% 98%;
+
+
+  --popover: 227, 60%, 17%;
+  --popover-foreground: 210 40% 98%;
+
+  --primary: 210 40% 98%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+
+
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+
+
+  --border: 231 15% 17%;
+  --input: 226 45% 29%;
+
+*/
+
 body {
-  background-color: #0b1437!important; /* Tu color predeterminado */
+  background-color: #030b2b!important; /* Tu color predeterminado */
   color: white!important; /* Color predeterminado del texto */
-  font-family: 'Montserrat', sans-serif !important;
+  font-family: 'Inter', sans-serif !important;
 }
 
-
-input {
-  background-color: #fff!important; /* Tu color predeterminado */
+p, span {
+  font-weight: 300;
+  font-family: 'hansengrotesk', sans-serif !important;
 }
 
-@layer base {
-  :root {
-    --sidebar-background: 220 40% 94%; /* Azul muy claro */
-    --sidebar-foreground: 220 20% 20%; /* Azul grisáceo */
-    --sidebar-primary: 220 60% 35%; /* Azul oscuro */
-    --sidebar-primary-foreground: 220 90% 98%;
-    --sidebar-accent: 220 50% 80%; /* Azul vibrante */
-    --sidebar-accent-foreground: 220 20% 20%;
-    --sidebar-border: 220 30% 85%;
-    --sidebar-ring: 220 70% 50%;
-  }
-
-  .dark {
-    --sidebar-background: 228, 67%, 13%;
-    --sidebar-foreground: 220 70% 85%;
-    --sidebar-primary: 220 60% 40%;
-    --sidebar-primary-foreground: 220 90% 98%;
-    --sidebar-accent: 220 50% 30%;
-    --sidebar-accent-foreground: 220 70% 85%;
-    --sidebar-border: 220 30% 25%;
-    --sidebar-ring: 220 70% 50%;
-  }
+.card-bg {
+  background-color: #070a12;
+  background-image: linear-gradient(315deg, #070a12 0%, #132947 100%);
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+.card-outline {
+  border: 1px solid #ffffff14;
+  background-color: #f8f8fa08;
+  border-radius: 16px;
+}
+
+/*.data-\[active\=true\]\:bg-sidebar-accent[data-active="true"] {
+  border-left: 2px solid #fff!important;
+  background-color: hsl(var(--accent)) !important;
+}*/
+
+[data-active="true"] span {
+  font-weight: 500!important;
 }
 
 /* HTML: <div class="loader"></div> */
@@ -121,4 +168,35 @@ input {
   87.5% {background-position: calc(0*100%/3) 50% ,calc(1*100%/3) 50% ,calc(2*100%/3) 50% ,calc(3*100%/3) 100%}
   95%,
   100%  {background-position: calc(0*100%/3) 50% ,calc(1*100%/3) 50% ,calc(2*100%/3) 50% ,calc(3*100%/3) 50% }
+}
+
+
+/* HTML: <div class="loader"></div> */
+.loader2 {
+  color: #fff;
+  width: 4px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  box-shadow: 19px 0 0 7px, 38px 0 0 3px, 57px 0 0 0;
+  transform: translateX(-38px);
+  animation: l21 .5s infinite alternate linear;
+}
+
+@keyframes l21 {
+  50%  {box-shadow: 19px 0 0 3px, 38px 0 0 7px, 57px 0 0 3px}
+  100% {box-shadow: 19px 0 0 0  , 38px 0 0 3px, 57px 0 0 7px}
+}
+
+
+
+@layer utilities {
+  @property --border-angle {
+    inherits: false;
+    initial-value: 0deg;
+    syntax: '<angle>';
+  }        
+}
+
+.loading-tool{
+  @apply bg-gradient-to-r from-secondary via-white/60 to-violet-600/80 text-transparent bg-clip-text bg-300% animate-gradient;
 }

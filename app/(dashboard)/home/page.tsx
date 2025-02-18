@@ -22,7 +22,7 @@ export default function Dashboard() {
             {authenticated ? (
               <span>Welcome, {`${user?.email}` || user?.wallet?.address}</span>
             ) : (
-              <Button onClick={login}>Connect Wallet</Button>
+              <Button onClick={login}>Connect</Button>
             )}
           </div>
         </CardContent>

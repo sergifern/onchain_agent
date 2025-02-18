@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { PrivyClient } from "@privy-io/server-auth";
 
 export async function getPrivyUser(req: NextRequest) {
