@@ -39,11 +39,13 @@ export function fakeRequest() {
   })
 }
 
-export function detectBlockchain(lastMessage: string): "solana" | "evm" | "unknown" {
-  const text = lastMessage.toLowerCase();
+export function detectBlockchain(messages: Message[]): "solana" | "evm" | "unknown" {
+  for (let i = messages.length - 1; i >= 0; i--) { // Recorrer desde el último mensaje hacia atrás
+    const text = messages[i].content.toLowerCase();
 
-  if (text.includes("solana") || text.includes("spl token") || text.includes("pumpfun")) return "solana";
-  if (text.includes("evm") || text.includes("ethereum") || text.includes("erc20")) return "evm";
+    if (text.includes("solana") || text.includes("spl token")) return "solana";
+    if (text.includes("evm") || text.includes("ethereum") || text.includes("erc20")) return "evm";
+  }
 
-  return "unknown";
+  return "unknown"; // Si no se encuentra ninguna coincidencia
 }

@@ -1,3 +1,4 @@
+
 import { streamText, ToolInvocation } from "ai"
 import { openai } from "@ai-sdk/openai"
 import { customTools, evmTools, solanaTools } from "@/lib/ai/tools"
@@ -40,8 +41,7 @@ interface Message {
 export async function POST(req: Request) {
   const { messages }: { messages: Message[] } = await req.json();
   
-  const lastMessage = messages[messages.length - 1]?.content || ""; // Get the last message safely
-  const blockchain = detectBlockchain(lastMessage);
+  const blockchain = detectBlockchain(messages);
 
     console.log(blockchain);
   let selectedTools = { ...customTools };   
