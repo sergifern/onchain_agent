@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "engines": {
+    "node": "23.x"
+  },
   "dependencies": {
     "@abstract-foundation/agw-client": "latest",
     "@ai-sdk/openai": "^1.1.12",
