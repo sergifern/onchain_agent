@@ -87,7 +87,7 @@ export class PrivyEVMWalletClient extends EVMWalletClient {
     // Resolver la dirección destino (por ejemplo, si se trata de un ENS)
     const toAddress = await this.resolveAddress(to);
   
-    const valueHex = value ? toQuantity(BigInt(value)) : "0x0";
+    const valueHex = value ? toQuantity(value.toString()) : "0x0";
 
     // Caso 1: Transferencia simple (sin ABI)
     if (!abi) {
