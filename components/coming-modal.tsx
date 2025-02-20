@@ -8,7 +8,7 @@ interface ComingSoonModalProps {
 export function ComingSoonModal({ isOpen, onClose }: ComingSoonModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="border-secondary/40">
         <DialogHeader>
           <DialogTitle>Coming Soon</DialogTitle>
           <DialogDescription>This feature is not available yet. Stay tuned for updates!</DialogDescription>

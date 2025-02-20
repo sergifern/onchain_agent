@@ -43,8 +43,8 @@ export function detectBlockchain(messages: Message[]): "solana" | "evm" | "unkno
   for (let i = messages.length - 1; i >= 0; i--) { // Recorrer desde el último mensaje hacia atrás
     const text = messages[i].content.toLowerCase();
 
-    if (text.includes("solana") || text.includes("spl token")) return "solana";
-    if (text.includes("evm") || text.includes("ethereum") || text.includes("erc20")) return "evm";
+    if (text.includes("evm") || text.includes("ethereum") || text.includes("erc20") || text.includes("base") || text.includes("debridge")) return "evm";
+    if (text.includes("solana") || text.includes("spl token") || text.includes("pumpfun")) return "solana";
   }
 
   return "unknown"; // Si no se encuentra ninguna coincidencia

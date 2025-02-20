@@ -45,17 +45,17 @@ export default function WalletInfoInline() {
   })
   const ethBalance = (parseFloat(formatEther(ethBalanceData?.value || BigInt(0))) || 0).toFixed(3);
 
-  const address = new PublicKey('6GJriXmDF8Y4EZSm4jHTscMFnMhWARpMj9NrNgt1qRyv') //4HBFacbpiyZdpRmfuePKX5tezS8J15dAkffjdJUcLGye
+  //const address = new PublicKey('6GJriXmDF8Y4EZSm4jHTscMFnMhWARpMj9NrNgt1qRyv') //4HBFacbpiyZdpRmfuePKX5tezS8J15dAkffjdJUcLGye
   const update = 0;
   
   useEffect(() => {
     if (!embeddedWalletSolana?.address) return
     const solanaConnection = new Connection(process.env.NEXT_PUBLIC_SOLANA_RPC_URL as string) 
-    solanaConnection.getBalance(address).then((balance) => {
+    solanaConnection.getBalance(new PublicKey(embeddedWalletSolana?.address)).then((balance) => {
       console.log('balance', balance / 1e9)
       setSolBalance((balance / 1e9).toFixed(2))
     })
-  }, [address, update])
+  }, [embeddedWalletSolana?.address])
 
   if (!user || !ready || !authenticated) {
     return null

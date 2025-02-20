@@ -56,7 +56,7 @@ export default function Home() {
               <h2 className="text-md ">X Integration</h2>
               <p className="text-sm text-secondary">
                 {twitterConnected
-                  ? "Your agents can now post updates to Twitter."
+                  ? "Your Agent can now post updates to Twitter."
                   : "Connect your profile to buy, sell, transfer, or create tasks on X by simply interacting with @ethy_agent."}
               </p>
             </div>
@@ -81,7 +81,7 @@ export default function Home() {
               <h2 className="text-md">Eye Future Forecast</h2>
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 {twitterConnected
-                  ? "Your agents can now post updates to Twitter."
+                  ? "Your Agent can now post updates to Twitter."
                   : "Link your account to receive market forecasts that you can fully automate with your Agent."}
               </p>
             </div>

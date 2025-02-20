@@ -6,6 +6,9 @@ import { fakeRequest } from "@/lib/utils"
 import { usePrivy } from "@privy-io/react-auth";
 import { usePrivyLogin } from "@/hooks/privy-hooks";
 import { Loader2 } from "lucide-react";
+import { useAccount, useBalance } from "wagmi";
+
+
 export function WaitlistCheck() {
   const [isOnWaitlist, setIsOnWaitlist] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -13,6 +16,13 @@ export function WaitlistCheck() {
   const { ready, authenticated } = usePrivy();
   const { login } = usePrivyLogin();
   const disableLogin = !ready || (ready && authenticated);
+  const { address } = useAccount();
+
+  const EthyBalance = useBalance({
+    address: address,
+    token: process.env.NEXT_PUBLIC_ETHY_TOKEN_ADDRESS as `0x${string}`, 
+  })  
+  
 
   useEffect(() => {
     const checkWaitlist = async () => {
@@ -30,7 +40,7 @@ export function WaitlistCheck() {
   };
 
   if (!ready) {
-    return null; // No muestra nada hasta que esté listo Privy
+    return null;
   }
 
   if (!authenticated) {
@@ -41,16 +51,26 @@ export function WaitlistCheck() {
     );
   }
 
-  if (!isOnWaitlist) {
-    return(isLoading ?
-    <Loader2 className="w-4 h-4 animate-spin mt-6" /> :
-     <Button onClick={handleRequest} disabled={loading} className="mt-6">
-      {loading ? "Processing..." : "Request Access"}
-    </Button>)
+  if(isOnWaitlist) {
+    return (
+      <p className="mt-6 text-sm text-secondary">You are already on the waitlist. Come back soon!</p>
+    );
+  }
+  if (EthyBalance.data?.formatted && Number(EthyBalance.data?.formatted) < 3000000) {
+    return (
+      <div className="flex flex-col items-center">
+        <Button disabled={true} className="mt-8">
+          {"Request Access"}
+        </Button>
+        <p className="mt-6 text-white font-semibold">You need to own at least 3m $ETHY to request access.</p>
+      </div>
+    );
   }
 
-  return (
-    <p className="mt-6 text-sm text-secondary">You are already on the waitlist. Come back soon!</p>
-
-  );
+  
+  return(isLoading ?
+    <Loader2 className="w-4 h-4 animate-spin mt-6" /> :
+    <Button onClick={handleRequest} disabled={loading} className="mt-6">
+      {loading ? "Processing..." : "Request Access"}
+    </Button>)
 }

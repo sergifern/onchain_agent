@@ -28,7 +28,7 @@ export default function Messages({ messages, addToolResult }: { messages: any, a
               switch (part.type) {       
                 case "text":
                   return (
-                    <div className="flex flex-col gap-2">
+                    <div key={`${part.id}-${index}`} className="flex flex-col gap-2">
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         components={{ a: LinkRenderer }}

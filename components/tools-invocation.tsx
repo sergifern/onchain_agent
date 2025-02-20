@@ -11,9 +11,9 @@ export default function ToolsInvocationMessage({ part, addToolResult }: { part: 
           return (
             <div key={callId} className="text-gray-500">
               {part.toolInvocation.args.message}
-              <div className="flex gap-2">
+              <div className="flex gap-2 mt-2">
                 <button
-                  className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+                  className="px-4 py-2 font-bold text-violet-500 bg-white rounded hover:bg-violet-700/30"
                   onClick={() =>
                     addToolResult({
                       toolCallId: callId,
@@ -24,7 +24,7 @@ export default function ToolsInvocationMessage({ part, addToolResult }: { part: 
                   Yes
                 </button>
                 <button
-                  className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700"
+                  className="px-4 py-2 font-bold text-white bg-red-500/30 rounded hover:bg-red-700"
                   onClick={() =>
                     addToolResult({
                       toolCallId: callId,

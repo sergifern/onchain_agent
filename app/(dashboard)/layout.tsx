@@ -57,7 +57,7 @@ const data = {
     },
     {
       title: "My Agent",
-      url: "/agents",
+      url: "/agent",
       icon: Bot,
     },
   ],
@@ -105,12 +105,12 @@ const data = {
   navSecondary: [
     {
       title: "Documentation",
-      url: "https://docs.ethyai.xyz",
+      url: "https://docs.ethyai.app",
       icon: LifeBuoy,
     },
     {
       title: "Community",
-      url: "#",
+      url: "https://x.com/ethy_agent",
       icon: Users,
     },
   ],
@@ -190,8 +190,28 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
             </SidebarMenu>
           </SidebarGroup>
           <Separator className="my-2 border-border w-5/6 mx-auto" />
-          <SidebarGroup className="">
-            <SidebarGroupLabel>$ETHY token</SidebarGroupLabel>
+          <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+            <SidebarGroupLabel>Account & Tools</SidebarGroupLabel>
+            <SidebarMenu>
+              {data.management.map((item) => {
+                const isActive = pathname === item.url;
+                return (
+                <SidebarMenuItem key={item.name}>
+                  <SidebarMenuButton asChild tooltip={item.name} isActive={isActive}>
+                    <Link
+                      href={item.url}
+                      onClick={() => item.url === "#" ? handleNavigation(item.url) : null }
+                    >
+                      <span>{item.name}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                )
+              })}
+            </SidebarMenu>
+          </SidebarGroup>
+          <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+            <SidebarGroupLabel>ETHY token</SidebarGroupLabel>
             <SidebarMenu>
               {data.token.map((item) => {
                 const isActive = pathname === item.url;
@@ -220,27 +240,7 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
               })}
             </SidebarMenu>
           </SidebarGroup>
-          <SidebarGroup className="">
-            <SidebarGroupLabel>Developers and Tools</SidebarGroupLabel>
-            <SidebarMenu>
-              {data.management.map((item) => {
-                const isActive = pathname === item.url;
-                return (
-                <SidebarMenuItem key={item.name}>
-                  <SidebarMenuButton asChild tooltip={item.name} isActive={isActive}>
-                    <Link
-                      href={item.url}
-                      onClick={() => item.url === "#" ? handleNavigation(item.url) : null }
-                    >
-                      <span>{item.name}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                )
-              })}
-            </SidebarMenu>
-          </SidebarGroup>
-          <SidebarGroup className="mt-auto border-t border-border">
+          <SidebarGroup className="mt-auto border-t border-border group-data-[collapsible=icon]:hidden">
             <SidebarGroupContent>
               <SidebarMenu>
                 {data.navSecondary.map((item) => (

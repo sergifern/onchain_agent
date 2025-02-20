@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { usePrivy } from "@privy-io/react-auth";
-import { Bot, LogOut, Menu, Link } from "lucide-react"
+import { Bot, LogOut, Menu, Link, Settings } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 export function ProfileDropdown() {
@@ -28,26 +28,22 @@ export function ProfileDropdown() {
           <Menu className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 shadow-xl border-none shadow-dark bg-card mr-6">
+      <DropdownMenuContent className="w-56 shadow-xl border-none shadow-dark mr-6 bg-primary/10">
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => router.push("/settings")}>
               Settings
               <DropdownMenuShortcut>
-                <Bot className="w-4 h-4" />
+                <Settings className="w-4 h-4" />
               </DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            Keyboard shortcuts
-            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+          <DropdownMenuItem className="hidden" onClick={() => window.open("https://basescan.org", "_blank")}>
+            Block Explorer
+            <DropdownMenuShortcut>
+              <Link className="w-4 h-4" />
+            </DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Block Explorer
-          <DropdownMenuShortcut>
-            <Link className="w-4 h-4" />
-          </DropdownMenuShortcut>
-        </DropdownMenuItem>
         <DropdownMenuItem onClick={logout}>
           Log out
           <DropdownMenuShortcut>

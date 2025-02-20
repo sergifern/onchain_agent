@@ -1,9 +1,9 @@
 "use client"
 
-import { useChat } from "ai/react"
+import { useChat } from '@ai-sdk/react';
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowUp, FileInput, Globe, Send, Square, Sparkles } from "lucide-react"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Avatar } from "@/components/ui/avatar"
@@ -13,25 +13,50 @@ import { SuggestedActions } from "@/components/suggested-actions"
 import Messages from "@/components/messages"
 import { ChatOverview } from "@/components/chat-overview"
 import WalletInfoInline from "@/components/wallet-info-inline"
+import dotenv from 'dotenv'
+import Link from 'next/link';
+import { usePrivy } from '@privy-io/react-auth';
 
+dotenv.config()
 
-const tags = Array.from({ length: 50 }).map(
-  (_, i, a) => `v1.2.0-beta.${a.length - i}`
-)
 
 export default function ChatPage() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading, append, addToolResult } = useChat({
-    api: '/api/chat',
+
+  const { getAccessToken } = usePrivy();
+  const [headers, setHeaders] = useState<Record<string, string>>({});
+
+  const { messages, input, handleInputChange, handleSubmit, append, addToolResult, status } = useChat({
+    api: process.env.NEXT_PUBLIC_ETHY_API_URL + '/chat',
+    headers: headers,
     maxSteps: 10,
   });
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const accessToken = await getAccessToken();
+        setHeaders({
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        });
+      } catch (error) {
+        console.error('Failed to fetch access token:', error);
+      }
+    };
+
+    fetchToken();
+  }, [getAccessToken]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  console.log(messages)
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages]);
+
+  if (!headers) {
+    return <p>Loading...</p>; // Show loading state while fetching token
+  }
 
   return (
     <div className="flex flex-col h-full"> 
@@ -42,9 +67,11 @@ export default function ChatPage() {
 
         {/* Opcional: Encabezado *  */}
         {messages.length > 0 && (
-          <div className="hidden flex flex-row items-center gap-2 mx-auto pt-4">
-            <Sparkles className="w-4 h-4 text-muted-foreground" />
-            <p className="text-muted-foreground">Run your Agent</p>
+          <div className="flex flex-row items-center gap-2 mx-auto pt-0">
+            <Link href="/agent" className="flex flex-row items-center gap-2">
+              <Sparkles className="w-4 h-4 text-muted-foreground" />
+              <p className="text-muted-foreground">Run your Agent</p>
+            </Link>
           </div>
         )}
 
@@ -52,7 +79,7 @@ export default function ChatPage() {
 
         {/* Contenedor de mensajes con scroll */}
         <div className="flex-1 overflow-y-auto px-4"> 
-          <div className="md:pt-8 pt-4 w-full max-w-[90%] lg:max-w-2xl mx-auto">
+          <div className="md:pt-8 pt-4 w-full md:max-w-[90%] max-w-[98%] lg:max-w-2xl mx-auto">
             <AnimatePresence initial={false}>
               <Messages messages={messages} addToolResult={addToolResult} />
             </AnimatePresence>
@@ -83,7 +110,7 @@ export default function ChatPage() {
               onKeyDown={(event) => {
                 if (event.key === 'Enter' && !event.shiftKey) {
                   event.preventDefault();
-                  if (!isLoading && input.trim()) {
+                  if (input.trim()) {
                     handleSubmit();
                   }
                 }
@@ -95,7 +122,7 @@ export default function ChatPage() {
                 <p className="text-sm text-muted-foreground/60">Search on Basenames</p>
               </div>
               <div className="p-2 flex flex-row justify-end">
-                <Button type="submit" size="icon" className="h-8 w-8 rounded-full" disabled={isLoading || !input.trim()}>
+                <Button type="submit" size="icon" className="h-8 w-8 rounded-full" disabled={!input.trim() || status === 'submitted' || status === 'streaming'}>
                   <ArrowUp className="h-8 w-8" />
                 </Button>
               </div>
