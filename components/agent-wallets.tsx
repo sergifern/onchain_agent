@@ -114,7 +114,7 @@ export default function AgentWallets() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Button disabled size="sm" 
+              <Button size="sm" 
                   onClick={() => fundWallet(evmWallet?.address as string, {
                   chain: base,
                   amount: "50",
