@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useDelegatedActions, useFundWallet, useHeadlessDelegatedActions, usePrivy, useSolanaWallets, useWallets, WalletWithMetadata } from "@privy-io/react-auth"
 import { base } from "viem/chains"
 import Link from "next/link"
+import { toast, useToast } from "@/hooks/use-toast"
 
 
 interface BaseAccount {
@@ -58,18 +59,19 @@ export default function AgentWallets() {
     (account): account is WalletWithMetadata => account.type === 'wallet' && account.address === evmWallet?.address && account.delegated,
   );
 
-  const solanaWallet = walletsSolana.find((wallet) => wallet.walletClientType === 'privy');
-  const isAlreadyDelegatedSolana = !!user?.linkedAccounts.find(
-    (account): account is WalletWithMetadata => account.type === 'wallet' && account.address === solanaWallet?.address && account.delegated,
-  );
-
-  console.log('isAlreadyDelegated', isAlreadyDelegated);
-  console.log('isAlreadyDelegatedSolana', isAlreadyDelegatedSolana);
+  //const solanaWallet = walletsSolana.find((wallet) => wallet.walletClientType === 'privy');
+  //const isAlreadyDelegatedSolana = !!user?.linkedAccounts.find(
+  //  (account): account is WalletWithMetadata => account.type === 'wallet' && account.address === solanaWallet?.address && account.delegated,
+  //);
+  const solanaWallet = null;
 
   const onDelegate = async () => {
     setIsConnecting(true)
     await delegateWallet({address: evmWallet?.address as string, chainType: 'ethereum'}); // or chainType: 'ethereum'
-    await delegateWallet({address: solanaWallet?.address as string, chainType: 'solana'}); // or chainType: 'ethereum'
+    //await delegateWallet({address: solanaWallet?.address as string, chainType: 'solana'}); // or chainType: 'ethereum'
+    toast({
+      description: "Delegation is now enabled",
+    })
     setIsConnecting(false)
   };
 
@@ -77,20 +79,6 @@ export default function AgentWallets() {
     await revokeWallets();
   };
 
-
-  const handleDelegation = async () => {
-    setIsConnecting(true)
-    // Implement delegation logic here
-    setTimeout(() => setIsConnecting(false), 1000)
-    await delegateWallet({address: evmWallet?.address as string, chainType: 'ethereum'}); // or chainType: 'ethereum'
-  }
-
-  const handleDelegationSolana = async () => {
-    setIsConnecting(true)
-    // Implement delegation logic here
-    setTimeout(() => setIsConnecting(false), 1000)
-    await delegateWallet({address: solanaWallet?.address as string, chainType: 'solana'}); // or chainType: 'ethereum'
-  }
 
   return (
       <div className="space-y-6">
@@ -113,14 +101,12 @@ export default function AgentWallets() {
                 </span>
               </div>
             </div>
+            
             <div className="flex items-center gap-3">
               <Button size="sm" 
                   onClick={() => fundWallet(evmWallet?.address as string, {
                   chain: base,
-                  amount: "50",
-                  card: {
-                    preferredProvider: 'moonpay',
-                  },
+                  amount: "0.1",
                 })}>
                 <div className="flex items-center gap-2">
                   <PlusCircle className="w-4 h-4" />
@@ -128,7 +114,7 @@ export default function AgentWallets() {
                 </div>
               </Button>
 
-              <Button disabled variant="secondary" size="sm" 
+              <Button variant="secondary" size="sm" 
                 onClick={() => exportWallet({address: evmWallet?.address as string})}>
                 Export Private Key
               </Button>
@@ -148,11 +134,11 @@ export default function AgentWallets() {
                     {solanaWallet.address}
                     <ExternalLink className="w-4 h-4" />
                   </Link> : 
-                  "Not connected"}
+                  "Not available yet"}
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="hidden flex items-center gap-3">
               <Button size="sm" disabled>
                 <div className="flex items-center gap-2">
                   <PlusCircle className="w-4 h-4" />
@@ -169,8 +155,7 @@ export default function AgentWallets() {
         <div className="pt-4">
           <h3 className="text-lg font-light">What is Delegated Access?</h3>
             <p className="text-sm text-white mt-2">
-              Delegated access allows your Ethy AI agent to perform transactions on your behalf without requiring manual signature approval each time. This is improve users experience for and is required for execute automated tasks.
-            </p>
+            Delegated access allows your Ethy AI agent to perform transactions on your behalf without requiring manual signature approval each time. This enhances the user experience and is essential for executing automated tasks — Ethy is working for you while you rest!</p>
             <div className="mt-4 flex gap-3 items-center">
               {!isAlreadyDelegated? 
               <Button variant="outline" size="sm" onClick={onDelegate} disabled={isConnecting || isAlreadyDelegated}>
@@ -178,7 +163,7 @@ export default function AgentWallets() {
               </Button>
               : <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-green-500" />
-                <p className="text-sm text-muted-foreground">Delegation is already enabled</p>
+                <p className="text-sm text-muted-foreground">Delegation enabled</p>
               </div>
               }
               {isAlreadyDelegated? 

@@ -38,7 +38,8 @@
   --sidebar-ring: 220 70% 50%;
 }
 .dark {
-  --background: 214, 20%, 16% ;
+  --background: 215, 17%, 14%; /* Color gris de TACo site */
+  /* El que hem tingut fins a ultima hora 214, 20%, 16%, que l'he canviat per gris de TACo site */
   /* mes grisos amor 231,15,18 o #202730 (neynar) - fons website framer: 258, 38%, 5%  - mes claret: 243,19,13  - Last version grisosa pero no agrada amor 231,27,12  - #0b0d15 */
   --foreground: 0 0% 100%;
 

@@ -19,7 +19,7 @@ export const ChatOverview = () => {
           </h1>
         </div>
 
-        <p>
+        <p className="hidden">
           Unlock ecommerce with AI. Ask anything about your store, products, customers, and more.
         </p>
          
@@ -27,7 +27,7 @@ export const ChatOverview = () => {
           You can learn more about Ethy AI by visiting the{' '}
           <Link
             className="font-medium underline underline-offset-4"
-            href="https://docs.ethyai.xyz"
+            href="https://docs.ethyai.app"
             target="_blank"
           >
             docs

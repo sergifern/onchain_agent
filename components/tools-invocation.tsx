@@ -1,3 +1,4 @@
+import TaskConfirmationCard from "@/components/chat-tools/confirm-task";
 
 // component to return tools invocation
 
@@ -61,6 +62,49 @@ export default function ToolsInvocationMessage({ part, addToolResult }: { part: 
             <div key={callId} className="text-gray-500">
               Weather in {part.toolInvocation.args.city}:{' '}
               {part.toolInvocation.result}
+            </div>
+          );
+      }
+      break;
+    }
+    case 'confirmTask': {
+      switch (part.toolInvocation.state) {
+        case 'call':
+          return (
+            <TaskConfirmationCard
+              action={part.toolInvocation.args.action}
+              type={part.toolInvocation.args.type}
+              asset={part.toolInvocation.args.asset}
+              cost={part.toolInvocation.args.cost}
+              onConfirm={() => {
+                addToolResult({
+                  toolCallId: callId,
+                  result: 'Yes, confirmed.',
+                })
+              }}
+              onCancel={() => {
+                addToolResult({
+                  toolCallId: callId,
+                  result: 'No, denied',
+                })
+              }}
+            />
+          );
+      }
+      break;
+    }
+    case 'createTask': {
+      switch (part.toolInvocation.state) {
+        case 'call':
+          return (
+            <div key={callId} className="loading-tool">
+              Creating task...
+            </div>
+          );
+        case 'result':
+          return (
+            <div key={callId} className="text-gray-500">
+              Task created successfully
             </div>
           );
       }

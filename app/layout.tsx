@@ -5,6 +5,7 @@ import localFont from 'next/font/local';
 import { Providers } from "./providers"
 import type React from "react" // Added import for React
 import '@coinbase/onchainkit/styles.css';
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"], weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"], style: ["normal", "italic"] })
 
@@ -52,6 +53,7 @@ export default function RootLayout({
       <body className={`${inter.className} ${funnelDisplay.variable} ${hansengrotesk.variable}`}>
         <Providers>
           <main className="flex-1 overflow-auto">{children}</main>
+          <Toaster />
         </Providers>
       </body>
     </html>

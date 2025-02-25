@@ -31,6 +31,7 @@ export default function Settings() {
   const address = mainAccount?.address;
   const { data: name, isLoading: nameIsLoading } = useName({ address: address, chain: base });
 
+  // Covers onchain fees to create your own namespace
   return (
     <PageContainer title="Namespace" description="Manage your namespace">
       <div className="flex flex-row gap-6 mb-12">

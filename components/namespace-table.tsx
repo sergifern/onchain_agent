@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Eye, Edit2, Lock, Unlock } from "lucide-react"
+import { Eye, Edit2, Lock, Unlock, Plus } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
@@ -114,11 +114,17 @@ export function NamespaceTable() {
 
   return (
     <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "my-data" | "shared")}>
-      <div className="flex justify-between items-center mb-4">
-        <TabsList>
-          <TabsTrigger value="my-data">My Data</TabsTrigger>
-          <TabsTrigger value="shared">Shared with Me</TabsTrigger>
-        </TabsList>
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center space-x-2">
+            <TabsList>
+              <TabsTrigger value="my-data">My Data</TabsTrigger>
+              <TabsTrigger value="shared">Shared with Me</TabsTrigger>
+            </TabsList>
+            <Button>  
+              <Plus className="h-4 w-4" />
+              Add Data
+            </Button>
+          </div>
         <div className="flex space-x-2">
           <Input
             placeholder="Search by name"

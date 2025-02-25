@@ -16,6 +16,12 @@ export function truncateAddress(address: string | undefined) {
   return address.slice(0, 6) + "..." + address.slice(-4)
 }
 
+export function truncateHash(hash: string | undefined) {
+  if (!hash) return ""
+  return hash.slice(0, 10) + "..." + hash.slice(-10)
+}
+
+
 
 // transform ethy token amount to human readable format, with two decimals, and if more than 1million show in millions 1m
 export function formatEthyAmount(amount: number) {
