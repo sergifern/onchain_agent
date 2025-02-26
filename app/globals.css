@@ -201,3 +201,29 @@ p, span {
 .loading-tool{
   @apply bg-gradient-to-r from-secondary via-white/60 to-violet-600/80 text-transparent bg-clip-text bg-300% animate-gradient;
 }
+
+
+.namespace-card {
+  @apply relative overflow-hidden transition-all duration-300 hover:scale-[1.02];
+}
+
+.namespace-card::before {
+  content: "";
+  @apply absolute inset-0 bg-gradient-to-r from-violet-500/10 to-violet-400/10 opacity-0 transition-opacity duration-300;
+}
+
+.namespace-card:hover::before {
+  @apply opacity-100;
+}
+
+.namespace-card::after {
+  content: "";
+  @apply absolute rounded-xl opacity-0 transition-opacity duration-300;
+  @apply -inset-[2px];
+  @apply bg-gradient-to-r from-violet-500/50 to-violet-400/50;
+  z-index: -1;
+}
+
+.namespace-card:hover::after {
+  @apply opacity-100;
+}

@@ -52,7 +52,6 @@ export default function WalletInfoInline() {
     if (!embeddedWalletSolana?.address) return
     const solanaConnection = new Connection(process.env.NEXT_PUBLIC_SOLANA_RPC_URL as string) 
     solanaConnection.getBalance(new PublicKey(embeddedWalletSolana?.address)).then((balance) => {
-      console.log('balance', balance / 1e9)
       setSolBalance((balance / 1e9).toFixed(2))
     })
   }, [embeddedWalletSolana?.address])
@@ -98,17 +97,17 @@ export default function WalletInfoInline() {
                       className="flex items-center gap-1 text-primary hover:underline"
                       target="_blank"
                     >
-                      {truncateAddress(embeddedWalletEthereum?.address)}
+                      {"0x0eC4...fb78"}
                       <ExternalLink className="h-3 w-3" />
                     </Link>
                   ) : (
                     <span className="text-muted-foreground">Not connected</span>
                   )}
-                  <span className="font-medium">{ethBalance} ETH</span>
+                  <span className="font-medium">{"0.5"} ETH</span>
                 </div>
 
                 {/* Solana Wallet */}
-                <div className="flex items-center gap-2">
+                <div className="hidden flex items-center gap-2">
                   <span className="text-muted-foreground">Solana:</span>
                   {embeddedWalletSolana?.address ? (
                     <Link
