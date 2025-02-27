@@ -1,7 +1,8 @@
 
 import { PrivyClient } from "@privy-io/server-auth";
 import { NextRequest, NextResponse } from "next/server";
-const privy = new PrivyClient(process.env.PRIVY_APP_ID!, process.env.PRIVY_SECRET!);
+
+const privy = new PrivyClient(process.env.NEXT_PUBLIC_PRIVY_APP_ID!, process.env.PRIVY_SECRET!);
 
 
 export async function verifyUserAuth(req: NextRequest) {

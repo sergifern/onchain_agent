@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
@@ -21,17 +21,10 @@ const font = fetch(
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const namespace = searchParams.get('namespace');
+  const namespace = searchParams.get('namespace') || 'jesse.base.eth';
 
-  if (!namespace) {
-    return NextResponse.json({ error: 'Namespace not found' }, { status: 400 });
-  }
-
-  const claimed = true;
-
-  if (claimed) {
-    return new ImageResponse(
-      (
+  return new ImageResponse(
+    (
       <div
         style={{
           display: 'flex',
@@ -84,7 +77,4 @@ export async function GET(req: NextRequest) {
       fonts: [await font], // Load custom font
     }
   );
-  } else {
-    return NextResponse.json({ error: 'Not claimed' }, { status: 200 });
-  }
 }

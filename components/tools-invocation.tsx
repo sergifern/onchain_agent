@@ -1,5 +1,5 @@
 import TaskConfirmationCard from "@/components/chat-tools/confirm-task";
-
+import { BadgeCheck } from "lucide-react";
 // component to return tools invocation
 
 export default function ToolsInvocationMessage({ part, addToolResult }: { part: any, addToolResult: (result: any) => void }) {
@@ -105,6 +105,27 @@ export default function ToolsInvocationMessage({ part, addToolResult }: { part: 
           return (
             <div key={callId} className="text-gray-500">
               Task created successfully
+            </div>
+          );
+      }
+      break;
+    }
+    case 'searchOnNamespace': {
+      switch (part.toolInvocation.state) {
+        case 'call':
+          return (
+            <div key={callId} className="loading-tool">
+              Searching on Namespace...
+            </div>
+          );
+        case 'result':
+          return (
+            <div key={callId} className="mb-1">
+              <div className="flex items-center gap-1 text-violeta">
+                <BadgeCheck className="w-5 h-5" />
+                <span className="text-md">Data verified on</span>
+                <span className="text-md font-semibold">{part.toolInvocation.args.namespace}{part.toolInvocation.result.path}</span>
+              </div>
             </div>
           );
       }

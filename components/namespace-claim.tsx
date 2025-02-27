@@ -1,43 +1,37 @@
 import { getAccessToken, usePrivy, useWallets } from "@privy-io/react-auth";
-import { useName } from "@coinbase/onchainkit/identity";
+import { Avatar, Name, Address, useName } from "@coinbase/onchainkit/identity";
 import { base } from "viem/chains";
 import { Button } from "./ui/button";
-import { BadgeCheck } from "lucide-react";
+import { BadgeCheck, Loader2 } from "lucide-react";
 import { usePrivyLogin } from "@/hooks/privy-hooks";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { useEffect, useState } from "react";
 import { parseEther } from "viem";
 import {useSetActiveWallet} from '@privy-io/wagmi';
-import { useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
-
+import { sendTransaction } from '@wagmi/core'
+import { config } from '../wagmiConfig';
 
 export default function NamespaceClaim() {
   const { user, authenticated } = usePrivy();
   const {wallets, ready} = useWallets();
   const { setActiveWallet } = useSetActiveWallet();
-
+  const [confirmedTx, setConfirmedTx] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
   const { login } = usePrivyLogin();
-  const { sendTransaction, data: hash } = useSendTransaction();
-  console.log('hash', hash);
+
   const [isMinted, setIsMinted] = useState<boolean | null>(null);
   const [loadingMintCheck, setLoadingMintCheck] = useState(true);
   
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-  useWaitForTransactionReceipt({
-    hash,
-  })
 
   const mainAccount = user?.linkedAccounts.find(
     (acc) => acc.type === "wallet" && acc.connectorType !== "embedded"
   );
+  
 
-  const injectedWallet = wallets.find((wallet) => wallet.walletClientType !== 'privy');
-  console.log('injectedWallet', injectedWallet?.address);
-
+  const injectedWallet = wallets.find((wallet) => wallet.walletClientType !== 'privy' && wallet.chainId == "eip155:8453");
 
   const { data: name, isLoading: nameIsLoading } = useName({ address: injectedWallet?.address as `0x${string}`, chain: base });
 
-  // Verificar si el namespace ya está mintado
   useEffect(() => {
     const checkNamespaceMintStatus = async () => {
       if (injectedWallet?.address) {
@@ -64,18 +58,19 @@ export default function NamespaceClaim() {
   
 
 
+  // Update namespace status to minted once the transaction is confirmed
   useEffect(() => {
     const updateNamespaceStatus = async () => {
-      if (isConfirmed && injectedWallet?.address) {
+      if (confirmedTx && injectedWallet?.address) {
         try {
-          const accessToken = await getAccessToken(); // Get access token
+          const accessToken = await getAccessToken();
           const response = await fetch("/api/users/namespace", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               'Authorization': `Bearer ${accessToken}`,
             },
-            body: JSON.stringify({ address: injectedWallet.address, minted: true }),
+            body: JSON.stringify({ address: injectedWallet.address, minted: true, name: name }),
           });
   
           const data = await response.json();
@@ -89,7 +84,7 @@ export default function NamespaceClaim() {
     };
   
     updateNamespaceStatus();
-  }, [isConfirmed]);
+  }, [confirmedTx]);
   
 
   const handleMintNamespace = async () => {
@@ -97,17 +92,19 @@ export default function NamespaceClaim() {
     await setActiveWallet(injectedWallet);
 
     try {
-      const tx = sendTransaction({
-        to: "0x0000000000000000000000000000000000000000", // Dirección del contrato de mint
+      setIsConfirming(true);
+      const tx = await sendTransaction(config, {
+        to: "0x1f294306d01546a4cd5E62F3c165c5B7B31C7F83", // Dirección del contrato de mint
         value: parseEther("0.0001"),
         chainId: base.id,
       });
-
-      console.log("Mint transaction sent:", tx);
+      if (tx) {
+        setTimeout(() => {
+          setConfirmedTx(true);
+          setIsConfirming(false);
+        }, 1000);
+      }
       
-      setTimeout(() => {
-        setIsMinted(true); // Simulamos que se ha mintado tras enviar la tx
-      }, 5000);
       
     } catch (err) {
       console.error("Error minting namespace:", err);
@@ -127,30 +124,44 @@ export default function NamespaceClaim() {
   }
 
   if (loadingMintCheck) {
-    return <p>Checking namespace status...</p>;
+    return <div className="flex gap-2 items-center"><Loader2 className="w-4 h-4 animate-spin" /> Loading Namespace...</div>;
   }
 
+
   return (
-    <div className="flex gap-2 items-center">
-      {isMinted ? (
-        <>
-          <p className="text-xl font-semibold">{name}</p>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <BadgeCheck className="w-5 h-5 text-emerald-500" />
-              </TooltipTrigger>
-              <TooltipContent className="border-0 bg-background">
-                <p>Namespace claimed</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </>
-      ) : (
-        <Button variant="default" onClick={handleMintNamespace}>
-          Mint Namespace
+    <>
+    {isMinted && <MintedNamespace name={name} />}
+    {!isMinted && <div className="flex gap-2 items-center">
+      <div className="flex gap-4 items-center">
+        <div className="flex items-center gap-3">
+          <Avatar address={injectedWallet?.address as `0x${string}`} chain={base} /> 
+          <div className="flex flex-col gap-0">
+            <Name address={injectedWallet?.address as `0x${string}`} chain={base} />
+            <Address address={injectedWallet?.address as `0x${string}`} />
+          </div>
+        </div>
+        <Button variant="default" onClick={handleMintNamespace} disabled={isConfirming}>
+          {isConfirming ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Mint Namespace'}
         </Button>
-      )}
-    </div>
+      </div>
+    </div>}
+    </>
   );
+}
+
+
+const MintedNamespace = ({name}: {name: string}) => {
+  return <div className="flex gap-2 items-center">
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger>
+          <BadgeCheck className="w-7 h-7 text-violeta" />
+        </TooltipTrigger>
+        <TooltipContent className="border-0 bg-background">
+          <p>Namespace claimed</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+    <p className="text-xl font-light text-white">{name}</p>
+  </div>;
 }

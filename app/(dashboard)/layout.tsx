@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { MoveUpRight, ChevronsLeftRightEllipsis, FolderOpen, Bot, ChevronRight, Coins, HandCoins, Command, ChartBar, CreditCard, Folder, Landmark, User2Icon, LifeBuoy, LogOut, Map, MoreHorizontal, PieChart, Search, Send, Settings2, Share, Sparkles, SquareTerminal, Users, Repeat, ArrowUpRight, Info } from 'lucide-react'
+import { MoveUpRight, ChevronsLeftRightEllipsis, PackageOpen, Bot, ChevronRight, Coins, HandCoins, Command, ChartBar, CreditCard, Folder, Landmark, User2Icon, LifeBuoy, LogOut, Map, MoreHorizontal, PieChart, Search, Send, Settings2, Share, Sparkles, SquareTerminal, Users, Repeat, ArrowUpRight, Info } from 'lucide-react'
 
 import Image
  from "next/image"
@@ -53,7 +53,14 @@ const data = {
     {
       title: "Namespace",
       url: "/namespace",
-      icon: FolderOpen,
+      icon: PackageOpen,
+      items: [
+        {
+          title: "Explore",
+          url: "/namespace/explore",
+        },
+        
+      ]
     },
     {
       title: "My Agent",

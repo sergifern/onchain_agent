@@ -204,26 +204,13 @@ p, span {
 
 
 .namespace-card {
-  @apply relative overflow-hidden transition-all duration-300 hover:scale-[1.02];
-}
-
-.namespace-card::before {
-  content: "";
-  @apply absolute inset-0 bg-gradient-to-r from-violet-500/10 to-violet-400/10 opacity-0 transition-opacity duration-300;
-}
-
-.namespace-card:hover::before {
-  @apply opacity-100;
-}
-
-.namespace-card::after {
-  content: "";
-  @apply absolute rounded-xl opacity-0 transition-opacity duration-300;
-  @apply -inset-[2px];
-  @apply bg-gradient-to-r from-violet-500/50 to-violet-400/50;
-  z-index: -1;
+  @apply relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:bg-violeta/50;
 }
 
 .namespace-card:hover::after {
   @apply opacity-100;
+}
+
+.gradient-bg {
+  background: linear-gradient(225deg, black, #3b007a/70, #a300ff/70);
 }

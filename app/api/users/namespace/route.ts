@@ -1,10 +1,9 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { getPrivyUser } from '@/lib/server';
-
+import { verifyUserAuth } from '@/lib/privy/users';
 
 export async function GET(req: NextRequest) {
   try {
-    const user = await getPrivyUser(req)
+    const user = await verifyUserAuth(req)
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
@@ -16,7 +15,7 @@ export async function GET(req: NextRequest) {
 
     //const namespace = await getNamespace(address);
 
-    return NextResponse.json({ success: true }, { status: 200 });
+    return NextResponse.json({ success: true, minted: false, name: 'builder00.base.eth' }, { status: 200 });
   } catch (error) {
     console.error("Error:", error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -25,7 +24,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await getPrivyUser(req)
+    const user = await verifyUserAuth(req)
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }

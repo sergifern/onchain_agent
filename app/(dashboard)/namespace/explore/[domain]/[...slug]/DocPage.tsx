@@ -9,9 +9,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import Link from "next/link"
 import { Metadata } from "next"
+import { useRouter } from "next/navigation"
 
 // Mock data - replace with real data
-const documentData = {
+const alphaData = {
   id: "alpha-call-doge",
   name: "Alpha Call: DOGE Season Analysis",
   type: "Alpha Call",
@@ -52,9 +53,49 @@ const documentData = {
   },
 }
 
-
+const documentData = {
+  id: "pizzamargherita",
+  type: "Product",
+  isPublic: true,
+  isOwner: false,
+  views: 1234,
+  likes: 89,
+  isLiked: false,
+  isSubscribed: false,
+  lastUpdated: "2024-02-20T10:30:00Z",
+  blockchain: {
+    network: "Base",
+    txHash: "0x1234567890abcdef",
+    blockNumber: 1234567890,
+    timestamp: "2024-02-20T10:30:00Z",
+  },
+  content: {
+    type: "structured",
+    sections: [
+      {
+        title: "Product Details",
+        content: "Pizza Margherita is a delicious pizza with a thin crust and a generous amount of cheese.",
+      },
+      {
+        title: "Ingredients",
+        content: "Pizza Margherita is a delicious pizza with a thin crust and a generous amount of cheese.",
+      },
+      {
+        title: "Coinbase Commerce",
+        content: "https://commerce.coinbase.com/checkout/0x1234567890abcdef",
+      },
+    ],
+  },
+  name: "Pizza Margherita",
+  description: "A delicious pizza with a thin crust and a generous amount of cheese.",
+  image: "/pizza.png",
+  price: 10,
+  currency: "USD",
+  quantity: 1,
+}
 
 export default function DocumentPage() {
+  const router = useRouter()
   const [isLiked, setIsLiked] = useState(documentData.isLiked)
   const [likes, setLikes] = useState(documentData.likes)
   const [isSubscribed, setIsSubscribed] = useState(documentData.isSubscribed)
@@ -113,7 +154,8 @@ export default function DocumentPage() {
       {/* Back Button */}
       <div className="flex items-center gap-2">
         <Link
-          href={`/namespace/${documentData.name.split("/")[0]}`}
+          onClick={() => router.back()}
+          href='#'
           className="text-zinc-400 hover:text-violet-400 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -136,6 +178,7 @@ export default function DocumentPage() {
               )}
             </div>
             <h1 className="text-3xl font-bold">{documentData.name}</h1>
+            <h1 className="text-md text-violeta">jesse.base.eth/{documentData.id}</h1>
           </div>
 
           <div className="flex items-center gap-2">
@@ -228,7 +271,7 @@ export default function DocumentPage() {
           )}
         </div>
 
-        <div className="flex items-center gap-6 text-zinc-400 border-b border-zinc-800 pb-6">
+        <div className="flex items-center gap-6 pb-6 text-muted-foreground">
           <div className="flex items-center gap-2">
             <Eye className="w-4 h-4" />
             {documentData.views} views
@@ -236,7 +279,7 @@ export default function DocumentPage() {
           <Button
             variant="ghost"
             size="sm"
-            className={`flex items-center gap-2 hover:text-violet-400 ${isLiked ? "text-violet-400" : ""}`}
+            className={`flex items-center gap-2 hover:text-violeta ${isLiked ? "text-violeta" : ""}`}
             onClick={handleLike}
           >
             <Heart className={`w-4 h-4 ${isLiked ? "fill-current" : ""}`} />
@@ -245,7 +288,7 @@ export default function DocumentPage() {
           <Button
             variant="ghost"
             size="sm"
-            className={`flex items-center gap-2 hover:text-violet-400 ${isSubscribed ? "text-violet-400" : ""}`}
+            className={`flex items-center gap-2 hover:text-violeta ${isSubscribed ? "text-violeta" : ""}`}
             onClick={() => setIsSubscribed(!isSubscribed)}
           >
             {isSubscribed ? (
@@ -270,12 +313,12 @@ export default function DocumentPage() {
 
 
       {/* Blockchain Validation Card */}
-      <Card className="p-6 bg-zinc-800/50 border-violet-500/20">
+      <Card className="p-6 card-outline">
         <div className="flex items-start justify-between">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <Shield className="w-5 h-5 text-violet-400" />
-              <h3 className="font-semibold text-lg">On-chain Validation</h3>
+              <h3 className="font-semibold text-lg">Onchain Validation</h3>
             </div>
             <p className="text-sm text-zinc-400">
               This document&apos;s integrity is verified on {documentData.blockchain.network}
@@ -339,14 +382,14 @@ export default function DocumentPage() {
       {documentData.content.type === "structured" ? (
         <div className="grid gap-8">
           {documentData.content.sections.map((section, index) => (
-            <Card key={index} className="p-6 bg-zinc-800/50">
+            <Card key={index} className="p-6 card-outline">
               <h2 className="text-xl font-semibold mb-4">{section.title}</h2>
               <div className="text-zinc-300 space-y-2 whitespace-pre-line">{section.content}</div>
             </Card>
           ))}
         </div>
       ) : (
-        <Card className="p-6 bg-zinc-800/50">
+        <Card className="p-6 card-outline">
           <div className="text-zinc-300 whitespace-pre-line">{documentData.content.text}</div>
         </Card>
       )}
