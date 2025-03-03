@@ -184,7 +184,7 @@ export default function AddDocumentPage() {
         {templates.map((template) => (
           <div key={template.id} className="relative group">
             <Link href={`/namespace/add/${template.id}`}>
-              <Card className="p-6 bg-zinc-800/50 space-y-4 cursor-pointer group namespace-card">
+              <Card className="p-6 space-y-4 cursor-pointer group card-outline">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
                     <div className="p-2 rounded-lg bg-violet-500/10 text-violet-400">
@@ -198,7 +198,6 @@ export default function AddDocumentPage() {
                   <ChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-violet-400" />
                 </div>
 
-                <div className="border-t border-zinc-700/50 pt-4">{renderPreview(template)}</div>
               </Card>
             </Link>
           </div>
