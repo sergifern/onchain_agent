@@ -84,11 +84,11 @@ export default function Page() {
   return (
     <PageContainer title="Namespace" description="Manage your namespace">
       <div className="max-w-4xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+        <div className="grid grid-cols-1 lg:!grid-cols-2 gap-6 mb-12">
 
           <NameSpacesCard />
 
-          <Card className="md:w-full bg-gradient-to-tr from-[#471877] via-[#6638ff] to-transparent">
+          <Card className="md:!w-full bg-gradient-to-tr from-[#471877] via-[#6638ff] to-transparent">
             <CardHeader>
               <CardTitle className="text-md font-semibold">How it works</CardTitle>
             </CardHeader>

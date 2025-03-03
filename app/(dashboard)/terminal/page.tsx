@@ -81,7 +81,7 @@ export default function ChatPage() {
 
         {/* Contenedor de mensajes con scroll */}
         <div className="flex-1 overflow-y-auto px-4"> 
-          <div className="md:pt-8 pt-4 w-full md:max-w-[90%] max-w-[98%] lg:max-w-2xl mx-auto">
+          <div className="md:!pt-8 pt-4 w-full md:!max-w-[90%] max-w-[98%] lg:!max-w-2xl mx-auto">
             <AnimatePresence initial={false}>
               <Messages messages={messages} addToolResult={addToolResult} />
             </AnimatePresence>
@@ -93,7 +93,7 @@ export default function ChatPage() {
       {/* Input fijo en la parte inferior */}
       <div className="p-4 pt-0 mt-auto">
         {messages.length === 0 && (
-          <div className="pb-8 w-full sm:max-w-[90%] max-w-[100%] lg:max-w-2xl mx-auto px-4">
+          <div className="pb-8 w-full sm:!max-w-[90%] max-w-[100%] lg:!max-w-2xl mx-auto px-4">
             <SuggestedActions append={append} />
           </div>
         )}

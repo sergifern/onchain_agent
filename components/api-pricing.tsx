@@ -28,13 +28,13 @@ export default function ApiPricingCard() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+        <div className="flex flex-col md:!flex-row justify-between items-center gap-6">
           <div className="text-left">
             <span className="text-3xl font-bold">1,000 ETHY</span>
             <span className="block text-sm text-muted-foreground">per API request</span>
           </div>
 
-          <Separator orientation="vertical" className="hidden md:block h-20 bg-secondary/50" />
+          <Separator orientation="vertical" className="hidden md:!block h-20 bg-secondary/50" />
 
           <div className="text-left">
             <h3 className="font-semibold mb-2">Free Request Limits</h3>

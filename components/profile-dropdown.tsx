@@ -24,7 +24,7 @@ export function ProfileDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="text-secondary hover:bg-transparent md:px-4 px-2">
+        <Button variant="ghost" className="text-secondary hover:bg-transparent md:!px-4 px-2">
           <Menu className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>

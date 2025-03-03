@@ -206,7 +206,7 @@ export default function AgentCard({ type }: AgentCardProps) {
               Add Funds
             </div>
           </Button>
-          <Button className="hidden flex-1 flex items-center justify-center h-9">
+          <Button className="hidden flex-1 items-center justify-center h-9">
             <MinusCircle className="mr-2 h-4 w-4" /> Withdraw
           </Button>
         </div>

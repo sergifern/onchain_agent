@@ -74,11 +74,11 @@ const Agent = () => {
 
 
     {/* Sección de Agentes */}
-    <div className="flex lg:flex-row flex-col gap-4 mb-12">
-      <div className="w-full lg:w-1/2">
+    <div className="flex flex-col lg:!flex-row gap-4 mb-12">
+      <div className="w-full lg:!w-1/2">
           <AgentCard type="Base" />
         </div>
-        <div className="w-full lg:w-1/2">
+        <div className="w-full lg:!w-1/2">
           <AgentCard type="Solana" />
         </div>
     </div>

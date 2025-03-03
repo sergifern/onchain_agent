@@ -72,7 +72,7 @@ export default function StatsCard() {
         <p className="text-sm text-muted-foreground">Overview of your domain names across different naming services</p>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-0">
+        <div className="grid grid-cols-1 md:!grid-cols-3 gap-6 md:!gap-0">
           <div className="flex items-stretch justify-center px-4">
             <Section
               title="Basenames"
@@ -87,7 +87,7 @@ export default function StatsCard() {
             />
           </div>
           <div className="flex items-stretch justify-center px-4 relative">
-            <Separator orientation="vertical" className="bg-muted-foreground/40 absolute left-0 h-full hidden md:block" />
+            <Separator orientation="vertical" className="bg-muted-foreground/40 absolute left-0 h-full hidden md:!block" />
             <Section
               title="SNS"
               domain=".sol"
@@ -100,7 +100,7 @@ export default function StatsCard() {
                 { value: 7, label: "Total" },
               ]}
             />
-            <Separator orientation="vertical" className="bg-muted-foreground/40 absolute right-0 h-full hidden md:block" />
+            <Separator orientation="vertical" className="bg-muted-foreground/40 absolute right-0 h-full hidden md:!block" />
           </div>
           <div className="flex items-stretch justify-center px-4">
             <Section

@@ -27,7 +27,7 @@ export default function Home() {
 
 
       {/* Sección de Agentes */}
-      <div className="grid md:grid-cols-2 gap-4 mb-8">
+      <div className="grid md:!grid-cols-2 gap-4 mb-8">
         <AgentCard type="Base"/>
         <AgentCard type="Solana"/>
       </div>

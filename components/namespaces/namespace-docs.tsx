@@ -65,7 +65,7 @@ export function NamespaceDocs({documents}: {documents: DocumentData[]}) {
   <div className="space-y-6">
     {/* Filters */}   
     <div className="sticky top-0 z-10 -mx-6 px-6 py-4">
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col md:!flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <Input

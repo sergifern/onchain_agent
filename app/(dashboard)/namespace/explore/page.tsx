@@ -49,7 +49,7 @@ export default function NamespacesPage() {
       </div>
 
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:!grid-cols-2 gap-6">
         {filteredNamespaces.map((ns: any) => (
           <div onClick={() => router.push(`/namespace/explore/${ns.name}`)} key={ns.id}>
             <Card className="namespace-card p-6 space-y-4 cursor-pointer bg-[conic-gradient(at_right,_var(--tw-gradient-stops))] from-[#08090b] via-violeta to-bg-sidebar/20">

@@ -180,7 +180,7 @@ export default function AddDocumentPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:!grid-cols-2 gap-6">
         {templates.map((template) => (
           <div key={template.id} className="relative group">
             <Link href={`/namespace/add/${template.id}`}>
