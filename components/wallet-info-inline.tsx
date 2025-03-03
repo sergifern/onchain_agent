@@ -46,7 +46,6 @@ export default function WalletInfoInline() {
   const ethBalance = (parseFloat(formatEther(ethBalanceData?.value || BigInt(0))) || 0).toFixed(3);
 
   //const address = new PublicKey('6GJriXmDF8Y4EZSm4jHTscMFnMhWARpMj9NrNgt1qRyv') //4HBFacbpiyZdpRmfuePKX5tezS8J15dAkffjdJUcLGye
-  const update = 0;
   
   /*useEffect(() => {
     if (!embeddedWalletSolana?.address) return
@@ -103,7 +102,7 @@ export default function WalletInfoInline() {
                   ) : (
                     <span className="text-muted-foreground">Not connected</span>
                   )}
-                  <span className="font-medium">{"0.5"} ETH</span>
+                  <span className="font-medium">{ethBalance} ETH</span>
                 </div>
 
                 {/* Solana Wallet */}

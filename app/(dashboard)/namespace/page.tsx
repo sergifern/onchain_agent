@@ -89,7 +89,7 @@ export default function Page() {
           <NameSpacesCard />
 
           <Card className="md:!w-full bg-gradient-to-tr from-[#471877] via-[#6638ff] to-transparent">
-            <CardHeader>
+            <CardHeader className="!pb-4">
               <CardTitle className="text-md font-semibold">How it works</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">

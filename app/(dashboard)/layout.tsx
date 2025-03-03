@@ -270,8 +270,8 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
       <Header />
         <div 
           className={cn(
-            "flex flex-col p-0 md:!p-4 flex-1",
-            isTerminalPage && "overflow-hidden"
+            "p-0 md:!p-4",
+            isTerminalPage && "overflow-hidden flex flex-1 flex-col "
           )}
         >
             {!ready ?
