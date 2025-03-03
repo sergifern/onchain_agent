@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
 
     //const namespace = await getNamespace(address);
 
-    return NextResponse.json({ success: true, minted: false, name: 'builder00.base.eth' }, { status: 200 });
+    return NextResponse.json({ success: true, claimed: false, name: 'builder00.base.eth' }, { status: 200 });
   } catch (error) {
     console.error("Error:", error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

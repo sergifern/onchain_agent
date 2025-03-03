@@ -35,9 +35,9 @@ export default function WalletInfoInline() {
     (acc) => acc.type === "wallet" && acc.connectorType === "embedded" && acc.chainType === "ethereum"
   ) as WalletAccount | undefined
 
-  const embeddedWalletSolana = user?.linkedAccounts?.find(
+  /*const embeddedWalletSolana = user?.linkedAccounts?.find(
     (acc) => acc.type === "wallet" && acc.connectorType === "embedded" && acc.chainType === "solana"
-  ) as WalletAccount | undefined
+  ) as WalletAccount | undefined*/
 
   const { data: ethBalanceData } = useBalance({
     address: embeddedWalletEthereum?.address as `0x${string}`,
@@ -48,13 +48,13 @@ export default function WalletInfoInline() {
   //const address = new PublicKey('6GJriXmDF8Y4EZSm4jHTscMFnMhWARpMj9NrNgt1qRyv') //4HBFacbpiyZdpRmfuePKX5tezS8J15dAkffjdJUcLGye
   const update = 0;
   
-  useEffect(() => {
+  /*useEffect(() => {
     if (!embeddedWalletSolana?.address) return
     const solanaConnection = new Connection(process.env.NEXT_PUBLIC_SOLANA_RPC_URL as string) 
     solanaConnection.getBalance(new PublicKey(embeddedWalletSolana?.address)).then((balance) => {
       setSolBalance((balance / 1e9).toFixed(2))
     })
-  }, [embeddedWalletSolana?.address])
+  }, [embeddedWalletSolana?.address])*/
 
   if (!user || !ready || !authenticated) {
     return null
@@ -107,7 +107,7 @@ export default function WalletInfoInline() {
                 </div>
 
                 {/* Solana Wallet */}
-                <div className="hidden flex items-center gap-2">
+                {/*<div className="hidden flex items-center gap-2">
                   <span className="text-muted-foreground">Solana:</span>
                   {embeddedWalletSolana?.address ? (
                     <Link
@@ -122,7 +122,7 @@ export default function WalletInfoInline() {
                     <span className="text-muted-foreground">Not connected</span>
                   )}
                   <span className="font-medium">{solBalance} SOL</span>
-                </div>
+                </div>*/}
 
                 {/* Twitter Status */}
                 <div className="flex items-center gap-2">

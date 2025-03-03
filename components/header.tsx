@@ -27,7 +27,7 @@ export function Header() {
         <div className="flex items-center">
           <SidebarTrigger className="text-white border-[1px] border-secondary p-4" />
         </div>
-        <div className="flex items-center">
+        <div className="items-center sm:flex hidden">
           <Button variant="ghost" className="text-white/60 border-[1px] border-secondary p-4 h-7 w-7" size="icon" onClick={() => {
             router.push("/terminal")
           }}>
@@ -37,7 +37,7 @@ export function Header() {
       </div>
 
       <div className="flex items-center md:gap-6 gap-4">
-        <div className="flex items-centertext-secondary text-sm ">
+        <div className="flex items-center text-secondary sm:text-sm text-xs">
           {formatEthyAmount(Number(EthyBalance.data?.formatted ?? 0))} ETHY
         </div>
         <Separator orientation="vertical" className="h-4 bg-white/20" />
@@ -48,7 +48,7 @@ export function Header() {
               <span className="absolute inline-flex h-full w-full animate-connected rounded-full bg-emerald-600 opacity-75"></span>
               <span className="relative inline-flex size-2 rounded-full bg-emerald-600"></span>
             </span>
-            <span className="text-secondary text-sm">{truncateAddress(address)}</span>
+            <span className="text-secondary md:text-sm text-xs">{truncateAddress(address)}</span>
             <ProfileDropdown />
           </div>
         ) : (

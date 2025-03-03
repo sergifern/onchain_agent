@@ -74,9 +74,13 @@ const Agent = () => {
 
 
     {/* Sección de Agentes */}
-    <div className="grid md:grid-cols-2 gap-4 mb-12">
-      <AgentCard type="Base" />
-      <AgentCard type="Solana"/>
+    <div className="flex lg:flex-row flex-col gap-4 mb-12">
+      <div className="w-full lg:w-1/2">
+          <AgentCard type="Base" />
+        </div>
+        <div className="w-full lg:w-1/2">
+          <AgentCard type="Solana" />
+        </div>
     </div>
 
 

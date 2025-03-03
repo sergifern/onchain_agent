@@ -16,7 +16,7 @@ import { useDelegatedActions } from "@privy-io/react-auth"
 import Link from "next/link"
 import { formatEther } from "viem"
 import { useBalance } from "wagmi"
-
+import { base } from "viem/chains"
 interface Asset {
   symbol: string
   amount: number
@@ -74,7 +74,7 @@ export default function AgentCard({ type }: AgentCardProps) {
 
   if (isSolana) {
     return (
-      <Card className="relative overflow-hidden bg-secondary/10">  
+      <Card className="relative overflow-hidden bg-secondary/10 h-full">  
         <CardContent className="pointer-events-none p-8">  
         <div className="flex items-center gap-3">
               <div className="w-6 h-6">
@@ -134,7 +134,7 @@ export default function AgentCard({ type }: AgentCardProps) {
             <span className="text-sm text-muted-foreground font-mono">
               {evmWallet?.address ? 
               <Link href={`https://basescan.org/address/${evmWallet.address}`} target="_blank" className="flex items-center gap-1">
-                {"0x0eC4...fb78"}
+                {evmWallet.address}
                 <ExternalLink className="w-4 h-4" />
               </Link> : 
               "Not connected"}
@@ -144,13 +144,13 @@ export default function AgentCard({ type }: AgentCardProps) {
         <div className="hidden flex items-center justify-between">
           <div className="flex items-center">
             <Wallet className="mr-2 h-4 w-4 text-gray-500" />
-            <span className="font-mono">0x0eC4...fb78</span>
+            <span className="font-mono">{evmWallet?.address}</span>
           </div>
           <Button
             variant="ghost"
             size="sm"
             className="h-8 w-8 p-0"
-            onClick={() => window.open("https://etherscan.io/address/0x1234...5678", "_blank")}
+            onClick={() => window.open(`https://basescan.org/address/${evmWallet?.address}`, "_blank")}
           >
             <ExternalLink className="h-4 w-4" />
           </Button>
@@ -161,8 +161,8 @@ export default function AgentCard({ type }: AgentCardProps) {
           <div className="space-y-1">
             <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">MAIN BALANCE</h3>
             <div className="flex items-baseline space-x-2">
-              <span className="text-2xl font-light">{mainBalance.amount} ETH</span>
-              <span className="text-sm text-gray-500">(${mainBalance.usdValue.toLocaleString()})</span>
+              <span className="text-2xl font-light">{ethBalance} ETH</span>
+              <span className="hidden text-sm text-gray-500">(${mainBalance.usdValue.toLocaleString()})</span>
             </div>
           </div>
 
@@ -196,10 +196,17 @@ export default function AgentCard({ type }: AgentCardProps) {
 
         {/* Actions Section */}
         <div className="flex space-x-2 mt-6">
-          <Button className="flex-1 flex items-center justify-center h-9">
-            <PlusCircle className="mr-2 h-4 w-4" /> Add funds
+          <Button size="sm" 
+              onClick={() => fundWallet(evmWallet?.address as string, {
+              chain: base ,
+              amount: "0.1",
+            })}>
+            <div className="flex items-center gap-2">
+              <PlusCircle className="w-4 h-4" />
+              Add Funds
+            </div>
           </Button>
-          <Button className="flex-1 flex items-center justify-center h-9">
+          <Button className="hidden flex-1 flex items-center justify-center h-9">
             <MinusCircle className="mr-2 h-4 w-4" /> Withdraw
           </Button>
         </div>

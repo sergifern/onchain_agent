@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { MoveUpRight, ChevronsLeftRightEllipsis, PackageOpen, Bot, ChevronRight, Coins, HandCoins, Command, ChartBar, CreditCard, Folder, Landmark, User2Icon, LifeBuoy, LogOut, Map, MoreHorizontal, PieChart, Search, Send, Settings2, Share, Sparkles, SquareTerminal, Users, Repeat, ArrowUpRight, Info } from 'lucide-react'
+import { MoveUpRight, ChevronsLeftRightEllipsis, PackageOpen, Bot, ChevronRight, Coins, HandCoins, Command, ChartBar, CreditCard, Folder, Landmark, User2Icon, LifeBuoy, LogOut, Map, MoreHorizontal, PieChart, Search, Send, Settings2, Share, Sparkles, SquareTerminal, Users, Repeat, ArrowUpRight, Info, ShieldUser  } from 'lucide-react'
 
 import Image
  from "next/image"
@@ -53,7 +53,7 @@ const data = {
     {
       title: "Namespace",
       url: "/namespace",
-      icon: PackageOpen,
+      icon: ShieldUser,
       items: [
         {
           title: "Explore",
@@ -102,12 +102,6 @@ const data = {
       icon: Coins,
       comingSoon: true
     },
-    {
-      name: "Governance",
-      url: "#",
-      icon: Landmark,
-      comingSoon: true
-    },
   ],
   navSecondary: [
     {
@@ -125,7 +119,7 @@ const data = {
 
 export default function Layout({ children }: Readonly<{ children: React.ReactNode; }>) {
   const pathname = usePathname();
-  const { ready } = usePrivy();
+  const { ready, authenticated } = usePrivy();
   const [isModalOpen, setIsModalOpen] = useState(false)
   const isTerminalPage = pathname.startsWith("/terminal")
 
@@ -197,7 +191,7 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
             </SidebarMenu>
           </SidebarGroup>
           <Separator className="my-2 border-border w-5/6 mx-auto" />
-          <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+          {ready && authenticated && <SidebarGroup className="group-data-[collapsible=icon]:hidden">
             <SidebarGroupLabel>Account & Tools</SidebarGroupLabel>
             <SidebarMenu>
               {data.management.map((item) => {
@@ -216,7 +210,7 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
                 )
               })}
             </SidebarMenu>
-          </SidebarGroup>
+          </SidebarGroup>}
           <SidebarGroup className="group-data-[collapsible=icon]:hidden">
             <SidebarGroupLabel>ETHY token</SidebarGroupLabel>
             <SidebarMenu>

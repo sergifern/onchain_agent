@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ListTodo } from "lucide-react"
+import { AlertCircle, ListTodo } from "lucide-react"
 import { useState } from "react"
 import TasksTab from "./tasks-tab"
 import ExecutionHistory from "./execution-history"
@@ -53,13 +53,28 @@ export default function AgentTable() {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="tasks">
-        <TasksTab />
+        {/*<TasksTab />*/}
+        {/*Under developemnt*/}
+        <div className="flex items-center mt-12 gap-2">
+          <AlertCircle className="h-8 w-8 text-muted-foreground" />
+          <p className="text-muted-foreground">Under development. Come back soon!</p>
+        </div>
       </TabsContent>
       <TabsContent value="execution">
-        <ExecutionHistory />
+        {/*<ExecutionHistory />*/}
+        {/*Under developemnt*/}
+        <div className="flex items-center mt-12 gap-2">
+          <AlertCircle className="h-8 w-8 text-muted-foreground" />
+          <p className="text-muted-foreground">Under development. Come back soon!</p>
+        </div>
       </TabsContent>
       <TabsContent value="transactions">
-        <TransactionsTab />
+        {/*<TransactionsTab />*/}
+        {/*Under developemnt*/}
+        <div className="flex items-center mt-12 gap-2">
+          <AlertCircle className="h-8 w-8 text-muted-foreground" />
+          <p className="text-muted-foreground">Under development. Come back soon!</p>
+        </div>
       </TabsContent>
     </Tabs>
   )

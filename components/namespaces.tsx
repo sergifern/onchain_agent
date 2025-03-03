@@ -71,7 +71,7 @@ export default function NameSpacesCard() {
       <CardHeader>
         <CardTitle className="text-md font-semibold">
           <div className="flex gap-1 items-baseline">
-          <h3 className="text-lg font-semibold">Basename</h3>
+          <h3 className="text-lg font-semibold">Basename Available</h3>
           <p className="text-sm text-muted-foreground">.base.eth</p>
         </div>
         </CardTitle>

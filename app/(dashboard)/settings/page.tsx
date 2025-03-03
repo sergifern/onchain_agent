@@ -25,7 +25,7 @@ export default function Settings() {
             <Info className="w-4 h-4" />
           </TooltipTrigger>
           <TooltipContent className="border-none">
-            <p>All your connected accounts that allow you to login to your ETHY account</p>
+            <p>All your verified accounts that allow you to login to your Ethy AI dashboard</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>  

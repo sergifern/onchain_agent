@@ -28,7 +28,7 @@ export function ProfileDropdown() {
           <Menu className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 shadow-xl border-none shadow-dark mr-6 bg-primary/10">
+      <DropdownMenuContent className="w-56 shadow-xl border-none shadow-dark mr-6 bg-sidebar">
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => router.push("/settings")}>
               Settings

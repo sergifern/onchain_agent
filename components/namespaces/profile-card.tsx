@@ -52,7 +52,7 @@ export function ProfileCard({ basename }: { basename: string }) {
             </div>
           </div>
             <div className="flex flex-col items-end gap-3">
-              <Badge variant={isClaimed ? "default" : "secondary"}>{isClaimed ? "Namespace Claimed" : "Namespace Available"}</Badge>
+              <Badge variant={isClaimed ? "default" : "secondary"}>{isClaimed ? "Claimed" : ""}</Badge>
               <span className="text-md text-white">10 documents</span>
             </div>
         </div>

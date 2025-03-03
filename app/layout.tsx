@@ -52,7 +52,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} ${funnelDisplay.variable} ${hansengrotesk.variable}`}>
         <Providers>
-          <main className="flex-1 overflow-auto">{children}</main>
+          <main className="flex-1">{children}</main>
           <Toaster />
         </Providers>
       </body>

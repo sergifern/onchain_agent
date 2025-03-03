@@ -93,7 +93,7 @@ export default function ChatPage() {
       {/* Input fijo en la parte inferior */}
       <div className="p-4 pt-0 mt-auto">
         {messages.length === 0 && (
-          <div className="pb-8 w-full max-w-[90%] lg:max-w-2xl mx-auto px-4">
+          <div className="pb-8 w-full sm:max-w-[90%] max-w-[100%] lg:max-w-2xl mx-auto px-4">
             <SuggestedActions append={append} />
           </div>
         )}
@@ -119,9 +119,9 @@ export default function ChatPage() {
               }}
             />
             <div className="flex justify-between items-center px-4 py-2 outline-0">
-              <div className="flex flex-row items-center gap-2 border rounded-full p-2 border-muted-foreground/60">
-                <Globe className="h-5 w-5 text-muted-foreground/60" />
-                <p className="text-sm text-muted-foreground/60">Search on Basenames</p>
+              <div className="flex flex-row items-center gap-2 border rounded-full p-2 border-violeta/60">
+                <Globe className="h-5 w-5 text-violeta" />
+                <p className="text-sm text-violeta">Search on Basenames</p>
               </div>
               <div className="p-2 flex flex-row justify-end">
                 <Button type="submit" size="icon" className="h-8 w-8 rounded-full" disabled={!input.trim() || status === 'submitted' || status === 'streaming'}>

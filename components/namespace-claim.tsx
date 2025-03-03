@@ -70,7 +70,7 @@ export default function NamespaceClaim() {
               "Content-Type": "application/json",
               'Authorization': `Bearer ${accessToken}`,
             },
-            body: JSON.stringify({ address: injectedWallet.address, minted: true, name: name }),
+            body: JSON.stringify({ address: injectedWallet.address, claimed: true, name: name }),
           });
   
           const data = await response.json();
@@ -124,7 +124,7 @@ export default function NamespaceClaim() {
   }
 
   if (loadingMintCheck) {
-    return <div className="flex gap-2 items-center"><Loader2 className="w-4 h-4 animate-spin" /> Loading Namespace...</div>;
+    return <div className="flex gap-2 items-center"><Loader2 className="w-4 h-4 animate-spin" /> Loading...</div>;
   }
 
 
@@ -132,8 +132,8 @@ export default function NamespaceClaim() {
     <>
     {isMinted && <MintedNamespace name={name} />}
     {!isMinted && <div className="flex gap-2 items-center">
-      <div className="flex gap-4 items-center">
-        <div className="flex items-center gap-3">
+      <div className="items-center">
+        <div className="flex items-center gap-3 mb-4">
           <Avatar address={injectedWallet?.address as `0x${string}`} chain={base} /> 
           <div className="flex flex-col gap-0">
             <Name address={injectedWallet?.address as `0x${string}`} chain={base} />
@@ -141,7 +141,7 @@ export default function NamespaceClaim() {
           </div>
         </div>
         <Button variant="default" onClick={handleMintNamespace} disabled={isConfirming}>
-          {isConfirming ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Mint Namespace'}
+          {isConfirming ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Claim Namespace'}
         </Button>
       </div>
     </div>}

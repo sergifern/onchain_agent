@@ -1,7 +1,6 @@
 "use client"
 
 import { usePrivy, useWallets } from "@privy-io/react-auth"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {useAccount} from 'wagmi';
 import { useSendTransaction } from "wagmi";
@@ -12,11 +11,13 @@ import { base } from 'viem/chains';
 import PageContainer from "@/components/page-container";
 import { NamespaceTable } from "@/components/namespace-table";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, PlusCircle, File } from "lucide-react";
 import { useEffect } from "react";
 import { useSetActiveWallet } from "@privy-io/wagmi";
 import NameSpacesCard from "@/components/namespaces";
 import { NamespaceDocs } from "@/components/namespaces/namespace-docs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 const documents = [
   {
@@ -83,7 +84,8 @@ export default function Page() {
   return (
     <PageContainer title="Namespace" description="Manage your namespace">
       <div className="max-w-4xl mx-auto">
-        <div className="flex md:flex-row flex-col gap-6 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+
           <NameSpacesCard />
 
           <Card className="md:w-full bg-gradient-to-tr from-[#471877] via-[#6638ff] to-transparent">
@@ -92,7 +94,7 @@ export default function Page() {
             </CardHeader>
             <CardContent className="space-y-2">
               <p className="text-sm text-white/75">
-              Minting a namespace gives users full control over their data, tied to their Digital Identity and usable anywhere. This structured data is AI-ready, enabling seamless interaction with AI Agents and unlocking the full potential of the Agentic Economy.
+              Claiming a Namespace gives users full control over their data, tied to their Digital Identity and usable anywhere. This structured data is AI-ready, enabling seamless interaction with AI Agents and unlocking the full potential of the Agentic Economy.
               </p>
 
               <Link href="/dashboard/namespace/create" className="pt-4 text-sm flex flex-row items-center gap-2 group/item">
@@ -102,8 +104,34 @@ export default function Page() {
             </CardContent>
           </Card>
         </div>
-        <NamespaceDocs documents={documents} />
+        
+        <EmptyDocumentTable />
+        {/* <NamespaceDocs documents={documents} /> */}
       </div>
     </PageContainer>
+  )
+}
+
+
+function EmptyDocumentTable() {
+  return (
+    <div className="w-full max-w-6xl mx-auto p-4 space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Documents</h1>
+          <p className="text-muted-foreground">Manage Namespace documents. Ready for AI Agents.</p>
+        </div>
+        <Button disabled className="flex items-center gap-2">
+          <PlusCircle className="h-4 w-4" />
+          Add Document
+        </Button>
+      </div>
+
+      <div className="max-w-sm mx-auto gap-4 pt-16 text-center">
+        <div className="text-sm text-secondary max-w-sm text-center">
+          You haven&apos;t added any documents yet. We are rolling out this feature for users with Claimed Namespace.
+        </div>
+      </div>
+    </div>
   )
 }
