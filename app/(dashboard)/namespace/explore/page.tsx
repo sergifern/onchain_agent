@@ -3,90 +3,179 @@
 import { useState } from "react"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Search, ArrowRight, Github, Twitter, Loader2 } from "lucide-react"
-import Link from "next/link"
-import Image from "next/image"
-import { MenuBar } from "@/components/menu-bar"
+import { Button } from "@/components/ui/button"
+import { Loader2, OctagonAlert, Terminal } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
-import { Avatar, Identity, Name, Address, IdentityCard, Socials } from '@coinbase/onchainkit/identity';
-import { base } from 'viem/chains';
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"
+import { ListProfileCard } from "@/components/namespaces/profile-card"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+import { Badge } from "@/components/ui/badge"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
-export default function NamespacesPage() {
+async function fetchData({ page, search, filters }: { page: number; search: string, filters: string[] }) {
+  const res = await fetch(`/api/namespace?page=${page}&search=${search}&filters=${filters.join(",")}`)
+  return res.json()
+}
+
+const FILTERS = ["AI Agents", "Business", "Builders", "Team"]
+
+export default function PaginatedList() {
+  const [page, setPage] = useState(1)
   const [search, setSearch] = useState("")
-  const router = useRouter();
+  const [query, setQuery] = useState("") // Holds the submitted search value
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([])
 
-  
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['namespaces'],
-    queryFn: () => fetch('/api/namespace').then(res => res.json())
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["basenames", page, query, selectedFilters],
+    queryFn: () => fetchData({ page, search: query, filters: selectedFilters }),
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
   })
 
-  if (isLoading) return <Loader2 className="w-4 h-4 animate-spin" />
-  if (error) return <div>Error</div>
-  console.log(data)
+  const totalPages = data?.totalPages || 1
 
+  const handleSubmit = () => {
+    setQuery(search) // Update search query on button click
+    setPage(1) // Reset page to 1 on new search
+  }
 
-  const filteredNamespaces = Array.isArray(data.namespaces)
-    ? data.namespaces.filter((ns: any) => ns.name.toLowerCase().includes(search.toLowerCase()))
-    : [];
+  const toggleFilter = (filter: string) => {
+    setSelectedFilters((prevFilters) =>
+      prevFilters.includes(filter)
+        ? prevFilters.filter((f) => f !== filter)
+        : [...prevFilters, filter]
+    )
+  }
 
+  const getPageNumbers = () => {
+    const maxPagesToShow = 3
+    let start = Math.max(1, page - Math.floor(maxPagesToShow / 2))
+    let end = Math.min(totalPages, start + maxPagesToShow - 1)
+
+    if (totalPages > maxPagesToShow && end === totalPages) {
+      start = Math.max(1, totalPages - maxPagesToShow + 1)
+    }
+
+    const pages = []
+    for (let i = start; i <= end; i++) {
+      pages.push(i)
+    }
+    return pages
+  }
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
-      <div className="space-y-4">
-        <h1 className="text-3xl mb-12 font-hansengrotesk text-center">Namespace Explorer</h1>
-        <div className="relative max-w-md mx-auto">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search namespaces..."
-            className="pl-10"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
+    <div className="space-y-8 max-w-4xl mx-auto mb-12">
+      <h1 className="text-3xl mb-6 font-semibold text-center">Namespace Explorer</h1>
+
+      <div className="flex gap-2 max-w-md mx-auto">
+        <Input
+          type="text"
+          placeholder="Search a Basename..."
+          onChange={(e) => setSearch(e.target.value)}
+          className="border-white/60 placeholder:text-white/60"
+        />
+        <Button onClick={handleSubmit}>Search</Button>
       </div>
 
 
-      <div className="grid grid-cols-1 md:!grid-cols-2 gap-6">
-        {filteredNamespaces.map((ns: any) => (
-          <div onClick={() => router.push(`/namespace/explore/${ns.name}`)} key={ns.id}>
-            <Card className="namespace-card p-6 space-y-4 cursor-pointer bg-[conic-gradient(at_right,_var(--tw-gradient-stops))] from-[#08090b] via-violeta to-bg-sidebar/20">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                <Avatar address={ns.address} chain={base} /> 
-                <div className="flex flex-col gap-0">
-                  <Name address={ns.address} chain={base} />
-                  <Address address={ns.address} />
-                </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Badge variant={ns.claimed ? "default" : "secondary"}>{ns.claimed ? "Claimed" : "Available"}</Badge>
-                <span className="text-sm text-zinc-400">{ns.documents} documents</span>
-              </div>
-
-              <div className="flex items-center gap-4 text-zinc-400">
-                <Socials
-                  address="0x4bEf0221d6F7Dd0C969fe46a4e9b339a84F52FDF"
-                  chain={base}
-                /> 
-              </div>
-
-              {ns.isOwner && (
-                <div className="top-3 right-3">
-                  <Badge variant="outline" className="border-violet-400 text-violet-400">
-                    Your Namespace
-                  </Badge>
-                </div>
-              )}
-            </Card>
-          </div>
+      <div className="flex gap-2 justify-center mt-4">
+        {FILTERS.map((filter) => (
+          <TooltipProvider key={filter}>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Badge
+                    key={filter}
+                    className={`px-3 py-1 rounded-lg hover:bg-violeta/20 ${selectedFilters.includes(filter) ? "bg-violeta text-white" : "bg-transparent text-violeta border border-violeta"}`}
+                    //onClick={() => toggleFilter(filter)}
+              >
+                {filter}
+              </Badge>
+              </TooltipTrigger>
+              <TooltipContent className="bg-sidebar border-none">
+                <p>Coming soon</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         ))}
       </div>
+
+      {isLoading && <Loader2 className="w-4 h-4 animate-spin mx-auto" />}
+      {isError && <p className="text-center text-red-500">Error loading data</p>}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {data?.basenames?.map((ns: any) => (
+          <ListProfileCard key={ns.id} namespace={ns} />
+        ))}
+      </div>
+
+      {totalPages > 1 && (
+        <Pagination>
+          <PaginationContent>
+            {/* Previous Button */}
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              />
+            </PaginationItem>
+
+            {/* First Page */}
+            {page > 3 && (
+              <>
+                <PaginationItem>
+                  <PaginationLink href="#" onClick={() => setPage(1)}>1</PaginationLink>
+                </PaginationItem>
+                <PaginationItem><PaginationEllipsis /></PaginationItem>
+              </>
+            )}
+
+            {/* Dynamic Page Numbers */}
+            {getPageNumbers().map((num) => (
+              <PaginationItem key={num}>
+                <PaginationLink
+                  href="#"
+                  isActive={page === num}
+                  onClick={() => setPage(num)}
+                >
+                  {num}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+
+            {/* Last Page */}
+            {page < totalPages - 2 && (
+              <>
+                <PaginationItem><PaginationEllipsis /></PaginationItem>
+              </>
+            )}
+
+            {/* Next Button */}
+            <PaginationItem>
+              <PaginationNext
+                href="#"
+                onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
+
+      <Alert className="border-secondary">
+        <OctagonAlert className="h-5 w-5 !text-muted-foreground" />
+        <AlertTitle className="text-muted-foreground">Upgrades in Progress!</AlertTitle>
+        <AlertDescription className="text-secondary">
+        We are working on enhancements to bring you a better experience. Currently, we are adding more Basenames to ensure all are available and improving categorization and search functionalities. Stay tuned for updates!
+        </AlertDescription>
+      </Alert>
     </div>
   )
 }
-

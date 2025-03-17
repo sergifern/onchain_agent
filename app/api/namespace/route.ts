@@ -1,16 +1,12 @@
-
-/// echeck if user waitlist...
-
 import { NextResponse, NextRequest } from 'next/server';
-import { getPrivyUser } from '@/lib/server';
-import { verifyUserAuth } from '@/lib/privy/users';
+import { supabase } from '@/supabaseClient';
+ 
 
-// get rthat returns true if user is on waitlist
 
 export async function GET(req: NextRequest) {
   try {
 
-    const namespaces = [
+    const namespacesOld = [
       {
         id: 1,
         name: "jesse.base.eth",
@@ -91,8 +87,62 @@ export async function GET(req: NextRequest) {
       }
     ]
     
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get("page") || "1");
+    const search = searchParams.get("search") || "";
+    const limit = 10;
+    const offset = (page - 1) * limit;
+  
+    let query = supabase.from("basenames").select("*").order("id", { ascending: false }).range(offset, offset + limit - 1);
+  
+    if (search) {
+      query = query.ilike("name", `%${search}%`);
+    }
+  
+    const { data, error } = await query;
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-    return NextResponse.json({ namespaces }, { status: 200 });
+    const groupedBasenames = Object.values(
+      data.reduce((acc, item) => {
+        acc[item.owner] = acc[item.owner] || item; // Keep only the first occurrence of each owner
+        return acc;
+      }, {})
+    );
+
+
+    // check if are claimed and verified with X or Farcaster account
+    // first fetchinbg data grom tabnle namespaces to si if caliemd. if existis is claimed, and then if exist check if have twitter
+    // Comprovar si estan reclamats i verificats
+    const names = groupedBasenames.map((item: any) => item.name);
+    const { data: namespaces, error: namespaceError } = await supabase
+      .from("namespaces")
+      .select("*")
+      .in("basename", names);
+
+    if (namespaceError) return NextResponse.json({ error: namespaceError.message }, { status: 500 });
+    
+    // Convertir els resultats en un objecte per facilitar la cerca
+    const namespaceMap = namespaces.reduce((acc, ns) => {
+      acc[ns.basename] = ns; // Ara la clau és el basename
+      return acc;
+    }, {});
+
+    
+    // Afegir informació de verificació a cada registre
+    const finalData = groupedBasenames.map((item: any) => ({
+      ...item,
+      claimed: !!namespaceMap[item.name], // Buscar per item.name en comptes de owner
+      documents: namespaceMap[item.name]?.documents || 0,
+      twitter_verified: !!namespaceMap[item.name]?.twitter, // Si té twitter_handle, està verificat a X
+      farcaster_verified: !!namespaceMap[item.name]?.farcaster, // Si té farcaster_handle, està verificat a Farcaster
+    }));
+    
+
+  
+    const totalPages = Math.ceil(65000 / limit);
+
+
+    return NextResponse.json({ namespaces: namespacesOld, basenames: finalData, totalPages }, { status: 200 });
 
   } catch (error) {
     console.error("Error:", error);
@@ -100,20 +150,10 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    const user = await getPrivyUser(req)
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
-    }
 
-    console.log(user);
-
-
-    return NextResponse.json({ message: 'success' }, { status: 200 });
-
-  } catch (error) {
-    console.error("Error:", error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
+function groupByOwner(basenames: any) {
+  return basenames.reduce((acc: any, item: any) => {
+    acc[item.owner] = (acc[item.owner] || 0) + 1;
+    return acc;
+  }, {});
 }

@@ -107,7 +107,7 @@ export default function AgentCard({ type }: AgentCardProps) {
   }
 
   return (
-    <div className="[background:linear-gradient(45deg,#282f37,#282f37,#282f37)_padding-box,conic-gradient(from_var(--border-angle),theme(colors.slate.600/.48)_80%,_theme(colors.indigo.500)_86%,_theme(colors.indigo.300)_90%,_theme(colors.indigo.500)_94%,_theme(colors.slate.600/.48))_border-box] rounded-2xl border border-transparent animate-border">
+    <div className="[background:linear-gradient(45deg,#323a47,#323a47,#323a47)_padding-box,conic-gradient(from_var(--border-angle),theme(colors.slate.600/.48)_80%,_theme(colors.indigo.500)_86%,_theme(colors.indigo.300)_90%,_theme(colors.indigo.500)_94%,_theme(colors.slate.600/.48))_border-box] rounded-2xl border border-transparent animate-border">
       <CardHeader className="pb-4 hidden">
         <CardTitle className="flex justify-between items-center">
           <Image src="/img/base-logo.png" alt="Base Logo" width={100} height={250} />
@@ -173,7 +173,7 @@ export default function AgentCard({ type }: AgentCardProps) {
                 <ChevronDown className="h-4 w-4" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80 bg-[#373d45] border-secondary/50" align="end">
+            <PopoverContent className="w-80 bg-sidebar border-secondary/50" align="end">
               <div className="space-y-2">
                 {otherAssets.map((asset) => (
                   <div
@@ -196,7 +196,7 @@ export default function AgentCard({ type }: AgentCardProps) {
 
         {/* Actions Section */}
         <div className="flex space-x-2 mt-6">
-          <Button size="sm" 
+          <Button size="sm" className="button-outline"
               onClick={() => fundWallet(evmWallet?.address as string, {
               chain: base ,
               amount: "0.1",

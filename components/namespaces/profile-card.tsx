@@ -2,13 +2,15 @@
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Github, Twitter, PlusCircle, Loader2 } from "lucide-react";
-import { Address, getAddress, Name, Socials } from '@coinbase/onchainkit/identity';
+import { Github, Twitter, PlusCircle, Loader2, CheckCircle2, BadgeCentIcon, BadgeCheckIcon } from "lucide-react";
+import { Address, getAddress, Name, Socials, useName } from '@coinbase/onchainkit/identity';
 import { base } from 'viem/chains';
 import { Avatar, Badge as BadgeCheck } from "@coinbase/onchainkit/identity";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
+
 
 export function ProfileCard({ basename }: { basename: string }) {
   //user state addres
@@ -29,7 +31,7 @@ export function ProfileCard({ basename }: { basename: string }) {
   return (
     <>
     {address && (
-      <Card className="p-6 bg-[conic-gradient(at_right,_var(--tw-gradient-stops))] from-[#9ca3af] via-violeta/90 to-bg-sidebar border border-solid border-violeta/40">
+      <Card className="p-6 namespace-card">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-6">
             <div className="flex flex-col gap-4 items-center">
@@ -38,7 +40,6 @@ export function ProfileCard({ basename }: { basename: string }) {
                 <div className="flex flex-col gap-0">
                   <div className="flex items-center gap-2">
                     <Name address={address as `0x${string}`} chain={base} className="text-2xl" />
-                    <BadgeCheck className="w-10 h-10" />
                   </div>
                   <div className="flex items-baseline gap-2">
                     <Address address={address as `0x${string}`} className="text-lg" />
@@ -70,5 +71,79 @@ export function ProfileCard({ basename }: { basename: string }) {
         </div>
       )}
   </>
+  )
+}
+
+
+interface Namespace {
+  id: string;
+  name: string;
+  owner: `0x${string}`;
+  claimed: boolean;
+  documents: number;
+  twitter_verified: boolean;
+}
+
+
+
+export function ListProfileCard({ namespace }: { namespace: Namespace }) {
+  const router = useRouter();
+  
+  
+  /*const address = '0x1234567890abcdef1234567890abcdef12345678';
+  const attestationsOptions = {
+    schemas: [COINBASE_VERIFIED_ACCOUNT_SCHEMA_ID],
+  };
+    
+  const attestations = await getAttestations(address, base, attestationsOptions);*/
+
+  return (
+    <div onClick={() => router.push(`/namespace/explore/${namespace.name}.base.eth`)} key={namespace.id}>
+    <Card className="namespace-card p-6 space-y-4 cursor-pointer min-h-48">
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-3">
+          <Avatar address={namespace.owner} chain={base} /> 
+          <div className="flex flex-col gap-0">
+            <div className="flex items-center gap-2">
+              <Name className="text-white" address={namespace.owner} chain={base} />
+            </div>
+            <Address className="text-muted-foreground" address={namespace.owner} />
+          </div>
+        </div>
+        {namespace.twitter_verified && (
+          <div className="flex items-center gap-2">
+            <BadgeCheckIcon className="w-5 h-5 text-violeta" />
+            <span className="text-sm text-muted-foreground">Verified</span>
+          </div>
+        )}
+      </div>
+
+      {namespace.claimed ? (
+        <div className="flex items-center gap-3">
+          <Badge variant="default">Claimed</Badge>
+          <span className="text-sm text-muted-foreground">{namespace.documents} documents</span>
+        </div>
+      ) : (
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-muted-foreground">0 documents</span>
+        </div>
+      )}
+
+      <div className="flex items-baseline gap-4 text-muted-foreground">
+        <Socials
+          address={namespace.owner}
+          chain={base}
+        /> 
+      </div>
+
+      {/*ns.isOwner && (
+        <div className="top-3 right-3">
+          <Badge variant="outline" className="border-violet-400 text-violet-400">
+            Your Namespace
+          </Badge>
+        </div>
+      )*/}
+    </Card>
+  </div>
   )
 }

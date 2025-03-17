@@ -1,30 +1,161 @@
 "use client"
 
-import { Button } from "@/components/ui/button";
-import { usePrivy } from "@privy-io/react-auth";
-import { usePrivyLogin } from "@/hooks/privy-hooks"; // Importamos nuestro hook personalizado
+import { useChat } from '@ai-sdk/react';
+import { motion, AnimatePresence } from "framer-motion"
+import { ArrowUp, FileInput, Globe, Send, Square, Sparkles, LifeBuoy, FireExtinguisherIcon, Component, Zap, Repeat } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { Avatar } from "@/components/ui/avatar"
+import Image from "next/image"
+import { Textarea } from "@/components/ui/textarea"
+import { SuggestedActions } from "@/components/suggested-actions"
+import Messages from "@/components/messages"
+import { ChatOverview } from "@/components/chat-overview"
+import WalletInfoInline from "@/components/wallet-info-inline"
+import dotenv from 'dotenv'
+import Link from 'next/link';
+import { usePrivy } from '@privy-io/react-auth';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-export default function Home() {
-  const { ready, authenticated, user, logout } = usePrivy();
-  const { login } = usePrivyLogin();
+dotenv.config()
 
-  const disableLogin = !ready || (ready && authenticated);
+
+export default function ChatPage() {
+
+  const { getAccessToken } = usePrivy();
+  const [headers, setHeaders] = useState<Record<string, string>>({});
+
+  const { messages, input, handleInputChange, handleSubmit, append, addToolResult, status } = useChat({
+    api: process.env.NEXT_PUBLIC_ETHY_API_URL + '/chat',
+    headers: headers,
+    maxSteps: 10,
+  });
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const accessToken = await getAccessToken();
+        let token = accessToken || "public-key";
+        console.log('token', token);
+        setHeaders({
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        });
+      } catch (error) {
+        console.error('Failed to fetch access token:', error);
+      }
+    };
+
+    fetchToken();
+  }, [getAccessToken]);
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [messages]);
+
+  if (!headers) {
+    return <p>Loading...</p>; // Show loading state while fetching token
+  }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-4xl font-bold mb-4">Welcome to Ethy AI</h1>
-      <p className="text-xl mb-8">Manage your wallet and settings with ease</p>
-          
-      <div>
-        {authenticated ? (
-          <span>Welcome, {user?.email || user?.wallet?.address}</span>
-        ) : (
-          <Button disabled={disableLogin} onClick={login}>Connect</Button>
+    <div className="flex flex-col h-full"> 
+      
+      {/* Contenedor de mensajes */}
+      <div className="flex flex-col flex-1 overflow-hidden ">
+        
+
+        {/* Opcional: Encabezado *  */}
+        {messages.length > 0 && (
+          <div className="flex flex-row items-center gap-2 mx-auto pt-0">
+            <Link href="/agent" className="flex flex-row items-center gap-2">
+              <Sparkles className="w-4 h-4 text-muted-foreground" />
+              <p className="text-muted-foreground">Run your Agent</p>
+            </Link>
+          </div>
         )}
+
+        {messages.length === 0 && <ChatOverview />}
+
+        {/* Contenedor de mensajes con scroll */}
+        <div className="flex-1 overflow-y-auto px-4"> 
+          <div className="md:!pt-8 pt-4 w-full md:!max-w-[90%] max-w-[98%] lg:!max-w-2xl mx-auto">
+            <AnimatePresence initial={false}>
+              <Messages messages={messages} addToolResult={addToolResult} />
+            </AnimatePresence>
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
       </div>
-      <Button onClick={logout} variant="destructive">
-        Logout
-      </Button>
+
+      {/* Input fijo en la parte inferior */}
+      <div className="p-4 pt-0 mt-auto">
+        {messages.length === 0 && (
+          <div className="pb-8 w-full sm:!max-w-[90%] max-w-[100%] lg:!max-w-2xl mx-auto px-4">
+            <SuggestedActions append={append} />
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="mx-auto max-w-2xl">
+          <WalletInfoInline />
+          <div className="card-outline border-0 rounded-3xl">
+            <Textarea
+              ref={inputRef}
+              value={input}
+              onChange={handleInputChange}
+              placeholder="Send a message to Ethy..."
+              className="focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 min-h-[24px] max-h-[calc(75dvh)] overflow-hidden bg-transparent border-0 text-white placeholder:text-muted-foreground resize-none overflow-y-auto p-4 w-full"
+              rows={2}
+              autoFocus
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                  event.preventDefault();
+                  if (input.trim()) {
+                    handleSubmit();
+                  }
+                }
+              }}
+            />
+            <div className="flex justify-between items-center px-4 py-2 outline-0">
+              <div className="flex flex-row items-center gap-0">
+                <Popover>
+                  <PopoverTrigger>
+                    <Zap className="hidden h-5 w-5 text-secondary hover:text-violeta" />
+                  </PopoverTrigger>
+                  <PopoverContent className="bg-sidebar border-0 w-56 p-1">
+                    <div className="space-y-2">
+                      <Button variant="ghost" className="w-full justify-start"
+                        onClick={async () => {
+                            append({
+                              role: 'user',
+                              content: 'Explain me how to swap tokens',
+                            });
+                          }}
+                        >
+                        <Repeat className="w-4 h-4" /> Swap tokens
+                      </Button>
+                      <Button variant="ghost" className="w-full justify-start" onClick={() => window.open('https://ethy.ai/docs', '_blank')}>Version 1.0</Button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+                <div className="flex flex-row items-center gap-2 border rounded-full p-2 border-violeta/60">
+                  <Globe className="h-5 w-5 text-violeta" />
+                  <p className="text-sm text-violeta">Search on Basenames</p>
+                </div>
+              </div>
+              <div className="p-2 flex flex-row justify-end">
+                <Button type="submit" size="icon" className="h-8 w-8 rounded-full" disabled={!input.trim() || status === 'submitted' || status === 'streaming'}>
+                  <ArrowUp className="h-8 w-8" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
     </div>
   );
 }

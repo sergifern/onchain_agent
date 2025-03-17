@@ -19,6 +19,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
       config={{
         defaultChain: base ,
+        appearance: {
+          theme: 'dark',
+        },
         embeddedWallets: {
           ethereum: { 
             createOnLogin: "all-users",

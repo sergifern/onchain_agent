@@ -17,14 +17,14 @@ export default function Settings() {
 
   return (
     <PageContainer title="Settings" description="Manage your account settings">
-      <h2 className="text-xl mb-6 text-secondary flex items-center gap-2">
-        Connected Accounts
+      <h2 className="text-xl mb-6 text-muted-foreground flex items-center gap-2">
+        Linked Accounts
         <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <Info className="w-4 h-4" />
           </TooltipTrigger>
-          <TooltipContent className="border-none">
+          <TooltipContent className="border-none bg-sidebar">
             <p>All your verified accounts that allow you to login to your Ethy AI dashboard</p>
           </TooltipContent>
         </Tooltip>
@@ -36,7 +36,7 @@ export default function Settings() {
         </CardContent>
       </Card>
 
-      <h2 className="text-xl mb-6 text-secondary flex items-center gap-2 mt-10">
+      <h2 className="text-xl mb-6 text-muted-foreground flex items-center gap-2 mt-10">
         Agent Wallets
         <TooltipProvider>
         <Tooltip>

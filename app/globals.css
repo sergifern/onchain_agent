@@ -135,7 +135,7 @@ p, span {
 
 .card-outline {
   border: 1px solid #ffffff14;
-  background-color: #f8f8fa08;
+  background-color: #323a47; /* from TACO */ /* #f8f8fa08; */
   border-radius: 16px;
 }
 
@@ -204,13 +204,30 @@ p, span {
 
 
 .namespace-card {
-  @apply relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:bg-violeta/50;
+  @apply !bg-[#13171b] !border !border-solid !border-violeta transition-all duration-300 hover:scale-[1.02] hover:bg-violeta/50;
 }
 
-.namespace-card:hover::after {
-  @apply opacity-100;
+.namespace-card:hover {
+  @apply !bg-violeta/20;
 }
 
 .gradient-bg {
   background: linear-gradient(225deg, black, #3b007a/70, #a300ff/70);
 }
+
+.button-outline {
+  @apply border border-violeta bg-transparent text-violeta;
+}
+
+.button-outline:hover {
+  @apply !bg-violeta/20;
+}
+
+.button-filled {
+  @apply bg-violeta text-white hover:bg-violeta/80;
+}
+
+.button-filled:hover {
+  @apply !bg-violeta/80;
+}
+

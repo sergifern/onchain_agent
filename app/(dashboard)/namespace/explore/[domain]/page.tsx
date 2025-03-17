@@ -1,5 +1,3 @@
-
-import { Metadata } from "next"
 import DomainPage from "./DomainPage"
 
 /*

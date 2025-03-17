@@ -16,10 +16,12 @@ import {
 import { usePrivy } from "@privy-io/react-auth";
 import { Bot, LogOut, Menu, Link, Settings } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { usePrivyLogout } from "@/hooks/privy-hooks";
 
 export function ProfileDropdown() {
   const router = useRouter();
-  const { logout, user, ready, authenticated } = usePrivy()
+  const { user, ready, authenticated } = usePrivy()
+  const { logout } = usePrivyLogout();
 
   return (
     <DropdownMenu>

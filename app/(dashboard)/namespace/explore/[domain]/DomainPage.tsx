@@ -77,9 +77,16 @@ export default function NamespacePage() {
   })
 
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="w-4 h-4 animate-spin" />
+      </div>
+    )
+  }
+
   return (
     <>
-    {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
     {error && <div>Error</div>}
     {data && (
     <div className="space-y-8 max-w-4xl mx-auto">

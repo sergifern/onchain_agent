@@ -2,7 +2,7 @@
 
 import { useChat } from '@ai-sdk/react';
 import { motion, AnimatePresence } from "framer-motion"
-import { ArrowUp, FileInput, Globe, Send, Square, Sparkles } from "lucide-react"
+import { ArrowUp, FileInput, Globe, Send, Square, Sparkles, LifeBuoy, FireExtinguisherIcon, Component, Zap, Repeat } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -16,6 +16,7 @@ import WalletInfoInline from "@/components/wallet-info-inline"
 import dotenv from 'dotenv'
 import Link from 'next/link';
 import { usePrivy } from '@privy-io/react-auth';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 dotenv.config()
 
@@ -119,9 +120,31 @@ export default function ChatPage() {
               }}
             />
             <div className="flex justify-between items-center px-4 py-2 outline-0">
-              <div className="flex flex-row items-center gap-2 border rounded-full p-2 border-violeta/60">
-                <Globe className="h-5 w-5 text-violeta" />
-                <p className="text-sm text-violeta">Search on Basenames</p>
+              <div className="flex flex-row items-center gap-0">
+                <Popover>
+                  <PopoverTrigger>
+                    <Zap className="hidden h-5 w-5 text-secondary hover:text-violeta" />
+                  </PopoverTrigger>
+                  <PopoverContent className="bg-sidebar border-0 w-56 p-1">
+                    <div className="space-y-2">
+                      <Button variant="ghost" className="w-full justify-start"
+                        onClick={async () => {
+                            append({
+                              role: 'user',
+                              content: 'Explain me how to swap tokens',
+                            });
+                          }}
+                        >
+                        <Repeat className="w-4 h-4" /> Swap tokens
+                      </Button>
+                      <Button variant="ghost" className="w-full justify-start" onClick={() => window.open('https://ethy.ai/docs', '_blank')}>Version 1.0</Button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+                <div className="flex flex-row items-center gap-2 border rounded-full p-2 border-violeta/60">
+                  <Globe className="h-5 w-5 text-violeta" />
+                  <p className="text-sm text-violeta">Search on Basenames</p>
+                </div>
               </div>
               <div className="p-2 flex flex-row justify-end">
                 <Button type="submit" size="icon" className="h-8 w-8 rounded-full" disabled={!input.trim() || status === 'submitted' || status === 'streaming'}>

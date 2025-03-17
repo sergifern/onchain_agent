@@ -4,8 +4,9 @@ import { useState } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { FileText, Package, Notebook, BarChart3, PenLine, ChevronRight } from "lucide-react"
+import { FileText, Package, Notebook, BarChart3, PenLine, ChevronRight, ArrowLeft } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 // Mock wallet connection status - replace with real wallet connection
 const isWalletConnected = true
@@ -62,7 +63,8 @@ const templates = [
   },
 ]
 
-export default function AddDocumentPage() {
+export default function AddDocumentPage() { 
+  const router = useRouter();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
 
   if (!isWalletConnected) {
@@ -173,9 +175,13 @@ export default function AddDocumentPage() {
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
+      <div className="flex items-center gap-2">
+        <ArrowLeft className="w-4 h-4" onClick={() => router.push("/namespace")} />
+        <h1 className="text-sm font-light text-muted-foreground">Go back</h1>
+      </div>
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold">Create New Document</h1>
-        <p className="text-zinc-400">
+        <h1 className="text-3xl font-bold">Add Data</h1>
+        <p className="text-zinc-400 hidden">
           Adding to namespace: <span className="text-violet-400">{currentNamespace}</span>
         </p>
       </div>
@@ -204,7 +210,7 @@ export default function AddDocumentPage() {
         ))}
 
         <Link href="/namespace/add/manual">
-          <Card className="p-6 bg-zinc-800/50 space-y-4 cursor-pointer group namespace-card h-full">
+          <Card className="p-6 space-y-4 cursor-pointer group card-outline">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-violet-500/10 text-violet-400">

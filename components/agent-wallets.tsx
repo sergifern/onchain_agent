@@ -103,7 +103,7 @@ export default function AgentWallets() {
             </div>
             
             <div className="flex items-center gap-3">
-              <Button size="sm" 
+              <Button size="sm" className="button-outline"
                   onClick={() => fundWallet(evmWallet?.address as string, {
                   chain: base,
                   amount: "0.1",
@@ -158,7 +158,7 @@ export default function AgentWallets() {
             Delegated access allows your Ethy AI agent to perform transactions on your behalf without requiring manual signature approval each time. This enhances the user experience and is essential for executing automated tasks — Ethy is working for you while you rest!</p>
             <div className="mt-4 flex gap-3 items-center">
               {!isAlreadyDelegated? 
-              <Button variant="outline" size="sm" onClick={onDelegate} disabled={isConnecting || isAlreadyDelegated}>
+              <Button className="button-filled" size="sm" onClick={onDelegate} disabled={isConnecting || isAlreadyDelegated}>
                 Enable Delegation
               </Button>
               : <div className="flex items-center gap-2">
@@ -172,8 +172,8 @@ export default function AgentWallets() {
               </Link>
               : 
               <div className="flex items-center gap-2">
-                <XCircle className="w-4 h-4 text-red-500" />
-                <p className="text-sm text-red-500">Delegation is required to use My Agent capabilities</p>
+                <XCircle className="w-4 h-4 text-violeta" />
+                <p className="text-sm text-violeta">Delegation is required to use My Agent capabilities</p>
               </div>
               }
             </div>

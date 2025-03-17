@@ -52,7 +52,7 @@ export function Header() {
             <ProfileDropdown />
           </div>
         ) : (
-          <Button onClick={login}>Connect</Button>
+          <Button className="button-filled"  onClick={login}>Connect</Button>
         )}
       </div>
 

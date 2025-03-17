@@ -94,7 +94,7 @@ export default function NamespaceClaim() {
     try {
       setIsConfirming(true);
       const tx = await sendTransaction(config, {
-        to: "0x1f294306d01546a4cd5E62F3c165c5B7B31C7F83", // Dirección del contrato de mint
+        to: process.env.NEXT_PUBLIC_PAYMENT_ADDRESS as `0x${string}`, // Dirección del contrato de mint
         value: parseEther("0.0001"),
         chainId: base.id,
       });
@@ -117,7 +117,7 @@ export default function NamespaceClaim() {
 
   if (!authenticated) {
     return (
-      <Button variant="outline" className="w-full" onClick={login}>
+      <Button className="button-filled"   onClick={login}>
         Connect Wallet
       </Button>
     );
@@ -140,7 +140,7 @@ export default function NamespaceClaim() {
             <Address address={injectedWallet?.address as `0x${string}`} />
           </div>
         </div>
-        <Button variant="default" onClick={handleMintNamespace} disabled={isConfirming}>
+        <Button className="button-filled" onClick={handleMintNamespace} disabled={isConfirming}>
           {isConfirming ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Claim Namespace'}
         </Button>
       </div>

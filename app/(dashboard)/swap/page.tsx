@@ -64,10 +64,6 @@ const swappableTokens: Token[] = [usdc, virtual];
 
 export default function SwapPage() {
   const { logout, user } = usePrivy()
-  const { sendTransaction } = useSendTransaction();
-  console.log(user);
-
-  const {address} = useAccount();
 
 
   return (

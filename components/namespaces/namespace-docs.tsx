@@ -96,7 +96,7 @@ export function NamespaceDocs({documents}: {documents: DocumentData[]}) {
 
     {/* Document List */}
     <div className="flex flex-col gap-6">
-      {filteredDocuments.map((doc) => (
+      {documents && filteredDocuments.map((doc) => (
         <div onClick={() => router.push(`/namespace/explore/${doc.namespace}/${doc.id}`)} key={doc.id}>
           <TooltipProvider>
             <Card

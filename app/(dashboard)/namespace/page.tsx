@@ -118,11 +118,11 @@ function EmptyDocumentTable() {
     <div className="w-full max-w-6xl mx-auto p-4 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Documents</h1>
-          <p className="text-muted-foreground">Manage Namespace documents. Ready for AI Agents.</p>
+          <h1 className="text-2xl font-bold tracking-tight">My Data</h1>
+          <p className="text-muted-foreground">Manage your Namespace data. Ready for AI Agents.</p>
         </div>
         <Link href="/namespace/add">
-          <Button className="flex items-center gap-2">
+          <Button className="flex items-center gap-2 button-outline">
             <PlusCircle className="h-4 w-4" />
             Add Document
           </Button>
