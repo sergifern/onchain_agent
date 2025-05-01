@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   title: 'Ethy AI',
   description: 'Bridging AI Agents with Digital Identity',
   openGraph: {
-    images: `https://chat.ethyai.app/img/og-v2.png`,
+    images: `https://chat.ethyai.app/img/og-v3.png`,
   },
 };
 
