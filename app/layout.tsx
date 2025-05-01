@@ -48,7 +48,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Ethy AI" />
         <Script
           async
-          src={`https://www.googletagmanager.com/gtag/js?id=G-CW15Z8E7K`}
+          src={`https://www.googletagmanager.com/gtag/js?id=G-CW15Z8E7K5`}
         />
 
         <Script id="tab-manager">
@@ -57,7 +57,7 @@ export default function RootLayout({
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
 
-          gtag('config', 'G-CW15Z8E7K');
+          gtag('config', 'G-CW15Z8E7K5');
         `}
         </Script>
       </head>
