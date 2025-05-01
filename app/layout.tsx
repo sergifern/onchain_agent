@@ -6,6 +6,7 @@ import { Providers } from "./providers"
 import type React from "react" // Added import for React
 import '@coinbase/onchainkit/styles.css';
 import { Toaster } from "@/components/ui/toaster"
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"], weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"], style: ["normal", "italic"] })
 
@@ -45,6 +46,20 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="apple-mobile-web-app-title" content="Ethy AI" />
+        <Script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=G-CW15Z8E7K`}
+        />
+
+        <Script id="tab-manager">
+          {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-CW15Z8E7K');
+        `}
+        </Script>
       </head>
       <body className={`${inter.className} ${funnelDisplay.variable} ${hansengrotesk.variable}`}>
         <Providers>
