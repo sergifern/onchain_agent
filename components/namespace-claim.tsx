@@ -162,7 +162,7 @@ export default function NamespaceClaim() {
 
   if (Number(EthyBalance.data?.formatted) < 2000000) {
     return <div className="flex flex-col gap-2 items-center">
-      <p className="text-xl font-light text-white">Not enough ETHY to claim namespace</p>
+      <p className="text-md font-light text-white">Not enough ETHY to claim namespace. 2m $ETHY required</p>
       <Link href="/swap" className="text-violeta">Buy more</Link>
     </div>
   }

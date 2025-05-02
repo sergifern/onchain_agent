@@ -22,7 +22,7 @@ function PureSuggestedActions({ append }: SuggestedActionsProps) {
     {
       title: 'Retrieve data stored',
       label: 'under a Basename',
-      action: 'under a specific Basename',
+      action: 'Give me updates about ethyai.base.eth',
     },
   ];
 
