@@ -96,7 +96,7 @@ export default function NamespacePage() {
         </div>
 
       <ProfileCard basename={params.domain} />
-      <NamespaceDocs documents={data.documents} />
+      <NamespaceDocs documents={[]} />
     </div>
     )}
     </>

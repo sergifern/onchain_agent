@@ -106,7 +106,7 @@ const data = {
   navSecondary: [
     {
       title: "Documentation",
-      url: "https://docs.ethyai.app",
+      url: "https://basenames-ai.gitbook.io/ethyai-docs",
       icon: LifeBuoy,
     },
     {

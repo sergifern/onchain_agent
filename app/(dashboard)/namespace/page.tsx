@@ -97,7 +97,7 @@ export default function Page() {
               Claiming a Namespace gives users full control over their data, tied to their Digital Identity and usable anywhere. This structured data is AI-ready, enabling seamless interaction with AI Agents and unlocking the full potential of the Agentic Economy.
               </p>
 
-              <Link href="/dashboard/namespace/create" className="pt-4 text-sm flex flex-row items-center gap-2 group/item">
+              <Link href="https://basenames-ai.gitbook.io/ethyai-docs" className="pt-4 text-sm flex flex-row items-center gap-2 group/item">
                 Read more
                 <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover/item:translate-x-1" />
               </Link>

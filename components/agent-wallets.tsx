@@ -103,7 +103,7 @@ export default function AgentWallets() {
             </div>
             
             <div className="flex items-center gap-3">
-              <Button size="sm" className="button-outline"
+              <Button size="sm" className="button-outline" disabled={true}
                   onClick={() => fundWallet(evmWallet?.address as string, {
                   chain: base,
                   amount: "0.1",

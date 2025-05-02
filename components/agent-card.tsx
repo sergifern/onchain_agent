@@ -58,8 +58,9 @@ export default function AgentCard({ type }: AgentCardProps) {
   }
 
   const otherAssets: Asset[] = [
-    { symbol: "USDC", amount: 2500, usdValue: 1404 }, // RESTAR USDC
-    { symbol: "ETHY", amount: 3184110, usdValue: 300 }, 
+    { symbol: "ETH", amount: 0, usdValue: 0 }, // RESTAR USDC
+    { symbol: "USDC", amount: 0, usdValue: 0 }, // RESTAR USDC
+    { symbol: "ETHY", amount: 0, usdValue: 0 }, 
   ]
 
   const totalAssetsValue = otherAssets.reduce((acc, asset) => acc + asset.usdValue, 0)
@@ -196,7 +197,7 @@ export default function AgentCard({ type }: AgentCardProps) {
 
         {/* Actions Section */}
         <div className="flex space-x-2 mt-6">
-          <Button size="sm" className="button-outline"
+          <Button size="sm" className="button-outline" disabled={true}
               onClick={() => fundWallet(evmWallet?.address as string, {
               chain: base ,
               amount: "0.1",

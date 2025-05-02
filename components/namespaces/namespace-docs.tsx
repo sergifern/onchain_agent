@@ -96,56 +96,60 @@ export function NamespaceDocs({documents}: {documents: DocumentData[]}) {
 
     {/* Document List */}
     <div className="flex flex-col gap-6">
-      {documents && filteredDocuments.map((doc) => (
-        <div onClick={() => router.push(`/namespace/explore/${doc.namespace}/${doc.id}`)} key={doc.id}>
-          <TooltipProvider>
-            <Card
-              className={`group hover:bg-violet-900/40 transition-colors cursor-pointer  border-violeta/60 bg-transparent border border-solid`}
-            >
-              <div className="p-4 flex justify-between items-center">
-
-                {/* Document Info */}
-                <div className="space-y-2 min-w-0">
-                  <div className="flex items-center gap-3">
-                    <h3 className="font-semibold truncate">{doc.name}</h3>
-                    {getStatusBadge(doc)}
-                  </div>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4 text-violeta" />
-                      {doc.lastUpdated}
-                    </span>
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                      <Shield className="w-4 h-4 text-violeta" />
-                      <span className="font-mono">{doc.blockchain.txHash}</span>
-                      <Link
-                        href={`https://basescan.org/tx/${doc.blockchain.txHash}`}
-                        target="_blank"
-                        className="text-violet-400 hover:text-violeta/20"
-                      >
-                      </Link>
+      {documents && filteredDocuments.length > 0 ? (
+        documents.map((doc) => (
+          <div onClick={() => router.push(`/namespace/explore/${doc.namespace}/${doc.id}`)} key={doc.id}>
+            <TooltipProvider>
+              <Card
+                className={`group hover:bg-violet-900/40 transition-colors cursor-pointer  border-violeta/60 bg-transparent border border-solid`}
+              >
+                <div className="p-4 flex justify-between items-center">
+                  {/* Document Info */}
+                  <div className="space-y-2 min-w-0">
+                    <div className="flex items-center gap-3">
+                      <h3 className="font-semibold truncate">{doc.name}</h3>
+                      {getStatusBadge(doc)}
+                    </div>
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4 text-violeta" />
+                        {doc.lastUpdated}
+                      </span>
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <Shield className="w-4 h-4 text-violeta" />
+                        <span className="font-mono">{doc.blockchain.txHash}</span>
+                        <Link
+                          href={`https://basescan.org/tx/${doc.blockchain.txHash}`}
+                          target="_blank"
+                          className="text-violet-400 hover:text-violeta/20"
+                        >
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Actions */}
-                <div className="flex items-center gap-4">
-                  <span className="flex items-center gap-1">
-                    <Eye className="w-4 h-4" />
-                    {doc.views}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Heart className="w-4 h-4" />
-                    {doc.likes}
-                  </span>
-                  <ChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-violeta" />
+                  {/* Actions */}
+                  <div className="flex items-center gap-4">
+                    <span className="flex items-center gap-1">
+                      <Eye className="w-4 h-4" />
+                      {doc.views}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Heart className="w-4 h-4" />
+                      {doc.likes}
+                    </span>
+                    <ChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-violeta" />
+                  </div>
                 </div>
-              </div>
-            </Card>
-          </TooltipProvider>
+              </Card>
+            </TooltipProvider>
+          </div>
+        ))
+      ) : (
+        <div className="flex items-center justify-center h-full">
+          <p className="text-muted-foreground">No documents found</p>
         </div>
-      ))}
-
+      )}
     </div>
   </div>
   )

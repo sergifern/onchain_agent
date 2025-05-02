@@ -53,7 +53,9 @@ const alphaData = {
   },
 }
 
-const documentData = {
+const documentData = null
+
+const productData = {
   id: "pizzamargherita",
   type: "Product",
   isPublic: true,

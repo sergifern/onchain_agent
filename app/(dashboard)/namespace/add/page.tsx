@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { FileText, Package, Notebook, BarChart3, PenLine, ChevronRight, ArrowLeft } from "lucide-react"
+import { FileText, Package, Notebook, BarChart3, PenLine, ChevronRight, ArrowLeft, X } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
@@ -66,6 +66,7 @@ const templates = [
 export default function AddDocumentPage() { 
   const router = useRouter();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
+  const [showPopup, setShowPopup] = useState(false)
 
   if (!isWalletConnected) {
     return (
@@ -189,7 +190,7 @@ export default function AddDocumentPage() {
       <div className="grid grid-cols-1 md:!grid-cols-2 gap-6">
         {templates.map((template) => (
           <div key={template.id} className="relative group">
-            <Link href={`/namespace/add/${template.id}`}>
+            <div onClick={() => setShowPopup(true)}>
               <Card className="p-6 space-y-4 cursor-pointer group card-outline">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
@@ -203,9 +204,8 @@ export default function AddDocumentPage() {
                   </div>
                   <ChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-violet-400" />
                 </div>
-
               </Card>
-            </Link>
+            </div>
           </div>
         ))}
 
@@ -226,6 +226,31 @@ export default function AddDocumentPage() {
           </Card>
         </Link>
       </div>
+
+      {showPopup && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <Card className="p-6 max-w-md w-full mx-4 relative">
+            <button 
+              onClick={() => setShowPopup(false)}
+              className="absolute top-4 right-4 text-zinc-400 hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Feature Coming Soon</h2>
+              <p className="text-zinc-400">
+                We are rolling out features to all holders. Stay tuned for updates!
+              </p>
+              <Button 
+                onClick={() => setShowPopup(false)}
+                className="w-full"
+              >
+                Got it
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   )
 }
