@@ -28,13 +28,13 @@ export async function generateMetadata({ params }: { params: { domain: string } 
     openGraph: {
       title: `Claim your Namespace`,
       description: `Namespace claimed by ${domain}`,
-      images: `https://ethyai.vercel.app/api/og/claimed?namespace=${domain}`,
+      images: `https://chat.ethyai.app/api/og/claimed?namespace=${domain}`,
     },
     twitter: {
       card: 'summary_large_image',
       title: `Claim your Namespace`,
       description: `Namespace claimed by ${domain}`,
-      images: `https://ethyai.vercel.app/api/og/claimed?namespace=${domain}`,
+      images: `https://chat.ethyai.app/api/og/claimed?namespace=${domain}`,
     },
   }
 }
