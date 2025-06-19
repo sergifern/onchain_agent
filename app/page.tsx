@@ -7,7 +7,8 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
-      <Link className="" href="/terminal">
+      <h1 className="text-4xl font-bold">Public Launch June 26.</h1>
+      <Link className="hidden" href="/terminal">
         <Button>Access Terminal</Button>
       </Link>
     </div>
