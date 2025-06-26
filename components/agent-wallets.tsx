@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import { Twitter, Wallet, Mail, Copy, ExternalLink, X, Loader2, CheckCircle, XCircle, PlusCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -9,6 +9,7 @@ import { useDelegatedActions, useFundWallet, useHeadlessDelegatedActions, usePri
 import { base } from "viem/chains"
 import Link from "next/link"
 import { toast, useToast } from "@/hooks/use-toast"
+import { getAccessToken } from "@privy-io/react-auth"
 
 
 interface BaseAccount {
@@ -46,9 +47,33 @@ export default function AgentWallets() {
   const {exportWallet, user} = usePrivy();
   const {delegateWallet} = useHeadlessDelegatedActions();
   const {revokeWallets} = useDelegatedActions();
+  const [agent, setAgent] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+    const getAgent = async () => {
+      try {
+        setIsLoading(true);
+        const accessToken = await getAccessToken();
+        const response = await fetch(`/api/users/agents`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
 
+        const data = await response.json();
 
-  if (!ready || !readySolana) {
+        setAgent(data.agent);
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Error checking namespace mint status:", err);
+      }
+    };
+
+    getAgent();
+  }, []);
+
+  if (!ready || !readySolana || isLoading) {
     return (
         <Loader2 className="w-4 h-4 animate-spin" />
     )
@@ -80,6 +105,17 @@ export default function AgentWallets() {
   };
 
 
+
+  if (!agent) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <p className="text-md text-muted-foreground">
+          Agent not deployed, first <Link href="/agent" className="text-violeta hover:underline hover:text-violeta/80">create your agent</Link>
+        </p>
+      </div>
+    )
+  }
+
   return (
       <div className="space-y-6">
         {wallets && (
@@ -103,7 +139,7 @@ export default function AgentWallets() {
             </div>
             
             <div className="flex items-center gap-3">
-              <Button size="sm" className="button-outline" disabled={true}
+              <Button size="sm"
                   onClick={() => fundWallet(evmWallet?.address as string, {
                   chain: base,
                   amount: "0.1",

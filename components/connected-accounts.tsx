@@ -142,9 +142,9 @@ export default function ConnectedAccounts() {
               variant="outline"
               size="sm"
               onClick={linkTwitter}
-              disabled={isConnecting}
+              disabled={true}
             >
-              Connect
+              Coming soon
             </Button>
           )}
         </div>

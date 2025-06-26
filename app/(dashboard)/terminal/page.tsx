@@ -37,7 +37,6 @@ export default function ChatPage() {
       try {
         const accessToken = await getAccessToken();
         let token = accessToken || "public-key";
-        console.log('token', token);
         setHeaders({
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

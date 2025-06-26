@@ -7,9 +7,10 @@ const privy = new PrivyClient(process.env.NEXT_PUBLIC_PRIVY_APP_ID!, process.env
 
 export async function verifyUserAuth(req: NextRequest) {
   try {
-    console.log(`Middleware triggered for: ${req.nextUrl.pathname}`);
+    //console.log(`verifyUserAuth triggered for: ${req.nextUrl.pathname}`);
 
     const authHeader = req.headers.get("authorization");
+    
     if (!authHeader) {
       return NextResponse.json({ error: "Authorization header missing" }, { status: 401 });
     }

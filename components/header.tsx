@@ -3,13 +3,15 @@
 import { usePrivy } from "@privy-io/react-auth"
 import { Button } from "@/components/ui/button"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Settings, SquarePlus } from "lucide-react"
+import { Settings, Sparkles, SquarePlus } from "lucide-react"
 import { useAccount, useBalance } from "wagmi";
 import { truncateAddress, formatEthyAmount } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { WalletSheet } from "@/components/wallet-sheet";
 import { ProfileDropdown } from "@/components/profile-dropdown";
+import { Badge } from "./ui/badge"
+import Link from "next/link"
 
 export function Header() {
   const { login, authenticated, user } = usePrivy()
@@ -22,7 +24,7 @@ export function Header() {
   })  
   
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between px-4">
+    <header className="flex h-16 shrink-0 items-center justify-between px-4 mt-1 pt-[20px]">
       <div className="flex items-center gap-3">
         <div className="flex items-center">
           <SidebarTrigger className="text-white border-[1px] border-secondary p-4" />
@@ -37,10 +39,16 @@ export function Header() {
       </div>
 
       <div className="flex items-center md:!gap-6 gap-4">
+        <Link href="/leaderboard" className="flex items-center gap-2">
+          <Badge className="bg-transparent text-violeta border border-violeta hover:bg-violeta/50 hover:text-white transition-all duration-300">
+            <Sparkles className="h-3 w-3 mr-2 text-violeta" />
+            Earn $30
+          </Badge>
+        </Link>
+        <Separator orientation="vertical" className="h-4 bg-white/20" />
         <div className="flex items-center text-secondary sm:!text-sm text-xs">
           {formatEthyAmount(Number(EthyBalance.data?.formatted ?? 0))} ETHY
         </div>
-        <Separator orientation="vertical" className="h-4 bg-white/20" />
 
         {authenticated ? (
           <div className="flex items-center gap-2">

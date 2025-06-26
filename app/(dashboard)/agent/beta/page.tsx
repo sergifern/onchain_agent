@@ -102,7 +102,7 @@ export default function Home() {
           <TabsTrigger value="tasks">
             <span className="flex items-center">
             <ListTodo className="h-5 w-5 mr-2" />
-              Tasks
+              Automations
             </span>
           </TabsTrigger>
           <TabsTrigger value="execution">
@@ -122,7 +122,7 @@ export default function Home() {
               Execution History
             </span>
           </TabsTrigger>
-          <TabsTrigger value="transactions">
+          <TabsTrigger value="transactions" className="hidden">
             <span className="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

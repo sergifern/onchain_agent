@@ -64,7 +64,7 @@
   --accent: 217 24% 20%; /* 217.2 32.6% 17.5%; */
   --accent-foreground: 210 40% 98%;
 
-  --violeta: 261 100% 65%;
+  --violeta: 285 91% 54%; /* 261 100% 65%; */
   --violeta-foreground: 210 40% 98%;
 
   --border: 231 15% 17%;
@@ -223,6 +223,15 @@ p, span {
   @apply !bg-violeta/20;
 }
 
+.button-outline-secondary {
+  @apply border border-muted-foreground bg-transparent text-muted-foreground;
+}
+
+.button-outline-secondary:hover {
+  @apply !bg-muted-foreground/20;
+}
+
+
 .button-filled {
   @apply bg-violeta text-white hover:bg-violeta/80;
 }
@@ -230,4 +239,11 @@ p, span {
 .button-filled:hover {
   @apply !bg-violeta/80;
 }
+
+select {
+  @apply bg-secondary border-0 text-foreground;
+  border-radius: 0.375rem;
+}
+
+
 

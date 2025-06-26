@@ -1,10 +1,10 @@
 'use client'
 
-import { Flame, DollarSign, PieChart, Users, BarChart3, Clock, Package, Calendar, Coins, Loader2 } from "lucide-react"
+import { Flame, DollarSign, PieChart, Users, BarChart3, Clock, Package, Calendar, Coins, Loader2, Bot } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import PageContainer from "@/components/page-container";
 import { useQuery } from "@tanstack/react-query";
-
+import { ReactNode } from "react";
 
 export default function EthyTokenDashboard() {
 
@@ -16,53 +16,56 @@ export default function EthyTokenDashboard() {
 
   if (isLoading) return <Loader2 className="w-4 h-4 animate-spin" />
   if (error) return <div>Error</div>
-  console.log(data.data.attributes.price_usd)
-  console.log(data.data.attributes.volume_usd.h24)
-  console.log(data.data.attributes.fdv_usd)
 
   return (
-    <PageContainer title="Burn & Supply" description="View the latest metrics for the ETHY token">
+    <PageContainer title="Metrics" description="View the latest metrics for the ETHY token">
 
 
       <Section title="Market Metrics" color="bg-green-50 dark:bg-green-950">
         <MetricCard
           title="Current Price"
-          value={`$${data && Number(data.data.attributes.price_usd)}`}
+          value={`$${data && Number(data.data.attributes.price_usd).toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })}`}
           subValue="per ETHY token"
           icon={<DollarSign className="h-6 w-6" />}
+          className=""
         />
         <MetricCard
           title="Market Capitalization"
-          value={`$${data && Number(data.data.attributes.fdv_usd)}`}
+          value={`$${data && Number(data.data.attributes.fdv_usd).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
           subValue="of Fully Diluted Market Cap"
           icon={<PieChart className="h-6 w-6" />}
+          className=""
         />
         <MetricCard
           title="Trading Volume"
-          value={`$${data && Number(data.data.attributes.volume_usd.h24).toFixed(2)}`}
+          value={`$${data && Number(data.data.attributes.volume_usd.h24).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
           subValue="in last 24 hours"
           icon={<BarChart3 className="h-6 w-6" />}
+          className=""
         />
       </Section>
 
-      <Section title="Burn Stats" color="bg-blue-50 dark:bg-blue-950">
+      <Section title="Agent Stats" color="bg-blue-50 dark:bg-blue-950">
         <MetricCard
-          title="Burned Tokens"
+          title="Agent Deployed"
           value="-"
-          subValue="0% of initial supply"
-          icon={<Flame className="h-6 w-6" />}
+          subValue="agents created"
+          icon={<Bot className="h-6 w-6" />}
+          className=""
         />
         <MetricCard
-          title="Last Token Burn"
+          title="Smart Automations"
           value="-"
-          subValue="burned on -"
+          subValue="automations created"
           icon={<Clock className="h-6 w-6" />}
+          className=""
         />
         <MetricCard
-          title="Next Token Burn"
-          value="-"
-          subValue="scheduled burn of -"
+          title="Tokens Burned"
+          value="- $ETHY"
+          subValue="used as credits"
           icon={<Calendar className="h-6 w-6" />}
+          className=""
         />
       </Section>
       
@@ -77,22 +80,30 @@ export default function EthyTokenDashboard() {
         />
         <MetricCard
           title="Number of Holders"
-          value="1,020"
+          value="1,978"
           subValue="holders"
           icon={<Users className="h-6 w-6" />}
+          className=""
         />
         <MetricCard
           title="Circulating vs Total Supply"
-          value="700,000,000 ETHY"
+          value="615,110,000 ETHY"
           subValue="out of 1,000,000,000 ETHY"
           icon={<Package className="h-6 w-6" />}
+          className=""
         />
       </Section>
     </PageContainer>
   )
 }
 
-function Section({ title, color, children }) {
+interface SectionProps {
+  title: string;
+  color: string;
+  children: ReactNode;
+}
+
+function Section({ title, color, children }: SectionProps) {
   return (
     <div className={`p-0`}>
       <h2 className="text-xl mb-4 text-secondary flex items-center gap-2 mt-12">
@@ -103,7 +114,15 @@ function Section({ title, color, children }) {
   )
 }
 
-function MetricCard({ title, value, subValue, icon, className }) {
+interface MetricCardProps {
+  title: string;
+  value: string;
+  subValue: string;
+  icon: ReactNode;
+  className?: string;
+}
+
+function MetricCard({ title, value, subValue, icon, className = "" }: MetricCardProps) {
   return (
     <Card className={`card-outline ${className}`}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

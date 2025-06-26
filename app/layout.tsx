@@ -28,9 +28,9 @@ const funnelDisplay = localFont({
 
 export const metadata: Metadata = {
   title: 'Ethy AI',
-  description: 'Bridging AI Agents with Digital Identity',
+  description: 'Deploy your personal Intelligent Trading Agent. You define the intent. Ethy AI executes 24/7.',
   openGraph: {
-    images: `https://chat.ethyai.app/img/og-v3.png`,
+    images: `https://chat.ethyai.app/img/og-v4.png`,
   },
 };
 
