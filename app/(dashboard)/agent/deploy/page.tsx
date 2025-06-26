@@ -153,7 +153,7 @@ export default function AgentDeployment() {
   useEffect(() => {
     const getStakedEthy = async () => {
       //console.log(address);
-      const stakedBalance = await getStakedBalance(address as `0x${string}`, '0x0000000000000000000000000000000000000000'); //TODO
+      const stakedBalance = await getStakedBalance('0x9506cCaf568e49B157A04bbb2f08F9377Edb280e', address as `0x${string}`); //TODO
       //console.log(stakedBalance);
       return stakedBalance;
     }
