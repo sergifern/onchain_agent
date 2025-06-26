@@ -14,7 +14,7 @@ export const ChatOverview = () => {
     >
       <div className="rounded-xl p-6 flex flex-col gap-8 leading-relaxed text-center max-w-xl">
         <div className="flex flex-col justify-center gap-4 items-center">
-          <h1 className="flex flex-row justify-center gap-4 items-center font-semibold">
+          <h1 className="flex flex-row justify-center gap-4 items-center font-semibold text-2xl">
             Welcome to Ethy AI
           </h1>
         </div>
@@ -23,7 +23,7 @@ export const ChatOverview = () => {
           Unlock ecommerce with AI. Ask anything about your store, products, customers, and more.
         </p>
          
-        <p>
+        <p className="hidden">
           You can learn more about Ethy AI by visiting the{' '}
           <Link
             className="font-medium underline underline-offset-4"

@@ -27,22 +27,22 @@ export default function LeaderboardPage() {
         <div className="text-center mb-12">
           <Badge className="mb-6 px-4 py-2 bg-violeta text-white border-none">
             <Sparkles className="h-4 w-4 mr-2" />
-            REFERRAL CONTEST COMING SOON
+            Referral Program coming soon!
           </Badge>
           
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-violeta">
-            EARN ETHY INVITING FRIENDS!
+            Invite your friends & Earn $ETHY
           </h1>
           
           <p className="text-lg text-muted-foreground mb-8 max-w-4xl mx-auto">
-            Get ready for the ultimate referral program! Earn 30% of all ETHY spent by your friends when they execute automations with their agents!
+            Get ready for the ultimate referral program! Earn 30$ per friend + 30% of all ETHY spent by your friends when they execute automations with their agents!
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <Card className="card-outline">
               <CardContent className="p-6 text-center">
                 <Gift className="h-12 w-12 mx-auto mb-4 text-violeta" />
-                <h3 className="text-xl font-semibold mb-2">30% Commission</h3>
+                <h3 className="text-xl font-semibold mb-2">$30 payout + 30% Commission</h3>
                 <p className="text-muted-foreground">Every time your friend uses ETHY for agent automations, you earn 30%!</p>
               </CardContent>
             </Card>
@@ -66,7 +66,7 @@ export default function LeaderboardPage() {
         </div>
 
         {/* Coming Soon Section */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 hidden">
           <Card className="card-outline max-w-2xl mx-auto">
             <CardContent className="p-8">
               <Clock className="h-16 w-16 mx-auto mb-4 text-violeta animate-spin" />
@@ -91,11 +91,8 @@ export default function LeaderboardPage() {
         {/* Leaderboard Preview Section */}
         <h2 className="text-xl mb-4 text-secondary flex items-center gap-2 mt-12">
           <Trophy className="h-5 w-5" />
-          Leaderboard Preview
+          Leaderboard
         </h2>
-        <p className="text-muted-foreground mb-6">
-          This is what the competition will look like when it launches!
-        </p>
 
         <Card className="card-outline relative overflow-hidden mb-12">
           <CardHeader>
@@ -151,7 +148,7 @@ export default function LeaderboardPage() {
         </Card>
 
         {/* Final CTA */}
-        <div className="text-center">
+        <div className="text-center hidden">
           <Card className="card-outline max-w-3xl mx-auto">
             <CardContent className="p-8">
               <Sparkles className="h-16 w-16 mx-auto mb-4 text-violeta animate-pulse" />

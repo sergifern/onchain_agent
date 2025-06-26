@@ -685,8 +685,8 @@ export default function AddTaskPage() {
           </div>
         )}
 
-        <p className="text-sm text-muted-foreground mt-4">1) Virtuals contracts unless Vader</p>
-        <p className="text-sm text-muted-foreground">2) $ETHY operations have cahsback 30% of the trading fee (calculated end of the day)</p>
+        <p className="text-sm text-muted-foreground mt-4 hidden">1) Virtuals contracts unless Vader</p>
+        <p className="text-sm text-muted-foreground hidden">2) $ETHY operations have cahsback 30% of the trading fee (calculated end of the day)</p>
       </div>
     </PageContainer>
   );

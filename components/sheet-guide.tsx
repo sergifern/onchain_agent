@@ -7,7 +7,7 @@ import { ArrowUpRight, ChevronRight } from "lucide-react"
 export default function SheetGuide() {
   return (
     <Sheet>
-      <SheetTrigger className="ml-0">
+      <SheetTrigger className="ml-0 hidden">
         <div className="pt-4 text-sm flex flex-row items-center gap-2 group/item">
           Read more
           <ChevronRight className="w-4 h-4 transition-transform duration-200 group-hover/item:translate-x-1" />

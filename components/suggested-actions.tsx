@@ -16,13 +16,13 @@ function PureSuggestedActions({ append }: SuggestedActionsProps) {
   const suggestedActions = [
     {
       title: 'Explain what Ethy AI',
-      label: 'can do for me onchain',
-      action: 'Explain me all the capabilities you have, and how to get started',
+      label: 'can do for me',
+      action: 'Explain me all the capabilities you have, and how to get started with Ethy AI',
     },
     {
-      title: 'Retrieve data stored',
-      label: 'under a Basename',
-      action: 'Give me updates about ethyai.base.eth',
+      title: 'Give me deep analysis',
+      label: 'for Ethy AI',
+      action: 'Give me deep analysis of $ETHY, like volume, RSI, mindshare, social sentiment, etc',
     },
   ];
 

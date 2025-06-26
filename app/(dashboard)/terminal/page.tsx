@@ -2,7 +2,7 @@
 
 import { useChat } from '@ai-sdk/react';
 import { motion, AnimatePresence } from "framer-motion"
-import { ArrowUp, FileInput, Globe, Send, Square, Sparkles, LifeBuoy, FireExtinguisherIcon, Component, Zap, Repeat } from "lucide-react"
+import { ArrowUp, FileInput, Globe, Send, Square, Sparkles, LifeBuoy, FireExtinguisherIcon, Component, Zap, Repeat, Bot } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -27,9 +27,9 @@ export default function ChatPage() {
   const [headers, setHeaders] = useState<Record<string, string>>({});
 
   const { messages, input, handleInputChange, handleSubmit, append, addToolResult, status } = useChat({
-    api: process.env.NEXT_PUBLIC_ETHY_API_URL + '/chat',
+    api: '/api/chat',
     headers: headers,
-    maxSteps: 10,
+    maxSteps: 2,
   });
 
   useEffect(() => {
@@ -71,8 +71,8 @@ export default function ChatPage() {
         {messages.length > 0 && (
           <div className="flex flex-row items-center gap-2 mx-auto pt-0">
             <Link href="/agent" className="flex flex-row items-center gap-2">
-              <Sparkles className="w-4 h-4 text-muted-foreground" />
-              <p className="text-muted-foreground">Run your Agent</p>
+              <Bot className="w-4 h-4 text-muted-foreground" />
+              <p className="text-muted-foreground">Deploy your Agent</p>
             </Link>
           </div>
         )}
@@ -140,7 +140,7 @@ export default function ChatPage() {
                     </div>
                   </PopoverContent>
                 </Popover>
-                <div className="flex flex-row items-center gap-2 border rounded-full p-2 border-violeta/60">
+                <div className="hidden flex flex-row items-center gap-2 border rounded-full p-2 border-violeta/60">
                   <Globe className="h-5 w-5 text-violeta" />
                   <p className="text-sm text-violeta">Search on Basenames</p>
                 </div>

@@ -183,7 +183,7 @@ export default function AgentDeployment() {
 
     return (
       <div className="flex flex-col items-center justify-center mt-12 max-w-xl mx-auto gap-4">
-        <span className="pb-2 text-lg font-semibold text-muted-foreground">500,000 $ETHY required to Run your Agent</span>
+        <span className="pb-2 text-lg font-semibold text-muted-foreground">500,000 $ETHY staking or 1M $ETHY holding required</span>
         <div className="flex flex-row items-baseline gap-2">
           <h2 className="text-3xl font-extrabold">Run your own Agent</h2>
         </div>
