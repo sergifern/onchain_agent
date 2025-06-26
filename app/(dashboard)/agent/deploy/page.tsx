@@ -79,10 +79,10 @@ export default function AgentDeployment() {
   }, []);
 
   const handleCreateAgent = async () => {
-    if (Number(totalBalance) < 0) { // TODO: change to 500,000
+    if (Number(totalBalance) < 1000000 && Number(stakedBalance) < 500000) {
       toast({
         title: "Not enough balance",
-        description: "You need at least 500,000 $ETHY to deploy an agent",
+        description: "You need either 1,000,000 $ETHY total balance OR 500,000 $ETHY staked to deploy an agent",
       });
       return;
     }
@@ -155,7 +155,7 @@ export default function AgentDeployment() {
   useEffect(() => {
     const getStakedEthy = async () => {
       console.log(address);
-      const stakedBalance = await getStakedBalance('0x9506cCaf568e49B157A04bbb2f08F9377Edb280e', '0x0000000000000000000000000000000000000000'); //TODO
+      const stakedBalance = await getStakedBalance(address as `0x${string}`, '0x0000000000000000000000000000000000000000'); //TODO
       console.log(stakedBalance);
       return stakedBalance;
     }
@@ -183,7 +183,7 @@ export default function AgentDeployment() {
 
     return (
       <div className="flex flex-col items-center justify-center mt-12 max-w-xl mx-auto gap-4">
-        <span className="pb-2 text-lg font-semibold text-muted-foreground">500,000 $ETHY staking or 1M $ETHY holding required</span>
+        <span className="pb-2 text-lg font-semibold text-muted-foreground">500,000 $ETHY staked OR 1M $ETHY total balance required</span>
         <div className="flex flex-row items-baseline gap-2">
           <h2 className="text-3xl font-extrabold">Run your own Agent</h2>
         </div>
@@ -194,7 +194,7 @@ export default function AgentDeployment() {
           <Button disabled={disableLogin} onClick={login} className="mt-6">
             Connect
           </Button>
-        ) : totalBalance < 0 ? (  // TODO
+        ) : (Number(totalBalance) < 1000000 && Number(stakedBalance) < 500000) ? (
           <div className="flex flex-col items-center gap-2">
             <Button disabled className="mt-6">
               Not Enough Balance
@@ -216,23 +216,6 @@ export default function AgentDeployment() {
           <p className="text-sm text-muted-foreground">Total: {Number(totalBalance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
         </div>
 
-        {/* Embedded Wallet Information */}
-        <Card className="w-full mt-4">
-          <CardHeader className="!pb-2">
-            <CardTitle className="text-sm font-semibold">Embedded Wallet Status</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <div className="text-sm">
-              <p><strong>Ready:</strong> {walletReady ? "Yes" : "No"}</p>
-              <p><strong>Connected:</strong> {embeddedWallet?.address ? "Yes" : "No"}</p>
-              <p><strong>Address:</strong> {embeddedWallet?.address || "N/A"}</p>
-              <p><strong>Wallet Type:</strong> {embeddedWallet?.walletClientType || "N/A"}</p>
-              <p><strong>Chain ID:</strong> {embeddedWallet?.chainId || "N/A"}</p>
-              <p><strong>Delegated:</strong> {isAlreadyDelegated ? "Yes" : "No"}</p>
-
-            </div>
-          </CardContent>
-        </Card>
       </div>  
     );
 }

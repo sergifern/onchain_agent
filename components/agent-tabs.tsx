@@ -42,7 +42,6 @@ export default function AgentInfoTabs() {
   const [activeTab, setActiveTab] = useState("balances")
   const [tasks, setTasks] = useState([])
 
-  // TODO: get address from user
 
   const { wallet: embeddedWallet, isAlreadyDelegated, ready: walletReady } = useEmbeddedWalletDelegated();
   

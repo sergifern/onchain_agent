@@ -40,6 +40,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
+    // Check task limit - get existing tasks and count non-deleted ones
+    const allTasks = await getTasksByUserId(user as string)
+    const activeTasks = allTasks.filter(task => !task.isDeleted)
+    
+    if (activeTasks.length >= 10) {
+      return NextResponse.json({ 
+        error: 'Task limit reached. You can have a maximum of 10 active tasks.' 
+      }, { status: 400 });
+    }
+
     const {
       condition,
       type,

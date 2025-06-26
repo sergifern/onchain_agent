@@ -411,8 +411,8 @@ export default function AgentTable() {
                     <TableCell>{getFrequencyBadge(task.frequency)}</TableCell>
                     <TableCell>{getTypeBadge(task.type)}</TableCell>
                     <TableCell>{task.amount}</TableCell>
-                    <TableCell>{task.asset?.symbol || 'N/A'}</TableCell>
                     <TableCell>{task.baseCurrency?.symbol || 'N/A'}</TableCell>
+                    <TableCell>{task.asset?.symbol || 'N/A'}</TableCell>
                     <TableCell className="max-w-xs truncate">{task.condition}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
