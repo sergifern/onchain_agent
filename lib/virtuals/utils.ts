@@ -22,7 +22,7 @@ const stakingAbi = [
 
 export async function getStakedBalance(contract: string, address: string) {
 
-  console.log(process.env.NEXT_PUBLIC_RPC_PROVIDER_URL);
+  //console.log(process.env.NEXT_PUBLIC_RPC_PROVIDER_URL);
   const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_PROVIDER_URL);
 
   const stakingContract = new ethers.Contract(contract, stakingAbi, provider);

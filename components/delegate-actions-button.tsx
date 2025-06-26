@@ -15,13 +15,13 @@ export function DelegateActionButton({account}: {account: Account}) {
 
   // Find the embedded wallet to delegate from the array of the user's wallets
   const walletToDelegate = wallets.find((wallet) => wallet.address === account.address && wallet.walletClientType === 'privy');
-  console.log('walletToDelegate', walletToDelegate)
+  //console.log('walletToDelegate', walletToDelegate)
 
   // Check if the wallet to delegate by inspecting the user's linked accounts
   const isAlreadyDelegated = !!user?.linkedAccounts.find(
     (account): account is WalletWithMetadata => account.type === 'wallet' && account.address === account.address && account.delegated,
   );
-  console.log('isAlreadyDelegated', isAlreadyDelegated)
+  //console.log('isAlreadyDelegated', isAlreadyDelegated)
 
 
   const onDelegate = async () => {

@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
     
     // Filter out deleted tasks
     const tasks = allTasks.filter(task => !task.isDeleted)
-    console.log(tasks)
+    //console.log(tasks)
 
     return NextResponse.json({
       tasks,

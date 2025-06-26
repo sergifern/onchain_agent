@@ -55,7 +55,7 @@ export class PrivyEVMWalletClient extends EVMWalletClient {
 
   // Firma un mensaje utilizando Privy
   async signMessage(message: string): Promise<{ signature: `0x${string}` }> {
-    console.log("*************signMessage", message, this.userAddress);
+    //console.log("*************signMessage", message, this.userAddress);
     const { signature } = await this.privy.walletApi.ethereum.signMessage({
       address: this.userAddress,
       chainType: "ethereum",
@@ -66,7 +66,7 @@ export class PrivyEVMWalletClient extends EVMWalletClient {
 
   // Firma datos tipados usando la API de Privy
   async signTypedData(data: EVMTypedData): Promise<{ signature: `0x${string}` }> {
-    console.log("*************signTypedData", data, this.userAddress);
+    //console.log("*************signTypedData", data, this.userAddress);
     const { signature } = await this.privy.walletApi.ethereum.signTypedData({
       address: this.userAddress,
       chainType: "ethereum",
@@ -80,7 +80,7 @@ export class PrivyEVMWalletClient extends EVMWalletClient {
   ): Promise<{ hash: `0x${string}`; status: "success" | "reverted" }> {
     const { to, abi, functionName, args, value, data } = transaction;
     
-    console.log("*************sendTransaction", transaction, this.userAddress);
+    //console.log("*************sendTransaction", transaction, this.userAddress);
     // Verificar que exista la cuenta conectada
     if (!this.userAddress) throw new Error("No account connected");
   
@@ -121,7 +121,7 @@ export class PrivyEVMWalletClient extends EVMWalletClient {
       data: callData,
     };
   
-    console.log("*************txParams", txParams);
+    //console.log("*************txParams", txParams);
   
     // Enviar la transacción usando la API de Privy
     const { hash } = await this.privy.walletApi.ethereum.sendTransaction({
@@ -130,7 +130,7 @@ export class PrivyEVMWalletClient extends EVMWalletClient {
       caip2: `eip155:${this.chainId}`,
       transaction: txParams as any,
     });
-    console.log("*************hash", hash);
+    //console.log("*************hash", hash);
     return this.waitForReceipt(hash as `0x${string}`);
   }
 
@@ -149,7 +149,7 @@ export class PrivyEVMWalletClient extends EVMWalletClient {
     }*/
 
   async read(request: EVMReadRequest): Promise<{ value: unknown }> {
-    console.log("*************read", request);
+    //console.log("*************read", request);
   
     // If the request includes ABI, functionName, and args,
     // we can encode the call data.
@@ -166,15 +166,15 @@ export class PrivyEVMWalletClient extends EVMWalletClient {
           to: request.address,
           data,
         };
-        console.log("[read] Encoded txRequest:", txRequest);
+        //console.log("[read] Encoded txRequest:", txRequest);
         
         // Call the contract.
         const resultData = await this.provider.call(txRequest);
-        console.log("[read] Raw result data:", resultData);
+        //console.log("[read] Raw result data:", resultData);
         
         // Decode the result using the ABI.
         const decoded = iface.decodeFunctionResult(request.functionName, resultData);
-        console.log("[read] Decoded result:", decoded);
+        //console.log("[read] Decoded result:", decoded);
         
         // Return the decoded result. (You might need to adjust the format to what your tools expect)
         return { value: decoded };
@@ -203,7 +203,7 @@ export class PrivyEVMWalletClient extends EVMWalletClient {
     name: string;
     inBaseUnits: string;
   }> {
-    console.log("*************balanceOf", address, this.userAddress);
+    //console.log("*************balanceOf", address, this.userAddress);
     if (address.toLowerCase() === this.userAddress.toLowerCase()) {
       // Native balance: use provider.getBalance.
       const balanceBN = await this.provider.getBalance(this.userAddress);
@@ -228,7 +228,7 @@ export class PrivyEVMWalletClient extends EVMWalletClient {
       const decimals = await contract.decimals();
       const symbol = await contract.symbol();
       const name = await contract.name();
-      console.log("*************balanceBN", balanceBN.toString());
+      //console.log("*************balanceBN", balanceBN.toString());
 
       return {
         value: balanceBN.toString(),
@@ -242,7 +242,7 @@ export class PrivyEVMWalletClient extends EVMWalletClient {
 
   // Simula la espera del recibo de la transacción. Aquí podrías integrar un proveedor JSON-RPC para obtener la confirmación real.
   private async waitForReceipt(txHash: `0x${string}`) {
-    console.log("*************waitForReceipt", txHash);
+    //console.log("*************waitForReceipt", txHash);
     const receipt = await publicClient.waitForTransactionReceipt({
       hash: txHash,
     });

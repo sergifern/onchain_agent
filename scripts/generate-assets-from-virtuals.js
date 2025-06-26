@@ -18,7 +18,7 @@ function generateAssetsFromVirtuals() {
   // Parse the JSON array
   const filteredVirtualsAgents = JSON.parse(arrayContent);
   
-  console.log(`Processing ${filteredVirtualsAgents.length} virtuals agents...`);
+  //console.log(`Processing ${filteredVirtualsAgents.length} virtuals agents...`);
   
   const assets = filteredVirtualsAgents.map(agent => ({
     symbol: agent.symbol,
@@ -28,7 +28,7 @@ function generateAssetsFromVirtuals() {
     decimals: 18
   }));
 
-  console.log(`Generated ${assets.length} assets`);
+  //console.log(`Generated ${assets.length} assets`);
   
   // Create the output content
   const outputContent = `// Generated assets from virtuals agents
@@ -44,7 +44,7 @@ export const VIRTUALS_ASSETS: Asset[] = ${JSON.stringify(assets, null, 2)};
   const outputPath = path.join(process.cwd(), 'scripts/outputs/virtuals-assets.js');
   fs.writeFileSync(outputPath, outputContent);
   
-  console.log(`Assets written to: ${outputPath}`);
+  //console.log(`Assets written to: ${outputPath}`);
   
   // Also create TypeScript version
   const tsOutputContent = `// Generated assets from virtuals agents
@@ -59,7 +59,7 @@ export const VIRTUALS_ASSETS: Asset[] = ${JSON.stringify(assets, null, 2)};
   const tsOutputPath = path.join(process.cwd(), 'scripts/outputs/virtuals-assets.ts');
   fs.writeFileSync(tsOutputPath, tsOutputContent);
   
-  console.log(`TypeScript assets written to: ${tsOutputPath}`);
+  //console.log(`TypeScript assets written to: ${tsOutputPath}`);
   
   return assets;
 }
@@ -68,9 +68,9 @@ export const VIRTUALS_ASSETS: Asset[] = ${JSON.stringify(assets, null, 2)};
 if (require.main === module) {
   try {
     const assets = generateAssetsFromVirtuals();
-    console.log('\n=== Sample Assets ===');
-    console.log(JSON.stringify(assets.slice(0, 3), null, 2));
-    console.log(`\n... and ${assets.length - 3} more assets`);
+    //console.log('\n=== Sample Assets ===');
+    //console.log(JSON.stringify(assets.slice(0, 3), null, 2));
+    //console.log(`\n... and ${assets.length - 3} more assets`);
   } catch (error) {
     console.error('Error generating assets:', error);
     process.exit(1);

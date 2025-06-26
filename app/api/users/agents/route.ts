@@ -18,9 +18,9 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
-    console.log('user', user)
+    //console.log('user', user)
     const agent = await getAgentsByUserId(user as string)
-    console.log('agent', agent)
+    //console.log('agent', agent)
 
     return NextResponse.json({ 
       agent,
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    console.log('body', body.agent.walletAddress)
+    //console.log('body', body.agent.walletAddress)
 
     if (!body.agent.walletAddress) {
       return NextResponse.json({ error: 'Wallet address is required' }, { status: 400 });

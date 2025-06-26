@@ -13,7 +13,7 @@ export default function ImportWalletButton() {
   const handleImport = async () => {
     try {
       const wallet = await importWallet({privateKey: privateKey});
-      console.log('Wallet imported successfully:', wallet);
+      //console.log('Wallet imported successfully:', wallet);
     } catch (error) {
       console.error('Failed to import wallet:', error);
     }

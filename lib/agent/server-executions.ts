@@ -181,7 +181,7 @@ export async function executeSwap(
   
   // Use fee-on-transfer function if input token is ETHY
   if (tokenIn.toLowerCase() === VIRTUALS_ADDRESS.toLowerCase()) {
-    console.log("swapExactTokensForTokens************************")
+    //console.log("swapExactTokensForTokens************************")
     data = routerInterface.encodeFunctionData("swapExactTokensForTokens", [
     amountIn.toString(),
     amountOutMin.toString(),
@@ -241,7 +241,7 @@ export async function executeSwapV4(
 ) {
   // For now, let's fall back to a more reliable approach
   // The Universal Router V4 implementation is complex and needs proper SDK integration
-  console.log('V4 swap requested, but falling back to V2 for reliability');
+  //console.log('V4 swap requested, but falling back to V2 for reliability');
   
   // Use the reliable V2 swap instead
   return await executeSwap(walletId, userAddress, tokenIn, tokenOut, amountIn, slippagePercent);

@@ -80,10 +80,10 @@ function closeArrayInFile() {
 
 // Main extraction function
 async function extractAllAgents() {
-  console.log('🚀 Starting extraction of all Virtuals agents...');
-  console.log(`📊 API Endpoint: ${BASE_URL}`);
-  console.log(`📁 Output file: ${OUTPUT_FILE}`);
-  console.log('⏱️  Sleep delay: 2 seconds between requests\n');
+  //console.log('🚀 Starting extraction of all Virtuals agents...');
+  //console.log(`📊 API Endpoint: ${BASE_URL}`);
+  //console.log(`📁 Output file: ${OUTPUT_FILE}`);
+  //console.log('⏱️  Sleep delay: 2 seconds between requests\n');
 
   // Initialize output file
   if (fs.existsSync(OUTPUT_FILE)) {
@@ -96,7 +96,7 @@ async function extractAllAgents() {
 
   try {
     while (true) {
-      console.log(`📄 Fetching page ${currentPage}...`);
+      //console.log(`📄 Fetching page ${currentPage}...`);
       
       const url = buildUrl(currentPage);
       const response = await fetch(url);
@@ -109,11 +109,11 @@ async function extractAllAgents() {
       
       // Check if we have data
       if (!data.data || data.data.length === 0) {
-        console.log(`✅ No more data found on page ${currentPage}. Extraction complete!`);
+        //console.log(`✅ No more data found on page ${currentPage}. Extraction complete!`);
         break;
       }
 
-      console.log(`📦 Found ${data.data.length} agents on page ${currentPage}`);
+      //console.log(`📦 Found ${data.data.length} agents on page ${currentPage}`);
 
       // Process each agent
       for (const agent of data.data) {
@@ -124,21 +124,21 @@ async function extractAllAgents() {
         isFirstAgent = false;
         totalExtracted++;
 
-        console.log(`  ✓ Extracted: ${extractedAgent.symbol} (${extractedAgent.name}) - ID: ${extractedAgent.id}`);
+        //console.log(`  ✓ Extracted: ${extractedAgent.symbol} (${extractedAgent.name}) - ID: ${extractedAgent.id}`);
       }
 
       // Check pagination info
       const { page, pageCount, total } = data.meta.pagination;
-      console.log(`📊 Page ${page} of ${pageCount} (${totalExtracted}/${total} agents extracted)`);
+      //console.log(`📊 Page ${page} of ${pageCount} (${totalExtracted}/${total} agents extracted)`);
 
       // Break if we've reached the last page
       if (page >= pageCount) {
-        console.log('✅ Reached last page. Extraction complete!');
+        //console.log('✅ Reached last page. Extraction complete!');
         break;
       }
 
       // Sleep to avoid rate limiting
-      console.log('⏳ Sleeping for 2 seconds...\n');
+      //console.log('⏳ Sleeping for 2 seconds...\n');
       await sleep(2000);
 
       currentPage++;
@@ -147,9 +147,9 @@ async function extractAllAgents() {
     // Close the array in the file
     closeArrayInFile();
 
-    console.log(`\n🎉 Extraction completed successfully!`);
-    console.log(`📊 Total agents extracted: ${totalExtracted}`);
-    console.log(`📁 Data saved to: ${OUTPUT_FILE}`);
+    //console.log(`\n🎉 Extraction completed successfully!`);
+    //console.log(`📊 Total agents extracted: ${totalExtracted}`);
+    //console.log(`📁 Data saved to: ${OUTPUT_FILE}`);
 
   } catch (error) {
     console.error('❌ Error during extraction:', error.message);
@@ -157,7 +157,7 @@ async function extractAllAgents() {
     // If we have partial data, still close the array
     if (totalExtracted > 0) {
       closeArrayInFile();
-      console.log(`⚠️  Partial data saved (${totalExtracted} agents)`);
+      //console.log(`⚠️  Partial data saved (${totalExtracted} agents)`);
     }
     
     process.exit(1);

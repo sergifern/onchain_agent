@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
-    console.log(user);
+    //console.log(user);
 
 
     return NextResponse.json({ message: 'success' }, { status: 200 });

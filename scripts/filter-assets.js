@@ -12,12 +12,12 @@ function delay(ms) {
 }
 
 async function main() {
-  console.log(`Starting analysis of ${ASSETS.length} assets...\n`);
+  //console.log(`Starting analysis of ${ASSETS.length} assets...\n`);
   
   // Print header
-  console.log('=== ASSET ANALYSIS RESULTS ===\n');
-  console.log('Symbol'.padEnd(12) + 'Address'.padEnd(45) + 'Price ($)'.padEnd(15) + 'Market Cap ($)'.padEnd(20));
-  console.log('-'.repeat(90));
+  //console.log('=== ASSET ANALYSIS RESULTS ===\n');
+  //console.log('Symbol'.padEnd(12) + 'Address'.padEnd(45) + 'Price ($)'.padEnd(15) + 'Market Cap ($)'.padEnd(20));
+  //console.log('-'.repeat(90));
   
   let totalMarketCap = 0;
   let assetsWithData = 0;
@@ -34,7 +34,7 @@ export const FILTERED_ASSETS = [
   
   // Create file with header
   fs.writeFileSync(outputPath, fileHeader, 'utf8');
-  console.log(`📝 Created output file: ${outputPath}`);
+  //console.log(`📝 Created output file: ${outputPath}`);
   
   // Process assets in batches of 5
   const batchSize = 5;
@@ -45,7 +45,7 @@ export const FILTERED_ASSETS = [
       const batchNumber = Math.floor(i / batchSize) + 1;
       const totalBatches = Math.ceil(ASSETS.length / batchSize);
       
-      console.log(`\n[Batch ${batchNumber}/${totalBatches}] Processing assets ${i + 1}-${Math.min(i + batchSize, ASSETS.length)}...`);
+      //console.log(`\n[Batch ${batchNumber}/${totalBatches}] Processing assets ${i + 1}-${Math.min(i + batchSize, ASSETS.length)}...`);
       
       // Get symbols and addresses for this batch
       const batchSymbols = batch.map(asset => asset.symbol);
@@ -76,7 +76,7 @@ export const FILTERED_ASSETS = [
           const priceStr = (price && price > 0) ? `$${price.toFixed(8)}`.padEnd(15) : 'N/A'.padEnd(15);
           const marketCapStr = (marketCap && marketCap > 0) ? `$${marketCap.toLocaleString()}`.padEnd(20) : 'N/A'.padEnd(20);
           
-          console.log(`${symbolStr}${addressStr}${priceStr}${marketCapStr}`);
+          //console.log(`${symbolStr}${addressStr}${priceStr}${marketCapStr}`);
           
           // Only add to filtered assets if both price and market cap are valid
           if (price && price > 0 && marketCap && marketCap > 0) {
@@ -94,7 +94,7 @@ export const FILTERED_ASSETS = [
             totalMarketCap += marketCap;
             assetsWithData++;
             
-            console.log(`  ✅ Added ${asset.symbol} to file`);
+            //console.log(`  ✅ Added ${asset.symbol} to file`);
           }
           
           processedCount++;
@@ -103,17 +103,17 @@ export const FILTERED_ASSETS = [
       
       // Add delay between batches (except for the last batch)
       if (i + batchSize < ASSETS.length) {
-        console.log(`[Batch ${batchNumber} completed] Waiting 5 seconds before next batch...`);
+        //console.log(`[Batch ${batchNumber} completed] Waiting 5 seconds before next batch...`);
         await delay(5000);
       }
     }
     
-    console.log('-'.repeat(90));
-    console.log(`\nFINAL SUMMARY:`);
-    console.log(`Total Assets Processed: ${processedCount}`);
-    console.log(`Assets with Valid Data: ${assetsWithData}`);
-    console.log(`Total Combined Market Cap: $${totalMarketCap.toLocaleString()}`);
-    console.log(`Average Market Cap: $${assetsWithData > 0 ? (totalMarketCap / assetsWithData).toLocaleString() : 'N/A'}`);
+    //console.log('-'.repeat(90));
+    //console.log(`\nFINAL SUMMARY:`);
+    //console.log(`Total Assets Processed: ${processedCount}`);
+    //console.log(`Assets with Valid Data: ${assetsWithData}`);
+    //console.log(`Total Combined Market Cap: $${totalMarketCap.toLocaleString()}`);
+    //console.log(`Average Market Cap: $${assetsWithData > 0 ? (totalMarketCap / assetsWithData).toLocaleString() : 'N/A'}`);
     
     // Close the array and add final comments
     const fileFooter = `];
@@ -124,16 +124,16 @@ export const FILTERED_ASSETS = [
 `;
     
     fs.appendFileSync(outputPath, fileFooter, 'utf8');
-    console.log(`\n✅ File completed: ${outputPath}`);
-    console.log(`📊 ${assetsWithData} valid assets out of ${ASSETS.length} total assets`);
-    console.log(`📈 Success rate: ${((assetsWithData / ASSETS.length) * 100).toFixed(1)}%`);
+    //console.log(`\n✅ File completed: ${outputPath}`);
+    //console.log(`📊 ${assetsWithData} valid assets out of ${ASSETS.length} total assets`);
+    //console.log(`📈 Success rate: ${((assetsWithData / ASSETS.length) * 100).toFixed(1)}%`);
     
   } catch (error) {
     console.error('Error during analysis:', error);
-    console.log(`\nPartial results before error:`);
-    console.log(`Assets processed: ${processedCount}`);
-    console.log(`Assets with data: ${assetsWithData}`);
-    console.log(`Total market cap so far: $${totalMarketCap.toLocaleString()}`);
+    //console.log(`\nPartial results before error:`);
+    //console.log(`Assets processed: ${processedCount}`);
+    //console.log(`Assets with data: ${assetsWithData}`);
+    //console.log(`Total market cap so far: $${totalMarketCap.toLocaleString()}`);
     
     // Close the file properly even if there was an error
     try {
@@ -144,8 +144,8 @@ export const FILTERED_ASSETS = [
 // Error: ${error.message}
 `;
       fs.appendFileSync(outputPath, errorFooter, 'utf8');
-      console.log(`💾 Partial results saved to: ${outputPath}`);
-      console.log(`📊 ${assetsWithData} assets were saved before the error occurred`);
+      //console.log(`💾 Partial results saved to: ${outputPath}`);
+      //console.log(`📊 ${assetsWithData} assets were saved before the error occurred`);
     } catch (fileError) {
       console.error('Could not close the output file:', fileError.message);
     }

@@ -83,7 +83,7 @@ export class PrivySolanaWalletClient extends SolanaWalletClient {
       tx.recentBlockhash = latestBlockhash.blockhash;
     }
 
-    console.log('FINAL TX********', tx);
+    //console.log('FINAL TX********', tx);
   
     // Envía la transacción utilizando Privy
     const { hash } = await this.privy.walletApi.solana.signAndSendTransaction({

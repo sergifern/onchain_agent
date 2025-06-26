@@ -106,7 +106,7 @@ const baseCurrencyOptions = [
 
 function getUsdValue(amount: string, currency: string, prices: Record<string, number>): string {
   const n = parseFloat(amount);
-  console.log(amount, currency, prices);
+  //console.log(amount, currency, prices);
   if (isNaN(n)) return '$0.00';
   
   const price = prices[currency] || 0;
@@ -146,7 +146,7 @@ export default function AddTaskPage() {
         const symbols = baseCurrencyOptions.map(option => option.value);
         const priceResults = await getTokenPricesBySymbols(symbols);
         
-        console.log('Price results:', priceResults);
+        //console.log('Price results:', priceResults);
         
         const pricesMap = priceResults.reduce((acc, { symbol, price }) => {
           acc[symbol] = price;
@@ -195,8 +195,8 @@ export default function AddTaskPage() {
   }, []);
 
   const onSubmit = async (data: TaskFormValues) => {
-    console.log('Form submitted with data:', data);
-    console.log('Form errors:', form.formState.errors);
+    //console.log('Form submitted with data:', data);
+    //console.log('Form errors:', form.formState.errors);
     
     try {
       setIsSubmitting(true);

@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
 
   try {
     // Call ThirdWeb Insight API directly
-    console.log(process.env.THIRDWEB_CLIENT_ID)
+    //console.log(process.env.THIRDWEB_CLIENT_ID)
     const response = await fetch(`https://insight.thirdweb.com/v1/tokens?chain_id=8453&limit=50&metadata=true&resolve_metadata_links=true&include_spam=false&owner_address=${address}&include_native=true&clientId=${process.env.THIRDWEB_CLIENT_ID}`);
     
     if (!response.ok) {

@@ -59,7 +59,7 @@ async function waitForRateLimit(): Promise<void> {
   
   if (timeSinceLastRequest < MIN_REQUEST_INTERVAL) {
     const waitTime = MIN_REQUEST_INTERVAL - timeSinceLastRequest;
-    console.log(`Rate limiting: waiting ${waitTime}ms before next request`);
+    //console.log(`Rate limiting: waiting ${waitTime}ms before next request`);
     await new Promise(resolve => setTimeout(resolve, waitTime));
   }
   
@@ -79,7 +79,7 @@ async function fetchWithRetry(url: string, options: any, maxRetries: number = 3)
         const retryAfter = response.headers.get('retry-after');
         const waitTime = retryAfter ? parseInt(retryAfter) * 1000 : Math.pow(2, attempt) * 1000; // Exponential backoff
         
-        console.log(`Rate limited (attempt ${attempt}/${maxRetries}). Waiting ${waitTime}ms before retry...`);
+        //console.log(`Rate limited (attempt ${attempt}/${maxRetries}). Waiting ${waitTime}ms before retry...`);
         
         if (attempt < maxRetries) {
           await new Promise(resolve => setTimeout(resolve, waitTime));
@@ -161,15 +161,15 @@ export async function buildApprovalTransaction(
     amount ? { tokenAddress, amount } : { tokenAddress }
   );
 
-  console.log('1inch approval URL:', url);
-  console.log('1inch headers:', headers);
+  //console.log('1inch approval URL:', url);
+  //console.log('1inch headers:', headers);
 
   try {
     const response = await fetch(url, { headers });
     
     // Check response status and content type
-    console.log('Response status:', response.status);
-    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+    //console.log('Response status:', response.status);
+    //console.log('Response headers:', Object.fromEntries(response.headers.entries()));
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -191,7 +191,7 @@ export async function buildApprovalTransaction(
       throw new Error(`1inch API error: ${transaction.description || transaction.error}`);
     }
     
-    console.log('Raw 1inch approval transaction:', JSON.stringify(transaction, null, 2));
+    //console.log('Raw 1inch approval transaction:', JSON.stringify(transaction, null, 2));
     
     return transaction;
   } catch (error) {
@@ -204,7 +204,7 @@ export async function buildApprovalTransaction(
 export async function buildSwapTransaction(swapParams: SwapParams): Promise<any> {
   const url = apiRequestUrl('/swap', swapParams);
 
-  console.log('1inch swap URL:', url);
+  //console.log('1inch swap URL:', url);
 
   try {
     const response = await fetch(url, { headers });
@@ -251,7 +251,7 @@ async function sendSimpleTransaction(walletId: string, to: string, data: string,
     gasLimit: "0x7A120", // 500000 - generous gas limit
   };
 
-  console.log('Simple transaction params:', simpleTx);
+  //console.log('Simple transaction params:', simpleTx);
 
   const { hash } = await privy.walletApi.ethereum.sendTransaction({
     walletId: walletId,
@@ -272,17 +272,17 @@ export async function executeSimple1inchSwap(
   amountIn: bigint,
   slippagePercent: number = 1
 ) {
-  console.log('Starting simplified 1inch swap...');
+  //console.log('Starting simplified 1inch swap...');
   
   try {
     // Step 1: Get approval transaction
     await sleep(1000);
     const approvalTx = await buildApprovalTransaction(tokenIn);
-    console.log('Approval tx from 1inch:', approvalTx);
+    //console.log('Approval tx from 1inch:', approvalTx);
     
     // Send simple approval
     await sendSimpleTransaction(walletId, approvalTx.to, approvalTx.data);
-    console.log('Approval completed');
+    //console.log('Approval completed');
     
     // Step 2: Build swap
     await sleep(2000);
@@ -297,11 +297,11 @@ export async function executeSimple1inchSwap(
     };
     
     const swapTx = await buildSwapTransaction(swapParams);
-    console.log('Swap tx from 1inch:', swapTx);
+    //console.log('Swap tx from 1inch:', swapTx);
     
     // Send simple swap
     const receipt = await sendSimpleTransaction(walletId, swapTx.to, swapTx.data, swapTx.value || '0x0');
-    console.log('Swap completed:', receipt.transactionHash);
+    //console.log('Swap completed:', receipt.transactionHash);
     
     return receipt;
     
@@ -391,25 +391,25 @@ export async function executeOneInchSwap(
     throw new Error(`Invalid parameters: walletId=${walletId}, userAddress=${userAddress}, tokenIn=${tokenIn}, tokenOut=${tokenOut}, amountIn=${amountIn}`);
   }
 
-  console.log('Starting 1inch swap process...');
+  //console.log('Starting 1inch swap process...');
 
   // Add initial delay to avoid rate limiting
-  console.log('Adding delay to prevent rate limiting...');
+  //console.log('Adding delay to prevent rate limiting...');
   await sleep(1000);
 
   // Step 1: Check allowance
   const allowance = await checkOneInchAllowance(tokenIn, userAddress);
-  console.log('Current allowance:', allowance);
+  //console.log('Current allowance:', allowance);
 
   // Step 2: Approve if needed
   if (BigInt(allowance) < amountIn) {
-    console.log('Insufficient allowance, creating approval transaction...');
+    //console.log('Insufficient allowance, creating approval transaction...');
     
     // Add delay before approval request
     await sleep(1500);
     
     const rawApprovalTx = await buildApprovalTransaction(tokenIn);
-    console.log('Raw approval tx from 1inch:', JSON.stringify(rawApprovalTx, null, 2));
+    //console.log('Raw approval tx from 1inch:', JSON.stringify(rawApprovalTx, null, 2));
     
     // Convert 1inch format to Privy-compatible format
     const approvalTx = {
@@ -427,10 +427,10 @@ export async function executeOneInchSwap(
       }
     });
 
-    console.log('Final approval tx params:', JSON.stringify(approvalTx, null, 2));
-    console.log('Sending approval transaction...');
+    //console.log('Final approval tx params:', JSON.stringify(approvalTx, null, 2));
+    //console.log('Sending approval transaction...');
     const approvalReceipt = await sendTransaction(walletId, approvalTx);
-    console.log('Approval transaction confirmed:', approvalReceipt.transactionHash);
+    //console.log('Approval transaction confirmed:', approvalReceipt.transactionHash);
   }
 
   // Step 3: Build swap transaction
@@ -444,13 +444,13 @@ export async function executeOneInchSwap(
     allowPartialFill: false
   };
 
-  console.log('Building swap transaction...');
+  //console.log('Building swap transaction...');
   
   // Add delay before swap request
   await sleep(2000); // Longer delay for the main swap call
   
   const rawSwapTx = await buildSwapTransaction(swapParams);
-  console.log('Raw swap tx from 1inch:', JSON.stringify(rawSwapTx, null, 2));
+  //console.log('Raw swap tx from 1inch:', JSON.stringify(rawSwapTx, null, 2));
 
   // Convert 1inch format to Privy-compatible format
   const swapTx = {
@@ -469,10 +469,10 @@ export async function executeOneInchSwap(
   });
 
   // Step 4: Execute swap
-  console.log('Final swap tx params:', JSON.stringify(swapTx, null, 2));
-  console.log('Executing swap...');
+  //console.log('Final swap tx params:', JSON.stringify(swapTx, null, 2));
+  //console.log('Executing swap...');
   const swapReceipt = await sendTransaction(walletId, swapTx);
-  console.log('Swap completed:', swapReceipt.transactionHash);
+  //console.log('Swap completed:', swapReceipt.transactionHash);
 
   return swapReceipt;
 }
@@ -489,15 +489,15 @@ export async function test1inchAPI(): Promise<any> {
   // Try to get tokens list first (simpler endpoint)
   const url = `${apiBaseUrl}/tokens`;
   
-  console.log('Testing 1inch API connection...');
-  console.log('URL:', url);
-  console.log('Headers:', headers);
+  //console.log('Testing 1inch API connection...');
+  //console.log('URL:', url);
+  //console.log('Headers:', headers);
 
   try {
     const response = await fetch(url, { headers });
     
-    console.log('Response status:', response.status);
-    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+    //console.log('Response status:', response.status);
+    //console.log('Response headers:', Object.fromEntries(response.headers.entries()));
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -523,7 +523,7 @@ export async function test1inchAPI(): Promise<any> {
     }
     
     const data = await response.json();
-    console.log('1inch API test successful!');
+    //console.log('1inch API test successful!');
     
     return { 
       success: true, 
@@ -552,7 +552,7 @@ export async function getOneInchQuote(
     amount: amountIn.toString()
   });
 
-  console.log('1inch quote URL:', url);
+  //console.log('1inch quote URL:', url);
 
   try {
     const response = await fetch(url, { headers });
@@ -593,33 +593,33 @@ export async function executeFixed1inchSwap(
   amountIn: bigint,
   slippagePercent: number = 1
 ) {
-  console.log('Starting fixed 1inch swap...');
+  //console.log('Starting fixed 1inch swap...');
 
   try {
     // Step 1: Check allowance with delay
     await sleep(1000);
     const allowance = await checkOneInchAllowance(tokenIn, userAddress);
-    console.log('Current allowance:', allowance);
+    //console.log('Current allowance:', allowance);
 
     // Step 2: Approve if needed
     if (BigInt(allowance) < amountIn) {
-      console.log('Building approval transaction...');
+      //console.log('Building approval transaction...');
       await sleep(1500);
       
       const rawApprovalTx = await buildApprovalTransaction(tokenIn);
-      console.log('Raw 1inch approval:', rawApprovalTx);
+      //console.log('Raw 1inch approval:', rawApprovalTx);
       
       // Convert to Privy format
       const approvalTx = convertToPrivyFormat(rawApprovalTx);
-      console.log('Converted approval for Privy:', approvalTx);
+      //console.log('Converted approval for Privy:', approvalTx);
       
       // Send approval
       const approvalReceipt = await sendTransaction(walletId, approvalTx);
-      console.log('Approval confirmed:', approvalReceipt.transactionHash);
+      //console.log('Approval confirmed:', approvalReceipt.transactionHash);
     }
 
     // Step 3: Build and execute swap
-    console.log('Building swap transaction...');
+    //console.log('Building swap transaction...');
     await sleep(2000);
     
     const swapParams: SwapParams = {
@@ -633,15 +633,15 @@ export async function executeFixed1inchSwap(
     };
 
     const rawSwapTx = await buildSwapTransaction(swapParams);
-    console.log('Raw 1inch swap:', rawSwapTx);
+    //console.log('Raw 1inch swap:', rawSwapTx);
     
     // Convert to Privy format
     const swapTx = convertToPrivyFormat(rawSwapTx);
-    console.log('Converted swap for Privy:', swapTx);
+    //console.log('Converted swap for Privy:', swapTx);
     
     // Send swap
     const swapReceipt = await sendTransaction(walletId, swapTx);
-    console.log('Swap completed:', swapReceipt.transactionHash);
+    //console.log('Swap completed:', swapReceipt.transactionHash);
 
     return swapReceipt;
 

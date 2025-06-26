@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     // Get the user's agent (first agent)
     const agent = await getAgentsByUserId(user as string);
     
-    console.log(agent);
+    //console.log(agent);
     if (!agent) {
       return NextResponse.json({ error: 'No agent found for user' }, { status: 404 });
     }
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     // Get executions for this agent
     const executions = await getAgentExecutions(agent._id as ObjectId, 50); // Get up to 50 executions
 
-    console.log(executions);
+    //console.log(executions);
     return NextResponse.json({ 
       executions,
       success: true

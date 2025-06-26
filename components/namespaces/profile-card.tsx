@@ -18,7 +18,7 @@ export function ProfileCard({ basename }: { basename: string }) {
   const [isClaimed, setIsClaimed] = useState(true);
 
 
-  console.log(address);
+  //console.log(address);
   useEffect(() => {
     const fetchAddress = async () => {
       const address = await getAddress({ name: basename });

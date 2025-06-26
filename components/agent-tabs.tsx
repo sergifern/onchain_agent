@@ -98,7 +98,7 @@ export default function AgentInfoTabs() {
           .filter((holding: Holding) => parseFloat(holding.price) > 0)
           .sort((a: Holding, b: Holding) => b.balanceInUsd - a.balanceInUsd)
         setStakingPositions(stakingPositions)
-        console.log(stakingPositions)
+        //console.log(stakingPositions)
       } catch (error) {
         console.error('Error fetching holdings:', error)
       } finally {

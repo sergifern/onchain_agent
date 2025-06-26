@@ -9,10 +9,10 @@ export async function GET(req: Request) {
     const address = "0x1f294306d01546a4cd5E62F3c165c5B7B31C7F83";
     let externalAddress = new ExternalAddress("base", address as `0x${string}` ); 
 
-    console.log(externalAddress);
+    //console.log(externalAddress);
   // Fetch reputation metadata for the address as JSON including score, reputation metadata, and risk metadata
   const addressReputation = await externalAddress.reputation();
-  console.log(addressReputation);
+  //console.log(addressReputation);
   // addressReputation.risky returns 0 if no risk indicated, or 1 if risk indicated
   if(addressReputation.risky) {
       // actions if risk indicated

@@ -60,7 +60,7 @@ export default function AgentDeployment() {
         const data = await response.json();
 
         setAgent(data.agent);
-        console.log('Agent data', data);
+        ////console.log('Agent data', data);
         if (data.agent) {
           router.push('/agent');
           setIsLoading(false);
@@ -121,7 +121,7 @@ export default function AgentDeployment() {
 
   const handleDeployComplete = () => {
     // Agent creation completed successfully
-    console.log("Agent deployment completed");
+    //console.log("Agent deployment completed");
   }
 
   const handleRedirect = () => {
@@ -134,8 +134,6 @@ export default function AgentDeployment() {
     try {
       // Here you would implement the actual delegation logic
       // For now, we'll just simulate a successful delegation
-      console.log("Delegating wallet:", embeddedWallet?.address);
-
 
       await delegateWallet({address: embeddedWallet?.address as string, chainType: 'ethereum'});
       
@@ -154,16 +152,23 @@ export default function AgentDeployment() {
 
   useEffect(() => {
     const getStakedEthy = async () => {
-      console.log(address);
+      //console.log(address);
       const stakedBalance = await getStakedBalance(address as `0x${string}`, '0x0000000000000000000000000000000000000000'); //TODO
-      console.log(stakedBalance);
+      //console.log(stakedBalance);
       return stakedBalance;
     }
     getStakedEthy().then((stakedBalance) => {
       setStakedBalance(stakedBalance);
-      setTotalBalance(Number(EthyBalance.data?.formatted) + Number(stakedBalance) || 0);
     });
   }, [user?.id, address]);
+
+  // Separate effect to calculate total balance when either wallet balance or staked balance changes
+  useEffect(() => {
+    const walletBalance = Number(EthyBalance.data?.formatted) || 0;
+    const total = walletBalance + Number(stakedBalance);
+    setTotalBalance(total);
+    //console.log('Balance calculation:', { walletBalance, stakedBalance, total });
+  }, [EthyBalance.data?.formatted, stakedBalance]);
 
   if (isLoading) {
     return <PageLoader />;

@@ -56,7 +56,7 @@ export default function Messages({ messages, addToolResult }: { messages: any, a
 
 
 function LinkRenderer(props: any) {
-  console.log({ props });
+  //console.log({ props });
   return (
     <a href={props.href} target="_blank" rel="noreferrer" className="text-violet-300 underline hover:text-violet-500 cursor-pointer">
       {props.children}

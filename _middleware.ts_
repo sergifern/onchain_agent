@@ -5,10 +5,10 @@ import { PrivyClient } from '@privy-io/server-auth';
 export async function middleware(req: NextRequest) {
 
   const privy = new PrivyClient(process.env.NEXT_PUBLIC_PRIVY_APP_ID!, process.env.PRIVY_SECRET!);
-  console.log(`Middleware triggered for: ${req.nextUrl.pathname}`);
+  //console.log(`Middleware triggered for: ${req.nextUrl.pathname}`);
 
   if (!req.nextUrl.pathname.startsWith('/api/users')) {
-    console.log("Not a user api call");
+    //console.log("Not a user api call");
     return NextResponse.next();
   }
   const authHeader = req.headers.get('authorization');

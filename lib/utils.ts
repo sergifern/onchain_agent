@@ -27,7 +27,7 @@ export function truncateHash(hash: string | undefined) {
 // transform ethy token amount to human readable format, with two decimals, and if more than 1million show in millions 1m
 export function formatEthyAmount(amount: number) {
   if (amount === 0) return "0"
-  console.log(amount)
+  //console.log(amount)
   if (amount >= 1000000) {
     return (amount / 1000000).toFixed(2) + "m"
   }

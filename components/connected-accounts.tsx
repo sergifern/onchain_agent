@@ -48,12 +48,12 @@ export default function ConnectedAccounts() {
 
   const {linkTwitter, linkEmail} = useLinkAccount({
     onSuccess: ({user, linkMethod, linkedAccount}) => {
-      console.log(user, linkMethod, linkedAccount);
+      //console.log(user, linkMethod, linkedAccount);
       // Any logic you'd like to execute if the user successfully links an account while this
       // component is mounted
     },
     onError: (error, details) => {
-      console.log(error, details);
+      //console.log(error, details);
       // Any logic you'd like to execute after a user exits the link flow or there is an error
     },
   }); 
@@ -82,7 +82,7 @@ export default function ConnectedAccounts() {
     //await unlinkTwitter()
     setTimeout(() => setIsConnecting(false), 1000)
   }
-  console.log(twitterAccount)
+  //console.log(twitterAccount)
 
   const renderMainAccount = () => {
     if (!mainAccount) return null

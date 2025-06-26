@@ -98,7 +98,7 @@ export default function NamespaceClaim() {
 
     const newActiveWallet = wallets.find((wallet) => wallet.address === mainAccount.address);
 
-    console.log(newActiveWallet);
+    //console.log(newActiveWallet);
     await setActiveWallet(newActiveWallet as ConnectedWallet);
 
     try {
@@ -131,7 +131,7 @@ export default function NamespaceClaim() {
         chainId: base.id,
       });
       if (tx) {
-        console.log(tx);
+        //console.log(tx);
         setTimeout(() => {
           setConfirmedTx(true);
           setIsConfirming(false);
@@ -167,7 +167,7 @@ export default function NamespaceClaim() {
     </div>
   }
 
-  console.log(isMinted);
+  //console.log(isMinted);
 
   return (
     <>

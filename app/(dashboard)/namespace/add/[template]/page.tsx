@@ -24,7 +24,7 @@ export default function AddDocumentTemplatePage({ params }: { params: { template
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Form submitted:", formData)
+    //console.log("Form submitted:", formData)
     // Here you would typically save the document and redirect
     router.push("/namespace/jesse.base.eth")
   }

@@ -23,27 +23,27 @@ export async function GET(request: Request) {
 
 
     const executions = await getTasksOrderedByNextExecutionTime();
-    console.log(executions);
+    //console.log(executions);
     const firstTask = executions[0];
-    console.log(firstTask);
-    console.log(firstTask.userId);
+    //console.log(firstTask);
+    //console.log(firstTask.userId);
 
     const walletId = await getWalletIdFromUserId(firstTask.userId);
-    console.log(walletId);
+    //console.log(walletId);
 
     const agent = await getAgentByUserId(firstTask.userId);
-    console.log(agent);
+    //console.log(agent);
 
     if (agent) {
       const result = await executeTask(firstTask, walletId, agent._id as ObjectId);
-      console.log(result);
+      //console.log(result);
     } else {
       throw new Error("Agent not found");
     }
     
 
 
-    /*console.log('Executing 1inch swap...');
+    /*//console.log('Executing 1inch swap...');
     const swapResult = await executeOneInchSwap(
       'nhmx1a68751zaumphl7kefjs',
       userAddress,

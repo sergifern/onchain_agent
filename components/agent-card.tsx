@@ -77,18 +77,18 @@ export default function AgentCard({ type }: AgentCardProps) {
   useEffect(() => {
     const getEthyPrice = async () => {
       const ethyPrice = await getTokenPriceBySymbol("ETHY");
-      console.log("ethyPrice", ethyPrice);
-      console.log("ethyBalance", ethyBalance);
+      //console.log("ethyPrice", ethyPrice);
+      //console.log("ethyBalance", ethyBalance);
       const ethyBalanceInUsd = ethyBalance * ethyPrice;
-      console.log("ethyBalanceInUsd", ethyBalanceInUsd);
+      //console.log("ethyBalanceInUsd", ethyBalanceInUsd);
       setEthyBalanceInUsd(ethyBalanceInUsd);
     }
     const getEthPrice = async () => {
       const ethprice = await getTokenPriceBySymbol("ETH");
-      console.log("ethprice", ethprice);
-      console.log("ethBalance", ethBalance);
+      //console.log("ethprice", ethprice);
+      //console.log("ethBalance", ethBalance);
       const ethBalanceInUsd = ethBalance * ethprice;
-      console.log("ethBalanceInUsd", ethBalanceInUsd);
+      //console.log("ethBalanceInUsd", ethBalanceInUsd);
       setEthBalanceInUsd(ethBalanceInUsd);
     }
     getEthyPrice();

@@ -20,7 +20,7 @@ import { LinkedAccounts } from "./linked-accounts"
 export function WalletSheet() {
   const { user, logout, linkTwitter, ready, authenticated } = usePrivy()
 
-  console.log(user)
+  //console.log(user)
   if (!(ready && authenticated) || !user) {
     return null;
   }

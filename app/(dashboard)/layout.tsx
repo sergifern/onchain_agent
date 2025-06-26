@@ -165,7 +165,7 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
 
   const handleNavigation = (url: string) => {
     if (url === "#" || !url) {
-      //console.log("Coming soon")
+      ////console.log("Coming soon")
       setIsModalOpen(true)
     } else {
       router.push(url)

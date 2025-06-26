@@ -122,7 +122,7 @@ export default function AgentTable() {
         }
       })
       const data = await response.json()
-      console.log(data.tasks)
+      //console.log(data.tasks)
       setTasks(data.tasks)
     }
 

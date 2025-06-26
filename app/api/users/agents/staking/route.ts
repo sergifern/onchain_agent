@@ -64,7 +64,7 @@ export async function GET(req: NextRequest) {
     // Process results
     results.forEach((balance, i) => {
       if (balance > 0n) {
-        console.log(`🟢 Staked in ${stakingContracts[i]}: ${balance.toString()}`)
+        //console.log(`🟢 Staked in ${stakingContracts[i]}: ${balance.toString()}`)
         
         // Find the virtual agent that matches this staking contract
         const virtualAgent = virtualsAgents.find(agent => 
@@ -126,7 +126,7 @@ export async function GET(req: NextRequest) {
       totalBalanceInUsd 
     })
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     console.error('Error fetching holdings:', error);
     return NextResponse.json({ error: 'Failed to fetch holdings' }, { status: 500 });
   }

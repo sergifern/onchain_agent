@@ -27,7 +27,7 @@ export async function getBasename(address: Address) {
       args: [addressReverseNode],
     });
 
-    console.log("*************basename", basename);
+    //console.log("*************basename", basename);
     if (basename) {
       return basename;
     }

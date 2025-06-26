@@ -68,7 +68,7 @@ async function getTokenPriceWithRetry(address, chain = 'base') {
       retryCount++;
       if (retryCount <= maxRetries) {
         const waitTime = Math.pow(2, retryCount) * 1000; // Exponential backoff: 2s, 4s, 8s
-        console.log(`  ⚠️  Error fetching price for ${address}. Waiting ${waitTime/1000}s before retry ${retryCount}/${maxRetries}...`);
+        //console.log(`  ⚠️  Error fetching price for ${address}. Waiting ${waitTime/1000}s before retry ${retryCount}/${maxRetries}...`);
         await delay(waitTime);
       } else {
         console.error(`  ❌ Failed to fetch price for ${address} after ${maxRetries} retries:`, error.message);
@@ -80,12 +80,12 @@ async function getTokenPriceWithRetry(address, chain = 'base') {
 }
 
 async function main() {
-  console.log(`Starting analysis of ${allVirtualsAgents.length} virtuals agents...\n`);
+  //console.log(`Starting analysis of ${allVirtualsAgents.length} virtuals agents...\n`);
   
   // Print header
-  console.log('=== VIRTUALS AGENTS PRICE ANALYSIS ===\n');
-  console.log('Symbol'.padEnd(15) + 'Chain'.padEnd(10) + 'Address'.padEnd(45) + 'Price ($)'.padEnd(15));
-  console.log('-'.repeat(85));
+  //console.log('=== VIRTUALS AGENTS PRICE ANALYSIS ===\n');
+  //console.log('Symbol'.padEnd(15) + 'Chain'.padEnd(10) + 'Address'.padEnd(45) + 'Price ($)'.padEnd(15));
+  //console.log('-'.repeat(85));
   
   let agentsWithValidPrice = 0;
   let processedCount = 0;
@@ -101,7 +101,7 @@ export const filteredVirtualsAgents = [
   
   // Create file with header
   fs.writeFileSync(outputPath, fileHeader, 'utf8');
-  console.log(`📝 Created output file: ${outputPath}`);
+  //console.log(`📝 Created output file: ${outputPath}`);
   
   // Process agents one by one with delays to avoid rate limiting
   for (let i = 0; i < allVirtualsAgents.length; i++) {
@@ -111,7 +111,7 @@ export const filteredVirtualsAgents = [
     // Progress indicator
     if (processedCount % 10 === 0) {
       try {
-        console.log(`\n📊 Progress: ${processedCount}/${allVirtualsAgents.length} (${((processedCount / allVirtualsAgents.length) * 100).toFixed(1)}%)`);
+        //console.log(`\n📊 Progress: ${processedCount}/${allVirtualsAgents.length} (${((processedCount / allVirtualsAgents.length) * 100).toFixed(1)}%)`);
       } catch (error) {
         if (error.code === 'EPIPE') process.exit(0);
         throw error;
@@ -121,7 +121,7 @@ export const filteredVirtualsAgents = [
     // Skip agents without token address
     if (!agent.tokenAddress) {
       try {
-        console.log(`${agent.symbol.padEnd(15)}${(agent.chain || 'N/A').padEnd(10)}${'NO_ADDRESS'.padEnd(45)}${'SKIPPED'.padEnd(15)}`);
+        //console.log(`${agent.symbol.padEnd(15)}${(agent.chain || 'N/A').padEnd(10)}${'NO_ADDRESS'.padEnd(45)}${'SKIPPED'.padEnd(15)}`);
       } catch (error) {
         if (error.code === 'EPIPE') process.exit(0);
         throw error;
@@ -141,7 +141,7 @@ export const filteredVirtualsAgents = [
     
     // Safe console logging (handle EPIPE errors when piped)
     try {
-      console.log(`${symbolStr}${chainStr}${addressStr}${priceStr}`);
+      //console.log(`${symbolStr}${chainStr}${addressStr}${priceStr}`);
     } catch (error) {
       if (error.code === 'EPIPE') {
         process.exit(0);
@@ -177,14 +177,14 @@ export const filteredVirtualsAgents = [
       agentsWithValidPrice++;
       
       try {
-        console.log(`  ✅ Added ${agent.symbol} to filtered list (Price: $${price.toFixed(8)})`);
+        //console.log(`  ✅ Added ${agent.symbol} to filtered list (Price: $${price.toFixed(8)})`);
       } catch (error) {
         if (error.code === 'EPIPE') process.exit(0);
         throw error;
       }
     } else {
       try {
-        console.log(`  ❌ Skipped ${agent.symbol} - no valid price data`);
+        //console.log(`  ❌ Skipped ${agent.symbol} - no valid price data`);
       } catch (error) {
         if (error.code === 'EPIPE') process.exit(0);
         throw error;
@@ -197,11 +197,11 @@ export const filteredVirtualsAgents = [
     }
   }
   
-  console.log('-'.repeat(85));
-  console.log(`\nFINAL SUMMARY:`);
-  console.log(`Total Agents Processed: ${processedCount}`);
-  console.log(`Agents with Valid Price Data: ${agentsWithValidPrice}`);
-  console.log(`Success Rate: ${((agentsWithValidPrice / processedCount) * 100).toFixed(1)}%`);
+  //console.log('-'.repeat(85));
+  //console.log(`\nFINAL SUMMARY:`);
+  //console.log(`Total Agents Processed: ${processedCount}`);
+  //console.log(`Agents with Valid Price Data: ${agentsWithValidPrice}`);
+  //console.log(`Success Rate: ${((agentsWithValidPrice / processedCount) * 100).toFixed(1)}%`);
   
   // Close the array and add final comments
   const fileFooter = `];
@@ -212,9 +212,9 @@ export const filteredVirtualsAgents = [
 `;
   
   fs.appendFileSync(outputPath, fileFooter, 'utf8');
-  console.log(`\n✅ Filtering completed: ${outputPath}`);
-  console.log(`📊 ${agentsWithValidPrice} valid agents out of ${processedCount} total agents`);
-  console.log(`📈 Success rate: ${((agentsWithValidPrice / processedCount) * 100).toFixed(1)}%`);
+  //console.log(`\n✅ Filtering completed: ${outputPath}`);
+  //console.log(`📊 ${agentsWithValidPrice} valid agents out of ${processedCount} total agents`);
+  //console.log(`📈 Success rate: ${((agentsWithValidPrice / processedCount) * 100).toFixed(1)}%`);
 }
 
 // Handle errors gracefully

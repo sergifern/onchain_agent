@@ -46,7 +46,7 @@ export const getTokenPricesBySymbols = async (symbols: string[]): Promise<{ symb
       try {
         const response = await fetch(`https://api.dexscreener.com/tokens/v1/${chain}/${addresses}`);
 
-        console.log(response);
+        //console.log(response);
         const data = await response.json();
         
         // Map prices back to symbols

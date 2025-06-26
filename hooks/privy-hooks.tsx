@@ -9,9 +9,9 @@ export function usePrivyLogin() {
   
   return useLogin({
     onComplete: async ({user, isNewUser, wasAlreadyAuthenticated, loginMethod}) => {
-      console.log(user, isNewUser, wasAlreadyAuthenticated, loginMethod);
+      //console.log(user, isNewUser, wasAlreadyAuthenticated, loginMethod);
       if (isNewUser) {
-        console.log("Nuevo usuario registrado");
+        //console.log("Nuevo usuario registrado");
         
         const accessToken = await getAccessToken();
 
@@ -47,7 +47,7 @@ export function usePrivyLogout() {
 
   return useLogout({
     onSuccess: () => {
-      console.log('User logged out');
+      //console.log('User logged out');
       router.push("/");
       // Any logic you'd like to execute after a user successfully logs out
     },
