@@ -2,9 +2,9 @@ import { Asset } from "../../lib/assets/utils";
 
 export const ASSETS: Asset[] = [
   {
-    "symbol": "ETH",
-    "name": "Ethereum",
-    "address": "0x0000000000000000000000000000000000000000",
+    "symbol": "ETHY",
+    "name": "Ethy AI",
+    "address": "0xC44141a684f6AA4E36cD9264ab55550B03C88643",
     "chain": "base",
     "decimals": 18
   },
@@ -26,13 +26,6 @@ export const ASSETS: Asset[] = [
     "symbol": "VIRTUALS",
     "name": "Virtuals Protocol",
     "address": "0x0b3e328455c4059EEb9e3f84b5543F74E24e7E1b",
-    "chain": "base",
-    "decimals": 18
-  },
-  {
-    "symbol": "ETHY",
-    "name": "Ethy AI",
-    "address": "0xC44141a684f6AA4E36cD9264ab55550B03C88643",
     "chain": "base",
     "decimals": 18
   },

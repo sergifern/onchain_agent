@@ -6,6 +6,10 @@ import { base } from "viem/chains";
 import { createExecution, Execution } from "../mongodb/executions";
 import { Task, updateTask } from "../mongodb/tasks";
 import { ObjectId } from "mongodb";
+import { getCreditsByUserId } from "../mongodb/credits";
+import { ASSETS } from "../assets/assets";
+import { reasonAboutTaskExecution } from './ai';
+import { executeOneInchSwap } from "./oneinch-swap";
 
 const publicClient = createPublicClient({ 
   chain: base,
@@ -301,7 +305,7 @@ export async function executeSwapV3(
   return await sendTransaction(walletId, txParams);
 }
 
-export async function getTokenBalance(userAddress: string, tokenAddress: string): Promise<bigint> {
+export async function getTokenBalance(userAddress: string, tokenAddress: string): Promise<number> {
   // Validate input parameters
   if (!userAddress || !tokenAddress) {
     throw new Error(`Invalid parameters: userAddress=${userAddress}, tokenAddress=${tokenAddress}`);
@@ -316,15 +320,48 @@ export async function getTokenBalance(userAddress: string, tokenAddress: string)
   });
   
   if (result.data) {
-    return BigInt(result.data);
+    const rawBalance = BigInt(result.data);
+    
+    // Find the asset in the ASSETS array to get decimals
+    const asset = ASSETS.find(asset => 
+      asset.address.toLowerCase() === tokenAddress.toLowerCase()
+    );
+    
+    if (!asset) {
+      throw new Error(`Asset not found for address: ${tokenAddress}`);
+    }
+    
+    // Convert from smallest unit to token amount using decimals
+    const divisor = BigInt(10 ** asset.decimals);
+    const balance = Number(rawBalance) / Number(divisor);
+    
+    return balance;
   }
-  return 0n;
+  return 0;
+}
+
+export async function getETHBalance(userAddress: string): Promise<number> {
+  // Validate input parameters
+  if (!userAddress) {
+    throw new Error(`Invalid parameters: userAddress=${userAddress}`);
+  }
+
+  // Get native ETH balance using viem's publicClient
+  const rawBalance = await publicClient.getBalance({
+    address: userAddress as `0x${string}`
+  });
+  
+  // Convert from wei to ETH (18 decimals)
+  const balance = Number(rawBalance) / Number(BigInt(10 ** 18));
+  
+  return balance;
 }
 
 // get wallet id from user
 export async function getWalletIdFromUserId(userId: string) {
   const privy = new PrivyClient(process.env.NEXT_PUBLIC_PRIVY_APP_ID!, process.env.PRIVY_SECRET!);
   const user = await privy.getUserById(userId);
+
 
   // Find the embedded Privy wallet in linkedAccounts where:
   // - type is 'wallet'
@@ -343,7 +380,7 @@ export async function getWalletIdFromUserId(userId: string) {
   }
 
   // Use walletId property instead of id
-  const walletId = (embeddedWallet as any).walletId || (embeddedWallet as any).address;
+  const walletId = embeddedWallet.id;
   if (!walletId) {
     throw new Error(`Embedded wallet found but has no wallet ID for user ${userId}`);
   }
@@ -434,8 +471,7 @@ export function calculateNextExecutionTime(
   return nextExecution;
 }
 
-// function that receiving one execution (all object) and walletid, do som logic (we can leave it empey) and gets the transaction hash to create then and exeuction on the db with it
-export async function executeTask(task: Task, walletId: string, agentId: ObjectId) {
+export async function executeTask(task: Task, walletId: string, walletAddress: string, agentId: ObjectId) {
   // do som logic
   // get the transaction hash
   // create the execution on the db with it, with the transaction hash
@@ -457,15 +493,99 @@ export async function executeTask(task: Task, walletId: string, agentId: ObjectI
 
     // EXECUTE THE TASK HERE
 
+    // 1. check base currency balance
+    const baseCurrencyBalance = await getTokenBalance(walletAddress, task.baseCurrency.address as `0x${string}`);
+    console.log("Base currency balance:", baseCurrencyBalance);
+
+    if (baseCurrencyBalance < task.amount) {
+      throw new Error("Insufficient base currency balance");
+    }
+
+    // 3. check if ETHY balance to pay the fee (50 $ETHY tokens needed) - if yes, continue, if not, send error. Ethy credits can be also from credits table on the db.
+    const ethyBalance = await getTokenBalance(walletAddress, ETHY_ADDRESS);
+    console.log("ETHY balance:", ethyBalance);
+
+    
+    // check if ethy balance is enough to pay the fee
+    const ethyCredits = await getCreditsByUserId(task.userId);
+    const ethyCreditsBalance = ethyCredits.reduce((acc: number, credit: any) => acc + credit.amount, 0);
+    console.log("ETHY credits balance:", ethyCreditsBalance);
+
+    const totalCredits = ethyCreditsBalance + ethyBalance;
+    console.log("Total credits:", totalCredits);
+
+    if (totalCredits < 50) {
+      throw new Error("Insufficient ETHY credits balance");
+    }
+
+
+    // 2. check if ETH balance (minim 0.0005), if not send it
+    const ethBalance = await checkETHBalance(walletAddress);
+    console.log("ETH balance:", ethBalance);
+
+
+    // 3. agent reasoning with task prompt to decide what to do
+    const additionalContext = "";
+    console.log("Getting AI reasoning for task execution...");
+    const aiReasoning = await reasonAboutTaskExecution(task, additionalContext);
+    console.log("AI Reasoning:", aiReasoning);
+
+    // If AI decides not to execute, exit early
+    if (!aiReasoning.shouldExecute) {
+      console.log("AI decided not to execute task:", aiReasoning.reasoning);
+      
+      // Create a skipped execution record
+      const execution = await createExecution({
+        taskId: task._id as ObjectId,
+        status: 'success',
+        agentId: agentId,
+        reasoning: `Task executed with with no action needed: ${aiReasoning.reasoning}`,
+        transactionHash: undefined,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      return true;
+    }
+
+
+    // 4. Execute the result and get the transaction hash + agent reasoning
+    //const executionAmount = aiReasoning.adaptedAmount;
+    //console.log(`Executing task with adapted amount: ${executionAmount} (original: ${task.amount})`);
+
+    // convert amount to use depending on the decimals. in case of buy base currency
+    const amountToUse = task.amount;
+    const amountToUseDecimals = task.baseCurrency.decimals;
+    const amountToUseInWei = BigInt(amountToUse * 10 ** amountToUseDecimals);
+
+
+    let hash = "";
+    if (task.type === 'buy') {
+      hash = await executeOneInchSwap(walletId, walletAddress, task.baseCurrency.address as `0x${string}`, task.asset.address as `0x${string}`, amountToUseInWei);
+      console.log("Buy transaction hash:", hash);
+    } else if (task.type === 'sell') {
+      hash = await executeOneInchSwap(walletId, walletAddress, task.asset.address as `0x${string}`, task.baseCurrency.address as `0x${string}`, amountToUseInWei);
+      console.log("Sell transaction hash:", hash);
+    }
+
+    // For now, we'll simulate a successful execution
+    //const hash = "0x1234567890";  // This should be the actual transaction hash
+    //const reasoning = `AI Analysis: ${aiReasoning.reasoning}. Executed with amount: ${executionAmount}`;
+
+
+    // 5. Remove 50 $ETHY tokens from the balance
+    //const ethyBalanceAfterRemoving = await removeTokenBalance(walletAddress, ETHY_ADDRESS, 50 * 1e18);
+    //console.log("ETHY balance after removing 50 tokens:", ethyBalanceAfterRemoving);
 
 
 
+    // 6. create the execution on the db with the transaction hash + agent reasoning
     const execution = await createExecution({
       taskId: task._id as ObjectId,
       status: 'success',
       agentId: agentId,
-      reasoning: undefined,
-      transactionHash: undefined,
+      reasoning: aiReasoning.reasoning,
+      transactionHash: hash,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -477,9 +597,9 @@ export async function executeTask(task: Task, walletId: string, agentId: ObjectI
     // Create a failed execution record
     const execution = await createExecution({
       taskId: task._id as ObjectId,
-      agentId: new ObjectId(), // Placeholder agentId - replace with actual agent ID when available
+      agentId: agentId,
       status: 'failed',
-      reasoning: undefined,
+      reasoning: error instanceof Error ? error.message : String(error),
       transactionHash: undefined,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -489,3 +609,41 @@ export async function executeTask(task: Task, walletId: string, agentId: ObjectI
   }
 }
   
+
+
+async function checkETHBalance(walletAddress: string) {
+  try {
+    const ethBalance = await getETHBalance(walletAddress);
+    console.log("ETH balance:", ethBalance);
+    if (ethBalance < 0.0005) {
+      // send 0.0005 ETH to the wallet
+      const tx = await refillETHBalance(walletAddress);
+      console.log("ETH transaction sent:", tx.hash);
+      
+      const receipt = await tx.wait();
+      if (receipt) {
+        console.log("Transaction confirmed in block:", receipt.blockNumber);
+      } else {
+        console.log("Transaction receipt is null, but continuing...");
+      }
+      
+      const ethBalance = await getETHBalance(walletAddress);
+      console.log("ETH balance after refill:", ethBalance);
+      return ethBalance;
+    }
+    return ethBalance;
+  } catch (error) {
+    console.error("Error checking ETH balance:", error);
+    throw error;
+  }
+}
+
+async function refillETHBalance(walletAddress: string) {
+  const provider = new ethers.JsonRpcProvider(process.env.RPC_PROVIDER_URL!);
+  const wallet = new ethers.Wallet(process.env.ETHY_EXECUTOR_FUNDS_PRIVATE_KEY!, provider);
+  const tx = await wallet.sendTransaction({
+    to: walletAddress,
+    value: ethers.parseEther('0.0005'),
+  });
+  return tx;
+}

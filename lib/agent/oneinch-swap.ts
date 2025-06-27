@@ -399,7 +399,7 @@ export async function executeOneInchSwap(
 
   // Step 1: Check allowance
   const allowance = await checkOneInchAllowance(tokenIn, userAddress);
-  //console.log('Current allowance:', allowance);
+  console.log('Current allowance:', allowance);
 
   // Step 2: Approve if needed
   if (BigInt(allowance) < amountIn) {
@@ -409,7 +409,7 @@ export async function executeOneInchSwap(
     await sleep(1500);
     
     const rawApprovalTx = await buildApprovalTransaction(tokenIn);
-    //console.log('Raw approval tx from 1inch:', JSON.stringify(rawApprovalTx, null, 2));
+    console.log('Raw approval tx from 1inch:', JSON.stringify(rawApprovalTx, null, 2));
     
     // Convert 1inch format to Privy-compatible format
     const approvalTx = {
@@ -427,10 +427,12 @@ export async function executeOneInchSwap(
       }
     });
 
-    //console.log('Final approval tx params:', JSON.stringify(approvalTx, null, 2));
-    //console.log('Sending approval transaction...');
+
+    console.log('Final approval tx params:', JSON.stringify(approvalTx, null, 2));
+    console.log('Sending approval transaction...');
+    console.log('walletId', walletId);
     const approvalReceipt = await sendTransaction(walletId, approvalTx);
-    //console.log('Approval transaction confirmed:', approvalReceipt.transactionHash);
+    console.log('Approval transaction confirmed:', approvalReceipt.transactionHash);
   }
 
   // Step 3: Build swap transaction

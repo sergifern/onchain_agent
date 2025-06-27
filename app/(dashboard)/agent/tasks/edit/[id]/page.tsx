@@ -22,12 +22,12 @@ import { Badge } from '@/components/ui/badge';
 import PageContainer from '@/components/page-container';
 import { ArrowLeft, Loader2, Save } from 'lucide-react';
 import Link from 'next/link';
-import TokenMentions from '@/components/mention/mention';
+import InfoTooltip from '@/components/info-tooltip';
 import PageLoader from '@/components/page-loader';
 
 const editFormSchema = z.object({
-  condition: z.string().min(10, {
-    message: 'Condition must be at least 10 characters long',
+  userInput: z.string().min(10, {
+    message: 'Prompt must be at least 10 characters long',
   }),
 });
 
@@ -62,10 +62,52 @@ export default function EditTaskPage() {
   
   const taskId = params.id as string;
   
+  // Helper function to generate prefix from task data
+  const generatePrefix = (task: Task) => {
+    const actionText = task.type === 'buy' ? 'buy' : 
+                      task.type === 'buy-and-stake' ? 'buy and stake' : 
+                      'perform action on';
+    
+    const assetSymbol = task.asset?.symbol || '[Asset]';
+    const currencySymbol = task.baseCurrency?.symbol || 'USDC';
+    
+    // Convert frequency to readable format
+    const getFrequencyText = (freq: string) => {
+      switch (freq) {
+        case '5m': return 'every 5 minutes';
+        case '15m': return 'every 15 minutes';
+        case '30m': return 'every 30 minutes';
+        case '1h': return 'every hour';
+        case '4h': return 'every 4 hours';
+        case '12h': return 'every 12 hours';
+        case 'daily': return 'daily';
+        default: return 'periodically';
+      }
+    };
+    
+    const frequencyText = getFrequencyText(task.frequency);
+    
+    return `Check ${frequencyText} to ${actionText} ${assetSymbol} using ${currencySymbol} if `;
+  };
+  
+  // Helper function to extract user input from stored condition
+  const extractUserInput = (condition: string, prefix: string) => {
+    if (condition.startsWith(prefix)) {
+      return condition.substring(prefix.length);
+    }
+    // Fallback: if prefix doesn't match exactly, try to find "if " and take everything after
+    const ifIndex = condition.lastIndexOf(' if ');
+    if (ifIndex !== -1) {
+      return condition.substring(ifIndex + 4);
+    }
+    // If no "if" found, return the whole condition as fallback
+    return condition;
+  };
+  
   const form = useForm<EditFormValues>({
     resolver: zodResolver(editFormSchema),
     defaultValues: {
-      condition: '',
+      userInput: '',
     },
     mode: 'onChange',
   });
@@ -89,8 +131,12 @@ export default function EditTaskPage() {
         const data = await response.json();
         setTask(data.task);
         
-        // Update form with fetched data
-        form.setValue('condition', data.task.condition);
+        // Generate prefix and extract user input
+        const prefix = generatePrefix(data.task);
+        const userInput = extractUserInput(data.task.condition, prefix);
+        
+        // Update form with extracted user input
+        form.setValue('userInput', userInput);
         
       } catch (error) {
         console.error('Error fetching task:', error);
@@ -115,6 +161,10 @@ export default function EditTaskPage() {
       setIsSubmitting(true);
       const accessToken = await getAccessToken();
 
+      // Reconstruct the full condition with prefix + user input
+      const prefix = task ? generatePrefix(task) : '';
+      const fullCondition = prefix + data.userInput;
+
       const response = await fetch(`/api/users/agents/tasks/${taskId}`, {
         method: 'PUT',
         headers: {
@@ -122,7 +172,7 @@ export default function EditTaskPage() {
           'Authorization': `Bearer ${accessToken}`
         },
         body: JSON.stringify({
-          condition: data.condition,
+          condition: fullCondition,
         }),
       });
 
@@ -259,24 +309,43 @@ export default function EditTaskPage() {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                   control={form.control}
-                  name="condition"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Prompt/Condition</FormLabel>
-                      <FormControl>
-                        <TokenMentions
-                          value={field.value}
-                          onChange={field.onChange}
-                          placeholder="Enter the condition or prompt for your Agent to evaluate. Use $ to mention tokens (e.g., $ETH, $BTC)"
-                          className="min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        />
-                      </FormControl>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        💡 Tip: Type $ to mention specific tokens in your prompt (e.g., "Buy $ETH when price drops below $3000")
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  name="userInput"
+                  render={({ field }) => {
+                    const prefix = task ? generatePrefix(task) : 'Loading...';
+
+                    return (
+                      <FormItem>
+                        <div className="flex items-center justify-between">
+                          <FormLabel>
+                            <div className="flex items-center gap-2">
+                              Agent Prompt
+                              <InfoTooltip message="The prompt/condition for your Agent to evaluate before performing the action." />
+                            </div>
+                          </FormLabel>
+                        </div>
+                        {/* Display prefix above textarea */}
+                        <div className="mb-1 p-3 py-1 bg-secondary/20 rounded-md border border-dashed border-secondary">
+                          <span className="text-sm font-medium text-violeta">{prefix}</span>
+                        </div>
+                        <FormControl>
+                          <Textarea
+                            value={field.value}
+                            onChange={field.onChange}
+                            rows={9}
+                            placeholder={`Enter the condition you want your agent to evaluate. Ethy has access to technical analysis, social sentiment and mindshare.
+
+For example:
+...price drops below $0.01
+...volume is growing in the last 24h
+...mindshare is trending up and social sentiment is positive
+...RSI is below 30 and price has dropped 20% this week`}
+                            className="min-h-[100px] w-full placeholder:text-secondary rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
                 />
 
                 <Button 

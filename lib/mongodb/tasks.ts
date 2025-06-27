@@ -27,7 +27,7 @@ export interface Task {
   scheduledTime?: Date; // UTC time for scheduled tasks (e.g., daily)
   amount: number;
   baseCurrency: Asset;
-  asset: Asset | { symbol: 'custom' };
+  asset: Asset;
   lastExecutionTime?: Date; // UTC, when the task was last executed
   nextExecutionTime?: Date; // UTC, when the task should next be executed
   isDeleted?: boolean; // Soft delete flag
@@ -119,7 +119,12 @@ export async function getTasksByUserId(userId: string): Promise<Task[]> {
 export async function getTasksOrderedByNextExecutionTime(): Promise<Task[]> {
   await connectToDatabase();
   const collection = await getCollection();
+  const currentTime = new Date();
   return collection.find({ 
-    nextExecutionTime: { $exists: true, $type: "date" } 
-  }).sort({ nextExecutionTime: 1 }).toArray();
+    nextExecutionTime: { 
+      $exists: true, 
+      $type: "date",
+      $lte: currentTime // Only tasks where execution time has passed
+    } 
+  }).sort({ nextExecutionTime: 1 }).toArray(); // Oldest (most overdue) first
 }
