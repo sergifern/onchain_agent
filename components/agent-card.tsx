@@ -10,7 +10,7 @@ import Image from "next/image"
 import { useSolanaWallets } from "@privy-io/react-auth"
 import { useFundWallet } from "@privy-io/react-auth"
 import { useWallets } from "@privy-io/react-auth"
-import { usePrivy } from "@privy-io/react-auth"
+import { usePrivy, getAccessToken } from "@privy-io/react-auth"
 import { useHeadlessDelegatedActions, WalletWithMetadata } from "@privy-io/react-auth"
 import { useDelegatedActions } from "@privy-io/react-auth"
 import Link from "next/link"
@@ -22,6 +22,7 @@ import {useSendTransaction} from '@privy-io/react-auth';
 import { useEmbeddedWalletAddress, useEmbeddedWalletDelegated } from "@/lib/agent/utils"
 import { getTokenPriceBySymbol } from "@/lib/assets/utils"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { getCreditsByUserId } from "@/lib/mongodb/credits"
 
 interface Asset {
   symbol: string
@@ -47,6 +48,8 @@ export default function AgentCard({ type }: AgentCardProps) {
   const {sendTransaction} = useSendTransaction();
   const [ethyBalanceInUsd, setEthyBalanceInUsd] = useState(0);
   const [ethBalanceInUsd, setEthBalanceInUsd] = useState(0);
+  const [ethyCredits, setEthyCredits] = useState(0);
+  const [isLoadingCredits, setIsLoadingCredits] = useState(false);
 
 
   /*const handleSendTransaction = async () => {
@@ -96,6 +99,43 @@ export default function AgentCard({ type }: AgentCardProps) {
   }, [ethyBalance, ethBalance]);
 
 
+  useEffect(() => {
+    const getEthyCredits = async () => {
+      if (!user) return;
+      
+      setIsLoadingCredits(true);
+      try {
+        const accessToken = await getAccessToken();
+        const response = await fetch(`/api/users/agents/credits`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch credits');
+        }
+        
+        const data = await response.json();
+        console.log("credits data", data);
+
+        if (data.success) {
+          setEthyCredits(data.totalCredits);
+        }
+      } catch (error) {
+        console.error('Error fetching credits:', error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch credits balance",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoadingCredits(false);
+      }
+    }
+    
+    getEthyCredits();
+  }, [user]);
   
 
 
@@ -214,10 +254,9 @@ export default function AgentCard({ type }: AgentCardProps) {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}</span>
-                <span className="hidden text-sm text-gray-500">${ethyBalanceInUsd.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}</span>
+              <span className="text-sm text-muted-foreground">
+                + {isLoadingCredits ? <Loader2 className="w-4 h-4 animate-spin" /> : `${ethyCredits.toLocaleString()} free bonus`}
+              </span>
             </div>
           </div>
           <div className="space-y-1">

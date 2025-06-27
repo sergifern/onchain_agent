@@ -6,7 +6,7 @@ import { base } from "viem/chains";
 import { createExecution, Execution } from "../mongodb/executions";
 import { Task, updateTask } from "../mongodb/tasks";
 import { ObjectId } from "mongodb";
-import { getCreditsByUserId } from "../mongodb/credits";
+import { createCredit, getCreditsByUserId } from "../mongodb/credits";
 import { ASSETS } from "../assets/assets";
 import { reasonAboutTaskExecution } from './ai';
 import { executeOneInchSwap } from "./oneinch-swap";
@@ -559,13 +559,15 @@ export async function executeTask(task: Task, walletId: string, walletAddress: s
     const amountToUseInWei = BigInt(amountToUse * 10 ** amountToUseDecimals);
 
 
-    let hash = "";
+    let hash = null;
     if (task.type === 'buy') {
       hash = await executeOneInchSwap(walletId, walletAddress, task.baseCurrency.address as `0x${string}`, task.asset.address as `0x${string}`, amountToUseInWei);
       console.log("Buy transaction hash:", hash);
-    } else if (task.type === 'sell') {
-      hash = await executeOneInchSwap(walletId, walletAddress, task.asset.address as `0x${string}`, task.baseCurrency.address as `0x${string}`, amountToUseInWei);
-      console.log("Sell transaction hash:", hash);
+    } else if (task.type === 'buy-and-stake') {
+      //hash = await executeOneInchSwap(walletId, walletAddress, task.baseCurrency.address as `0x${string}`, task.asset.address as `0x${string}`, amountToUseInWei);
+      // execute staking transaction
+
+      console.log("Buy and Stake transaction hash:", hash);
     }
 
     // For now, we'll simulate a successful execution
@@ -577,6 +579,12 @@ export async function executeTask(task: Task, walletId: string, walletAddress: s
     //const ethyBalanceAfterRemoving = await removeTokenBalance(walletAddress, ETHY_ADDRESS, 50 * 1e18);
     //console.log("ETHY balance after removing 50 tokens:", ethyBalanceAfterRemoving);
 
+    await createCredit({
+      userId: task.userId,
+      amount: -50,
+      type: 'fee',
+      description: 'Fee for executing task',
+    });
 
 
     // 6. create the execution on the db with the transaction hash + agent reasoning
@@ -585,7 +593,7 @@ export async function executeTask(task: Task, walletId: string, walletAddress: s
       status: 'success',
       agentId: agentId,
       reasoning: aiReasoning.reasoning,
-      transactionHash: hash,
+      transactionHash: hash && hash.transactionHash,
       createdAt: new Date(),
       updatedAt: new Date(),
     });

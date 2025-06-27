@@ -8,13 +8,6 @@ import { createCredit } from "@/lib/mongodb/credits";
 
 
 
-const userAddress = "0xBC103D53F12C466B82d7873d6c581FEd133386f7";
-const ETHY_ADDRESS = "0xC44141a684f6AA4E36cD9264ab55550B03C88643";
-const USDC_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"; // USDC on Base
-const ROUTER_ADDRESS = "0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24"; // Uniswap V2 Router
-const VIRTUALS_ADDRESS = "0x0b3e328455c4059EEb9e3f84b5543F74E24e7E1b";
-
-
 export async function GET(request: Request) {
 
   // Test swapping 100 ETHY tokens to USDC
@@ -45,7 +38,6 @@ export async function GET(request: Request) {
 
     if (agent) {
       const result = await executeTask(firstTask, walletId, agent.address, agent._id as ObjectId);
-      console.log(result.status);
     } else {
       throw new Error("Agent not found");
     }
