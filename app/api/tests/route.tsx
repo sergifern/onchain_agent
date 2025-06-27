@@ -6,6 +6,7 @@ import { getAgentsByUserId, getAgentByUserId } from "@/lib/mongodb/agents";
 import { ObjectId } from "mongodb";
 import { createCredit } from "@/lib/mongodb/credits";
 
+export const maxDuration = 250; // This function can run for a maximum of 5 seconds
 
 
 export async function GET(request: Request) {
