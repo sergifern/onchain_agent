@@ -10,6 +10,7 @@ import { createCredit, getCreditsByUserId } from "../mongodb/credits";
 import { ASSETS } from "../assets/assets";
 import { reasonAboutTaskExecution } from './ai';
 import { executeOneInchSwap } from "./oneinch-swap";
+import { getStakingContractAddress } from "../virtuals/utils";
 
 const publicClient = createPublicClient({ 
   chain: base,
@@ -357,6 +358,39 @@ export async function getETHBalance(userAddress: string): Promise<number> {
   return balance;
 }
 
+export async function getTokensReceivedFromTransaction(
+  receipt: any,
+  tokenAddress: string,
+  userAddress: string
+): Promise<bigint> {
+  // ERC20 Transfer event signature: Transfer(address indexed from, address indexed to, uint256 value)
+  const transferEventSignature = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
+  
+  // Look for Transfer events in the transaction logs
+  const transferLogs = receipt.logs.filter((log: any) => {
+    return log.topics[0] === transferEventSignature && 
+           log.address.toLowerCase() === tokenAddress.toLowerCase();
+  });
+  
+  let totalReceived = 0n;
+  
+  for (const log of transferLogs) {
+    // Decode the log data
+    const from = `0x${log.topics[1].slice(26)}`; // Remove padding from address
+    const to = `0x${log.topics[2].slice(26)}`; // Remove padding from address
+    const value = BigInt(log.data);
+    
+    // Check if tokens were transferred TO the user (user is the recipient)
+    if (to.toLowerCase() === userAddress.toLowerCase()) {
+      totalReceived += value;
+      console.log(`Found transfer TO user: ${value.toString()} tokens from ${from}`);
+    }
+  }
+  
+  console.log(`Total tokens received: ${totalReceived.toString()}`);
+  return totalReceived;
+}
+
 // get wallet id from user
 export async function getWalletIdFromUserId(userId: string) {
   const privy = new PrivyClient(process.env.NEXT_PUBLIC_PRIVY_APP_ID!, process.env.PRIVY_SECRET!);
@@ -380,7 +414,7 @@ export async function getWalletIdFromUserId(userId: string) {
   }
 
   // Use walletId property instead of id
-  const walletId = embeddedWallet.id;
+  const walletId = (embeddedWallet as any).walletId || (embeddedWallet as any).id;
   if (!walletId) {
     throw new Error(`Embedded wallet found but has no wallet ID for user ${userId}`);
   }
@@ -564,9 +598,27 @@ export async function executeTask(task: Task, walletId: string, walletAddress: s
       hash = await executeOneInchSwap(walletId, walletAddress, task.baseCurrency.address as `0x${string}`, task.asset.address as `0x${string}`, amountToUseInWei);
       console.log("Buy transaction hash:", hash);
     } else if (task.type === 'buy-and-stake') {
-      //hash = await executeOneInchSwap(walletId, walletAddress, task.baseCurrency.address as `0x${string}`, task.asset.address as `0x${string}`, amountToUseInWei);
-      // execute staking transaction
+      // Step 1: Execute the buy transaction
+      const buyHash = await executeOneInchSwap(walletId, walletAddress, task.baseCurrency.address as `0x${string}`, task.asset.address as `0x${string}`, amountToUseInWei);
+      console.log("Buy transaction hash:", buyHash);
 
+      // Step 2: Wait for the buy transaction to be confirmed
+      console.log("Waiting for buy transaction to be confirmed...");
+      const buyReceipt = await publicClient.waitForTransactionReceipt({ 
+        hash: buyHash.transactionHash as `0x${string}` 
+      });
+      console.log("Buy transaction confirmed in block:", buyReceipt.blockNumber);
+
+      // Step 3: Get the actual amount of target tokens received from the transaction
+      const tokensReceived = await getTokensReceivedFromTransaction(buyReceipt, task.asset.address, walletAddress);
+      console.log(`Tokens received from buy transaction: ${tokensReceived} ${task.asset.symbol}`);
+
+      if (tokensReceived === 0n) {
+        throw new Error("No tokens were received from the buy transaction");
+      }
+
+      // Step 4: Execute staking with the actual amount received
+      hash = await executeStaking(walletId, walletAddress, task.asset.symbol, tokensReceived);
       console.log("Buy and Stake transaction hash:", hash);
     }
 
@@ -654,4 +706,61 @@ async function refillETHBalance(walletAddress: string) {
     value: ethers.parseEther('0.0005'),
   });
   return tx;
+}
+
+
+
+export async function executeStaking(walletId: string, walletAddress: string, assetSymbol: string, amount: bigint) {
+  const stakingContractAddress = getStakingContractAddress(assetSymbol);
+  if (!stakingContractAddress) {
+    throw new Error(`Staking contract address not found for asset: ${assetSymbol}`);
+  }
+
+  // Find the asset to get its token address
+  const asset = ASSETS.find(asset => 
+    asset.symbol.toLowerCase() === assetSymbol.toLowerCase()
+  );
+  
+  if (!asset) {
+    throw new Error(`Asset not found for symbol: ${assetSymbol}`);
+  }
+
+  const tokenAddress = asset.address;
+
+  // Step 1: Approve the staking contract to spend the exact amount of tokens
+  console.log(`Approving ${amount.toString()} ${assetSymbol} tokens for staking contract ${stakingContractAddress}`);
+  
+  // Check current allowance
+  const currentAllowance = await checkTokenAllowance(walletAddress, tokenAddress, stakingContractAddress);
+  
+  if (currentAllowance < amount) {
+    // Approve the exact amount needed for staking
+    await approveToken(walletId, tokenAddress, stakingContractAddress, amount);
+    console.log(`Approved ${amount.toString()} ${assetSymbol} tokens for staking`);
+  } else {
+    console.log(`Sufficient allowance already exists: ${currentAllowance.toString()}`);
+  }
+
+  // Step 2: Call the stake function
+  console.log(`Calling stake function with amount: ${amount.toString()}`);
+  
+  const stakingABI = [
+    "function stake(uint256 amount) external"
+  ];
+  
+  const stakingInterface = new Interface(stakingABI);
+  const data = stakingInterface.encodeFunctionData("stake", [amount.toString()]);
+  
+  const txParams = {
+    to: stakingContractAddress,
+    data: data,
+    value: "0x0",
+    gasLimit: "0x493E0", // 300000 gas limit
+  };
+  
+  console.log(`Executing staking transaction...`);
+  const receipt = await sendTransaction(walletId, txParams);
+  console.log(`Staking transaction completed with hash: ${receipt.transactionHash}`);
+  
+  return receipt;
 }

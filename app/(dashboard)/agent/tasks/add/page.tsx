@@ -41,7 +41,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { ArrowDownToLine, ArrowUpDown, ArrowUpFromLine, ChartLine, Coins, Wallet, Clock, Check, ChevronsUpDown } from 'lucide-react';
+import { ArrowDownToLine, ArrowUpDown, ArrowUpFromLine, ChartLine, Coins, Wallet, Clock, Check, ChevronsUpDown, SproutIcon } from 'lucide-react';
 import PageContainer from '@/components/page-container';
 import { getAccessToken, usePrivy } from '@privy-io/react-auth';
 import Image from 'next/image';
@@ -291,7 +291,7 @@ export default function AddTaskPage() {
       value: 'yield-optimization',
       label: 'Yield Optimization',
       description: 'AI-powered yield optimizer for your stablecoins — your agent hunts the best onchain returns, auto-compounds rewards, and reinvests 24/7.',
-      icon: ArrowUpFromLine,
+      icon: SproutIcon,
     },
     /*{
       value: 'stake',

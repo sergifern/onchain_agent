@@ -393,9 +393,8 @@ export default function AgentTable() {
                   <TableHead>Id</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Last / Next</TableHead>
-                  <TableHead>Frequency</TableHead>
+                  <TableHead>Freq</TableHead>
                   <TableHead>Type</TableHead>
-                  <TableHead>Amount</TableHead>
                   <TableHead>Base Currency</TableHead>
                   <TableHead>Asset</TableHead>
                   <TableHead>Condition</TableHead>
@@ -410,8 +409,7 @@ export default function AgentTable() {
                     <TableCell>{formatExecutionTime(task.lastExecutionTime, false)} / {formatExecutionTime(task.nextExecutionTime, true)}</TableCell>
                     <TableCell>{getFrequencyBadge(task.frequency)}</TableCell>
                     <TableCell>{getTypeBadge(task.type)}</TableCell>
-                    <TableCell>{task.amount}</TableCell>
-                    <TableCell>{task.baseCurrency?.symbol || 'N/A'}</TableCell>
+                    <TableCell>{task.amount} {task.baseCurrency?.symbol || 'N/A'}</TableCell>
                     <TableCell>{task.asset?.symbol || 'N/A'}</TableCell>
                     <TableCell className="max-w-xs truncate">{task.condition}</TableCell>
                     <TableCell className="text-right">

@@ -31,3 +31,21 @@ export async function getStakedBalance(contract: string, address: string) {
   return Number(ethers.formatEther(balance));
 
 }
+
+
+import { getAssetBySymbol } from "../assets/utils";
+import { virtualsAgents } from "../virtuals/agents";
+
+export const getStakingContractAddress = (assetSymbol: string) => {
+  const asset = getAssetBySymbol(assetSymbol);
+  if (!asset) {
+    return null;
+  }
+
+  const stakingContract = virtualsAgents.find(agent => agent.tokenAddress === asset.address);
+  if (!stakingContract) {
+    return null;
+  }
+
+  return stakingContract.agentStakingContract;
+}

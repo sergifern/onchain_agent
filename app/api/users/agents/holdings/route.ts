@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
     const enhancedData = data.data
       .map((token: Token) => {
         // Skip if token is not a virtual agent token
-        if (!isVirtualAgentToken(token.token_address)) return null;
+        //if (!isVirtualAgentToken(token.token_address)) return null;
 
         const priceInfo = info.find(p => p.address.toLowerCase() === token.token_address.toLowerCase());
         const price = priceInfo?.price || 0;
@@ -70,7 +70,13 @@ export async function GET(req: NextRequest) {
         // Skip tokens with zero price
         // if (price === 0) return null;
         
-        const imageUrl = priceInfo?.imageUrl || '';
+        let imageUrl = '';
+        if (token.token_address.toLowerCase() === '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913'.toLowerCase()) {
+          imageUrl = 'https://assets.coingecko.com/coins/images/6319/standard/usdc.png?1696506694';
+        } else {
+          imageUrl = priceInfo?.imageUrl || ''; 
+        }
+
         
         // Calculate balance in USD
         const balanceInWei = BigInt(token.balance);
