@@ -3,5 +3,11 @@
     "src/app/**/*": {
       "maxDuration": 250
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/tests",
+      "schedule": "*/10 * * * *"
+    }
+  ]
 }
