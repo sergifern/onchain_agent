@@ -238,6 +238,7 @@ export async function buildSwapTransaction(swapParams: SwapParams): Promise<any>
 
 // Direct transaction sending without problematic gas parameters
 async function sendSimpleTransaction(walletId: string, to: string, data: string, value: string = '0x0') {
+  console.log('process.env.PRIVY_AUTH_KEY*************', process.env.PRIVY_AUTH_KEY!);
   const privy = new PrivyClient(process.env.NEXT_PUBLIC_PRIVY_APP_ID!, process.env.PRIVY_SECRET!, {
     walletApi: {
       authorizationPrivateKey: process.env.PRIVY_AUTH_KEY!

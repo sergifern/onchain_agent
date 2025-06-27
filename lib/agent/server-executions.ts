@@ -65,6 +65,8 @@ const PERMIT2_ABI = [
 const POOL_MANAGER_ADDRESS = "0x7Da1D65F8B249183667cdE74C5CBD46dD38AA829"; // V4 Pool Manager on Base
 
 export async function sendTransaction(walletId: string, txParams: any) {
+  console.log('process.env.PRIVY_AUTH_KEY*************', process.env.PRIVY_AUTH_KEY!);
+
   const privy = new PrivyClient(process.env.NEXT_PUBLIC_PRIVY_APP_ID!, process.env.PRIVY_SECRET!, {
     walletApi: {
       authorizationPrivateKey: process.env.PRIVY_AUTH_KEY!

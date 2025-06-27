@@ -101,7 +101,6 @@ Based on this information, provide:
 1. Detailed reasoning about whether this task should be executed now, considering:
    - User's specified conditions and triggers
 2. A clear yes/no decision on execution
-3. An adapted amount if needed (can be less than or equal to the original amount of ${task.amount}, but never more)
 
 Consider the user's intent, current market data, sentiment analysis, and risk factors in your decision.`;
 

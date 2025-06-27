@@ -60,6 +60,7 @@ export async function GET(req: NextRequest) {
       allowFailure: false
     })
 
+
     let data: Token[] = []
     // Process results
     results.forEach((balance, i) => {
@@ -106,7 +107,6 @@ export async function GET(req: NextRequest) {
         const balanceInUsd = Number((balanceInEth * price).toFixed(2));
         
         // Skip tokens with balance less than $1
-        if (balanceInUsd < 1) return null;
         
 
         return {
