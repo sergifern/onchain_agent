@@ -8,7 +8,7 @@ import { createCredit } from "@/lib/mongodb/credits";
 
 
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
 
   const { userId, amount } = await request.json();
 
