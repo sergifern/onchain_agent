@@ -14,8 +14,13 @@ export default function EthyTokenDashboard() {
     queryFn: () => fetch('https://api.geckoterminal.com/api/v2/networks/base/tokens/0xC44141a684f6AA4E36cD9264ab55550B03C88643').then(res => res.json())
   })
 
-  if (isLoading) return <Loader2 className="w-4 h-4 animate-spin" />
-  if (error) return <div>Error</div>
+  const { data: metricsData, isLoading: metricsLoading, error: metricsError } = useQuery({
+    queryKey: ['public-metrics'],
+    queryFn: () => fetch('/api/public/metrics').then(res => res.json())
+  })
+
+  if (isLoading || metricsLoading) return <Loader2 className="w-4 h-4 animate-spin" />
+  if (error || metricsError) return <div>Error</div>
 
   return (
     <PageContainer title="Metrics" description="View the latest metrics for the ETHY token">
@@ -48,21 +53,21 @@ export default function EthyTokenDashboard() {
       <Section title="Agent Stats" color="bg-blue-50 dark:bg-blue-950">
         <MetricCard
           title="Agent Deployed"
-          value="-"
+          value={metricsData?.totalAgents?.toLocaleString() || "-"}
           subValue="agents created"
           icon={<Bot className="h-6 w-6" />}
           className=""
         />
         <MetricCard
           title="Smart Automations"
-          value="-"
+          value={metricsData?.totalExecutions?.toLocaleString() || "-"}
           subValue="automations created"
           icon={<Clock className="h-6 w-6" />}
           className=""
         />
         <MetricCard
           title="Tokens Burned"
-          value="- $ETHY"
+          value={`${metricsData?.ethyCreditsUsed || "-"} $ETHY`}
           subValue="used as credits"
           icon={<Calendar className="h-6 w-6" />}
           className=""

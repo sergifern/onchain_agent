@@ -121,6 +121,11 @@ export async function getTasksOrderedByNextExecutionTime(): Promise<Task[]> {
   const collection = await getCollection();
   const currentTime = new Date();
   return collection.find({ 
+    status: 'active',
+    $or: [
+      { isDeleted: { $exists: false } },
+      { isDeleted: { $ne: true } }
+    ],
     nextExecutionTime: { 
       $exists: true, 
       $type: "date",

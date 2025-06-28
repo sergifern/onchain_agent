@@ -80,7 +80,7 @@ const data = {
       url: "/metrics",
       icon: ChartPie,
     },
-    {
+    /*{
       title: "Ecosystems",
       url: "#",
       icon: Component,
@@ -95,7 +95,7 @@ const data = {
           url: "/ecosystem/creatorbid",
         },
       ]
-    },
+    },*/
     {
       title: "Trading Strategies",
       url: "#",

@@ -19,9 +19,18 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import AgentHoldings from "./agent-holdings"
 import AgentStaking from "./agent-staking"
 import { useEmbeddedWalletDelegated } from "@/lib/agent/utils"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 interface Holding {
   chain_id: number
@@ -41,7 +50,10 @@ export default function AgentInfoTabs() {
   const { getAccessToken } = usePrivy()
   const [activeTab, setActiveTab] = useState("balances")
   const [tasks, setTasks] = useState([])
-
+  const {user} = usePrivy();
+  const [ethyCredits, setEthyCredits] = useState(0);
+  const [showInsufficientCreditsModal, setShowInsufficientCreditsModal] = useState(false);
+  const router = useRouter();
 
   const { wallet: embeddedWallet, isAlreadyDelegated, ready: walletReady } = useEmbeddedWalletDelegated();
   
@@ -108,6 +120,42 @@ export default function AgentInfoTabs() {
     fetchHoldings()
   }, [embeddedWallet?.address])
 
+  useEffect(() => {
+    const getEthyCredits = async () => {
+      if (!user) return;
+      
+      try {
+        const accessToken = await getAccessToken();
+        const response = await fetch(`/api/users/agents/credits`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch credits');
+        }
+        
+        const data = await response.json();
+
+        if (data.success) {
+          setEthyCredits(data.totalCredits);
+        }
+      } catch (error) {
+        console.error('Error fetching credits:', error);
+      }
+    }
+    
+    getEthyCredits();
+  }, [user]);
+
+  const handleCreateAutomation = () => {
+    if (ethyCredits <= 0) {
+      setShowInsufficientCreditsModal(true);
+    } else {
+      router.push("/agent/tasks/add");
+    }
+  };
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -154,10 +202,10 @@ export default function AgentInfoTabs() {
             </span>
           </TabsTrigger>
         </TabsList>
-        <Link href="/agent/tasks/add" className="flex px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors items-center">
+        <Button onClick={handleCreateAutomation} className="flex px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors items-center">
           <Plus className="h-4 w-4 mr-2" />
           Create Automation
-        </Link>
+        </Button>
       </div>
       <TabsContent value="balances">
         <div className="mt-6">
@@ -177,6 +225,27 @@ export default function AgentInfoTabs() {
           This section will soon display your cashback rewards. We're already tracking your $ETHY trading volume and Smart Automations that use $ETHY as the base currency — so no worries, everything is being counted! Payouts will begin rolling out in the coming days.</p>
         </div>
       </TabsContent>
+      
+      <Dialog open={showInsufficientCreditsModal} onOpenChange={setShowInsufficientCreditsModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Insufficient Credits</DialogTitle>
+            <DialogDescription>
+              Not enough credits ($ETHY) to run your Smart Automations. Please deposit funds to your agent first.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-2 mt-4">
+            <Button variant="outline" onClick={() => setShowInsufficientCreditsModal(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => {
+              setShowInsufficientCreditsModal(false);
+            }}>
+              Deposit Funds
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Tabs>
   )
 }

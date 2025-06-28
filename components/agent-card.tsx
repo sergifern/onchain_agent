@@ -124,11 +124,6 @@ export default function AgentCard({ type }: AgentCardProps) {
         }
       } catch (error) {
         console.error('Error fetching credits:', error);
-        toast({
-          title: "Error",
-          description: "Failed to fetch credits balance",
-          variant: "destructive",
-        });
       } finally {
         setIsLoadingCredits(false);
       }
@@ -284,14 +279,14 @@ export default function AgentCard({ type }: AgentCardProps) {
             })}>
             <div className="flex items-center gap-2">
               <PlusCircle className="w-4 h-4" />
-              Add Funds
+              Deposit
             </div>
           </Button>
           
           <Button size="sm" className="button-outline-secondary"
             //onClick={handleSendTransaction}
           >
-            <MinusCircle className="mr-2 h-4 w-4" /> Transfer
+            <MinusCircle className="mr-2 h-4 w-4" /> Withdraw
           </Button>
 
           
