@@ -3,7 +3,7 @@ import { ethers, Interface, JsonFragment, toQuantity } from "ethers";
 import { createPublicClient } from "viem";
 import { http } from "viem";
 import { base } from "viem/chains";
-import { createExecution, Execution } from "../mongodb/executions";
+import { createExecution, Execution, getTaskExecutions } from "../mongodb/executions";
 import { Task, updateTask } from "../mongodb/tasks";
 import { ObjectId } from "mongodb";
 import { createCredit, getCreditsByUserId } from "../mongodb/credits";
@@ -656,7 +656,8 @@ export async function executeTask(task: Task, walletId: string, walletAddress: s
   } catch (error) {
     console.error("Error executing task:", error);
 
-    // Create a failed execution record
+    await checkIfRepeatedFailure(task._id as ObjectId);
+
     const execution = await createExecution({
       taskId: task._id as ObjectId,
       agentId: agentId,
@@ -765,4 +766,32 @@ export async function executeStaking(walletId: string, walletAddress: string, as
   console.log(`Staking transaction completed with hash: ${receipt.transactionHash}`);
   
   return receipt;
+}
+
+// Add this function before the executeTask function
+export async function checkIfRepeatedFailure(taskId: ObjectId): Promise<void> {
+  try {
+    // Get all executions for this task
+    const executions = await getTaskExecutions(taskId, 50, 0); // Get up to 50 executions
+    
+    // Filter for failed executions
+    const failedExecutions = executions.filter(execution => execution.status === 'failed');
+    
+    console.log(`Task ${taskId.toString()} has ${failedExecutions.length} failed executions`);
+    
+    // If more than 5 failures, deactivate the task
+    if (failedExecutions.length > 5) {
+      console.log(`Task ${taskId.toString()} has exceeded 5 failures (${failedExecutions.length}). Setting status to inactive.`);
+      
+      await updateTask(taskId, { 
+        status: 'inactive' as const,
+        updatedAt: new Date()
+      });
+      
+      console.log(`Task ${taskId.toString()} has been deactivated due to repeated failures.`);
+    }
+  } catch (error) {
+    console.error(`Error checking repeated failures for task ${taskId.toString()}:`, error);
+    // Don't throw the error to avoid breaking the main execution flow
+  }
 }
