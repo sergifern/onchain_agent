@@ -406,7 +406,7 @@ export default function AgentTable() {
                   <TableRow key={task._id}>
                     <TableCell className="font-medium text-muted-foreground">{task._id.slice(-4)}</TableCell>
                     <TableCell>{getStatusDisplay(task.status)}</TableCell>
-                    <TableCell>{formatExecutionTime(task.lastExecutionTime, false)} / {formatExecutionTime(task.nextExecutionTime, true)}</TableCell>
+                    <TableCell>{formatExecutionTime(task.lastExecutionTime, false)} / {task.status === 'active' ? formatExecutionTime(task.nextExecutionTime, true) : "-"}</TableCell>
                     <TableCell>{getFrequencyBadge(task.frequency)}</TableCell>
                     <TableCell>{getTypeBadge(task.type)}</TableCell>
                     <TableCell>{task.amount} {task.baseCurrency?.symbol || 'N/A'}</TableCell>

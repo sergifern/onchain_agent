@@ -2,7 +2,7 @@ import { openai } from '@ai-sdk/openai';
 import { generateObject } from 'ai';
 import { z } from 'zod';
 import { Task } from '@/lib/mongodb/tasks';
-import { askLoky } from '@/lib/dapplooker/utils';
+import { askLoky, getMarketData } from '@/lib/dapplooker/utils';
 import { getAssetBySymbol } from '../assets/utils';
 
 /**
@@ -21,9 +21,7 @@ const TaskReasoningSchema = z.object({
 
 export type TaskReasoningResult = z.infer<typeof TaskReasoningSchema>;
 
-/**
- * Fetches market insights using the user's prompt directly
- */
+
 async function getMarketInsights(task: Task, assetSymbol: string): Promise<string> {
   try {
     if (!assetSymbol || assetSymbol === 'custom') {
@@ -70,8 +68,13 @@ export async function reasonAboutTaskExecution(
     const assetSymbol = task.asset && 'symbol' in task.asset ? task.asset.symbol : 'custom';
     console.log(`Fetching market insights for ${assetSymbol}...`);
     
-    const marketInsights = await getMarketInsights(task, assetSymbol);
-    console.log("Market insights received", marketInsights);
+    let marketInsights = '';
+    if (assetSymbol === 'VIRTUALS') {
+      marketInsights = await getMarketData('VIRTUAL');
+    } else {
+      marketInsights = await getMarketData(assetSymbol);
+    }
+    console.log("Market insights received", JSON.stringify(marketInsights));
 
     const systemPrompt = `You are an expert AI agent specialized in crypto trading and DeFi operations.
     
@@ -79,7 +82,6 @@ export async function reasonAboutTaskExecution(
 
 1. The user's intent and conditions specified in their prompt
 2. The task type and parameters
-3. The market insights and data provided, sentiment, and social signals
 
 User task are always buy or sell, and we have base currency and amount (so when buy, its the asset we use to pay and the amount, and when sell is the output asset and the amount)
 
@@ -102,7 +104,7 @@ Based on this information, provide:
    - User's specified conditions and triggers
 2. A clear yes/no decision on execution
 
-Consider the user's intent, current market data, sentiment analysis, and risk factors in your decision.`;
+Consider the user's intent mainly, and use the market insights to make your decision.`;
 
     const result = await generateObject({
       model: openai('gpt-4o'),

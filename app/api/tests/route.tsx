@@ -12,12 +12,11 @@ export const maxDuration = 250; // This function can run for a maximum of 5 seco
 export async function GET(request: Request) {
 
   // Test swapping 100 ETHY tokens to USDC
-  const amountToSwap = BigInt(Math.floor(100 * 1e18)); // 100 ETHY (18 decimals)
+  const amountToSwap = BigInt(Math.floor(10 * 1e18)); // 100 ETHY (18 decimals)
 
 
   try {
     
-
     const executions = await getTasksOrderedByNextExecutionTime();
     //console.log(executions);
 

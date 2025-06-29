@@ -385,7 +385,7 @@ export async function executeOneInchSwap(
   tokenIn: string,
   tokenOut: string,
   amountIn: bigint,
-  slippagePercent: number = 1
+  slippagePercent: number = 5
 ) {
   // Validate input parameters
   if (!walletId || !userAddress || !tokenIn || !tokenOut || amountIn <= 0n) {
